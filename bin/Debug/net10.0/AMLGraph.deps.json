@@ -1,0 +1,263 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "AMLGraph/1.0.0": {
+        "dependencies": {
+          "FSharp.Core": "10.1.201",
+          "FSharp.Data": "8.1.14",
+          "Neo4j.Driver": "6.2.1"
+        },
+        "runtime": {
+          "AMLGraph.dll": {}
+        }
+      },
+      "FSharp.Core/10.1.201": {
+        "runtime": {
+          "lib/netstandard2.1/FSharp.Core.dll": {
+            "assemblyVersion": "10.1.0.0",
+            "fileVersion": "10.102.126.15422"
+          }
+        },
+        "resources": {
+          "lib/netstandard2.1/cs/FSharp.Core.resources.dll": {
+            "locale": "cs"
+          },
+          "lib/netstandard2.1/de/FSharp.Core.resources.dll": {
+            "locale": "de"
+          },
+          "lib/netstandard2.1/es/FSharp.Core.resources.dll": {
+            "locale": "es"
+          },
+          "lib/netstandard2.1/fr/FSharp.Core.resources.dll": {
+            "locale": "fr"
+          },
+          "lib/netstandard2.1/it/FSharp.Core.resources.dll": {
+            "locale": "it"
+          },
+          "lib/netstandard2.1/ja/FSharp.Core.resources.dll": {
+            "locale": "ja"
+          },
+          "lib/netstandard2.1/ko/FSharp.Core.resources.dll": {
+            "locale": "ko"
+          },
+          "lib/netstandard2.1/pl/FSharp.Core.resources.dll": {
+            "locale": "pl"
+          },
+          "lib/netstandard2.1/pt-BR/FSharp.Core.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "lib/netstandard2.1/ru/FSharp.Core.resources.dll": {
+            "locale": "ru"
+          },
+          "lib/netstandard2.1/tr/FSharp.Core.resources.dll": {
+            "locale": "tr"
+          },
+          "lib/netstandard2.1/zh-Hans/FSharp.Core.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "lib/netstandard2.1/zh-Hant/FSharp.Core.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      },
+      "FSharp.Data/8.1.14": {
+        "dependencies": {
+          "FSharp.Core": "10.1.201",
+          "FSharp.Data.Csv.Core": "8.1.14",
+          "FSharp.Data.Html.Core": "8.1.14",
+          "FSharp.Data.Http": "8.1.14",
+          "FSharp.Data.Json.Core": "8.1.14",
+          "FSharp.Data.Runtime.Utilities": "8.1.14",
+          "FSharp.Data.WorldBank.Core": "8.1.14",
+          "FSharp.Data.Xml.Core": "8.1.14"
+        },
+        "runtime": {
+          "lib/net8.0/FSharp.Data.dll": {
+            "assemblyVersion": "8.1.14.0",
+            "fileVersion": "8.1.14.0"
+          }
+        }
+      },
+      "FSharp.Data.Csv.Core/8.1.14": {
+        "dependencies": {
+          "FSharp.Core": "10.1.201",
+          "FSharp.Data.Runtime.Utilities": "8.1.14"
+        },
+        "runtime": {
+          "lib/net8.0/FSharp.Data.Csv.Core.dll": {
+            "assemblyVersion": "8.1.14.0",
+            "fileVersion": "8.1.14.0"
+          }
+        }
+      },
+      "FSharp.Data.Html.Core/8.1.14": {
+        "dependencies": {
+          "FSharp.Core": "10.1.201",
+          "FSharp.Data.Csv.Core": "8.1.14",
+          "FSharp.Data.Json.Core": "8.1.14",
+          "FSharp.Data.Runtime.Utilities": "8.1.14"
+        },
+        "runtime": {
+          "lib/net8.0/FSharp.Data.Html.Core.dll": {
+            "assemblyVersion": "8.1.14.0",
+            "fileVersion": "8.1.14.0"
+          }
+        }
+      },
+      "FSharp.Data.Http/8.1.14": {
+        "dependencies": {
+          "FSharp.Core": "10.1.201"
+        },
+        "runtime": {
+          "lib/net8.0/FSharp.Data.Http.dll": {
+            "assemblyVersion": "8.1.14.0",
+            "fileVersion": "8.1.14.0"
+          }
+        }
+      },
+      "FSharp.Data.Json.Core/8.1.14": {
+        "dependencies": {
+          "FSharp.Core": "10.1.201",
+          "FSharp.Data.Http": "8.1.14",
+          "FSharp.Data.Runtime.Utilities": "8.1.14"
+        },
+        "runtime": {
+          "lib/net8.0/FSharp.Data.Json.Core.dll": {
+            "assemblyVersion": "8.1.14.0",
+            "fileVersion": "8.1.14.0"
+          }
+        }
+      },
+      "FSharp.Data.Runtime.Utilities/8.1.14": {
+        "dependencies": {
+          "FSharp.Core": "10.1.201",
+          "FSharp.Data.Http": "8.1.14"
+        },
+        "runtime": {
+          "lib/net8.0/FSharp.Data.Runtime.Utilities.dll": {
+            "assemblyVersion": "8.1.14.0",
+            "fileVersion": "8.1.14.0"
+          }
+        }
+      },
+      "FSharp.Data.WorldBank.Core/8.1.14": {
+        "dependencies": {
+          "FSharp.Core": "10.1.201",
+          "FSharp.Data.Http": "8.1.14",
+          "FSharp.Data.Json.Core": "8.1.14",
+          "FSharp.Data.Runtime.Utilities": "8.1.14"
+        },
+        "runtime": {
+          "lib/net8.0/FSharp.Data.WorldBank.Core.dll": {
+            "assemblyVersion": "8.1.14.0",
+            "fileVersion": "8.1.14.0"
+          }
+        }
+      },
+      "FSharp.Data.Xml.Core/8.1.14": {
+        "dependencies": {
+          "FSharp.Core": "10.1.201",
+          "FSharp.Data.Http": "8.1.14",
+          "FSharp.Data.Json.Core": "8.1.14",
+          "FSharp.Data.Runtime.Utilities": "8.1.14"
+        },
+        "runtime": {
+          "lib/net8.0/FSharp.Data.Xml.Core.dll": {
+            "assemblyVersion": "8.1.14.0",
+            "fileVersion": "8.1.14.0"
+          }
+        }
+      },
+      "Neo4j.Driver/6.2.1": {
+        "runtime": {
+          "lib/net10.0/Neo4j.Driver.dll": {
+            "assemblyVersion": "6.2.10.1",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AMLGraph/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "FSharp.Core/10.1.201": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-s5w9LWYurZ9yZdIppoIaYLkRadyT5s3u0wbQCb0J4bQd3ubIlIWQ3Nd5+ll1y3pv5OnTS373dP8T1S/BP46QXg==",
+      "path": "fsharp.core/10.1.201",
+      "hashPath": "fsharp.core.10.1.201.nupkg.sha512"
+    },
+    "FSharp.Data/8.1.14": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-vvq9shWudMN+MgGq1gB3Yvu0Hl9QYrQUAGI/R/U+j5sGV7sBdApAezecO0HQglzXODVdAIwFoapFdYZSbMQrOg==",
+      "path": "fsharp.data/8.1.14",
+      "hashPath": "fsharp.data.8.1.14.nupkg.sha512"
+    },
+    "FSharp.Data.Csv.Core/8.1.14": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Buy8srQZiKcWZhJ2c+gHaY1MRLWX2bYD5t/IyiPkyEZT+FUsmpLuK7BzGFLFNT6QPEc9Qh72gtfjh6sEHo2ypw==",
+      "path": "fsharp.data.csv.core/8.1.14",
+      "hashPath": "fsharp.data.csv.core.8.1.14.nupkg.sha512"
+    },
+    "FSharp.Data.Html.Core/8.1.14": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-FolPUmbHaCG/vbUStnNSBeSu+n2LV2NtGcAM6aJ5P2J2HleBrWphXA8QMEMDVTCJU5kisoFqDhqNcMZxGUKVeg==",
+      "path": "fsharp.data.html.core/8.1.14",
+      "hashPath": "fsharp.data.html.core.8.1.14.nupkg.sha512"
+    },
+    "FSharp.Data.Http/8.1.14": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-sVL1DKu1GyJzHsmJkCgdGqac9NaYirmRQIHQtAqfPPUZTHAa9svQxlFsoiJVEodlYwDIlDjaj/aKOAQqZxKWXA==",
+      "path": "fsharp.data.http/8.1.14",
+      "hashPath": "fsharp.data.http.8.1.14.nupkg.sha512"
+    },
+    "FSharp.Data.Json.Core/8.1.14": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2jogAEXcluCxpNp3K1i0xFLc+BsT/yyzwE2KNwIDK7lu/hOXuT/7AeNBqFWMQGNzntiSr2v/nLV/q6VdYMOgUg==",
+      "path": "fsharp.data.json.core/8.1.14",
+      "hashPath": "fsharp.data.json.core.8.1.14.nupkg.sha512"
+    },
+    "FSharp.Data.Runtime.Utilities/8.1.14": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kZCy7XzwDzwd8hohKSICW+KTEqOfdzeVQP4KHjdIWL0yMHrRNwS4mdAMmUmPcXPPc6UzTlw6+vDsFxPZjHRTbQ==",
+      "path": "fsharp.data.runtime.utilities/8.1.14",
+      "hashPath": "fsharp.data.runtime.utilities.8.1.14.nupkg.sha512"
+    },
+    "FSharp.Data.WorldBank.Core/8.1.14": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oywSDfJivodofqr4YbJYdgzR9OOeu8ui6rC0MENvrZ5XmddtLMMu03Hp8oLSNUKy0BDK9QMmGU5BO4MnGlLIiA==",
+      "path": "fsharp.data.worldbank.core/8.1.14",
+      "hashPath": "fsharp.data.worldbank.core.8.1.14.nupkg.sha512"
+    },
+    "FSharp.Data.Xml.Core/8.1.14": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2+smi58rZFvCp4dcEjTYU95IU2FmdQppbNxpbeNRQo3Cd4q4g0nsDKpNOgh6wqR4iA9IvFW7aafwbx38u2iQ/g==",
+      "path": "fsharp.data.xml.core/8.1.14",
+      "hashPath": "fsharp.data.xml.core.8.1.14.nupkg.sha512"
+    },
+    "Neo4j.Driver/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ruTHNd3mDRyII37aBcrzWqheunopo70RJjQqDBP+S98lAk+abTQ2Yno8yBg3k1LJT71BHoduKIjxny9Bcon4gg==",
+      "path": "neo4j.driver/6.2.1",
+      "hashPath": "neo4j.driver.6.2.1.nupkg.sha512"
+    }
+  }
+}
