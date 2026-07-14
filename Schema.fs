@@ -4,7 +4,7 @@ module Schema =
 
     let initialize() =
 
-        task {
+        async {
 
             use session = Neo4j.driver.AsyncSession()
 
@@ -23,6 +23,7 @@ module Schema =
                             let! _ = tx.RunAsync(cypher)
                             return ()
                         })
+                |> Async.AwaitTask
 
             printfn "Initialized schema"
         }

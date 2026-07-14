@@ -12,7 +12,6 @@ module CustomerNode =
             "riskRating", box customer.RiskRating
         ]
 
-
     let create (customers:Customer list) =
 
         let cypher =
@@ -26,7 +25,7 @@ module CustomerNode =
                 c.riskRating = $riskRating
             """
 
-        task {
+        async {
 
             use session = Neo4j.driver.AsyncSession()
 
