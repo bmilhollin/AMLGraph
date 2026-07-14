@@ -17,7 +17,6 @@ module DelimitedReader =
                 let line = reader.ReadLine()
 
                 let fields = line.Split('\t')
-                printfn "Read line: %A" fields
 
                 yield
                     {
@@ -30,3 +29,4 @@ module DelimitedReader =
                     }
         }
         |> Seq.toList
+        

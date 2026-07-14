@@ -9,7 +9,8 @@
     <Compile Include="Domain.fs" />
     <Compile Include="DelimitedReader.fs" />
     <Compile Include="Neo4j.fs" />
-    <Compile Include="CustomerNode.fs" />
+    <Compile Include="CustomerNodes.fs" />
+    <Compile Include="Schema.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

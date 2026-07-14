@@ -19,5 +19,5 @@ module Neo4j =
             do!
                 driver.VerifyConnectivityAsync()
 
-            printfn "Neo4j connection successful"
+            printfn "Verified connection"
         }

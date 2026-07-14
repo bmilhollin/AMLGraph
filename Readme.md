@@ -1,6 +1,11 @@
+This project is a result of reading this article.
+https://www.drivewingrow.com/how-to-build-a-simple-fraud-alert-system-using-neo4j/
+
+All data is fabricated, does not represent real entities
+
 Nodes
 (:Customer)
-    CustomerId (key)
+    CustomerId (key is required and unique)
     FirstName
     LastName
     DOB

@@ -14,3 +14,5 @@ packages/
 project.lock.json
 .vs/
 *.DotSettings.user
+
+.fake

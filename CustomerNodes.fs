@@ -6,20 +6,20 @@ module CustomerNode =
 
         task {
 
+            use session = Neo4j.driver.AsyncSession()
+
+            let cypher =
+                """
+                MERGE (c:Customer {customerId:$customerId})
+                SET
+                    c.firstName = $firstName,
+                    c.lastName = $lastName,
+                    c.dob = $dob,
+                    c.occupation = $occupation,
+                    c.riskRating = $riskRating
+                """
+            
             for customer in customers do
-
-                let cypher =
-                    """
-                    MERGE (c:Customer {customerId:$customerId})
-                    SET
-                        c.firstName = $firstName,
-                        c.lastName = $lastName,
-                        c.dob = $dob,
-                        c.occupation = $occupation,
-                        c.riskRating = $riskRating
-                    """
-
-                use session = Neo4j.driver.AsyncSession()
 
                 do!
                     session.ExecuteWriteAsync(
