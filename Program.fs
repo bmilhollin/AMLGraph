@@ -6,20 +6,16 @@ open AMLGraph.Graph.Nodes
 
 async {
 
-    do!
-        Neo4j.verifyConnection()
-        |> Async.AwaitTask
+    do! Neo4j.verifyConnectionAsync ()
 
-    do!
-        Schema.initialize()
+    do! Schema.initialize()
 
     let customers =
-        DelimitedReader.readCustomersFromFile "Data/Customers.tsv"
+        Readers.readCustomersFromFile "Data/Customers.tsv"
 
     printfn "Read %d customers" customers.Length
 
-    do!
-        Customer.create customers
+    do! Customer.create customers
 
     Neo4j.driver.Dispose()
     

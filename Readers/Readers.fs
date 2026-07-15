@@ -3,7 +3,7 @@ namespace AMLGraph.Readers
 open System.IO
 open AMLGraph.Domain
 
-module DelimitedReader =
+module Readers =
 
     let readCustomersFromFile (filePath:string) =
 
