@@ -17,6 +17,7 @@ The architecture separates business concepts from persistence concerns while kee
 5. Keep business concepts independent of Neo4j.
 6. Keep modules cohesive.
 7. Optimize only after measuring.
+8. Isolate external technology details at system boundaries.
 
 ---
 
@@ -160,6 +161,46 @@ Neo4j operations are asynchronous because they involve network I/O.
 Readers currently remain synchronous because the application processes one file at a time.
 
 If future requirements involve concurrent file processing or streaming large datasets, asynchronous readers may be introduced.
+
+# Async v. Task Strategy
+
+AMLGraph uses F# async workflows at the application and graph layers.
+
+The Neo4j .NET driver is task-based, so the Infrastructure layer is responsible for converting Task-based APIs into F# Async workflows.
+
+## Async Boundary
+
+The dependency flow is:
+
+Neo4j Driver
+    |
+    | Task
+    ▼
+Infrastructure.Neo4j
+    |
+    | Async
+    ▼
+Graph / Program
+
+
+Infrastructure functions expose Async results:
+
+- Neo4j.verifyConnectionAsync
+- Neo4j.executeWriteAsync
+
+Graph modules use async workflows:
+
+- Graph.Nodes.Customer.create
+- Graph.Nodes.Account.create
+- Graph.Relationships.Ownership.create
+
+Program.fs orchestrates workflows using Async.RunSynchronously.
+
+## Design Rationale
+
+F# async workflows are used throughout the application because they provide a consistent programming model and keep .NET Task details isolated to the infrastructure layer.
+
+The application should not need to know whether an external dependency uses Task, Async, or another asynchronous abstraction.
 
 ---
 

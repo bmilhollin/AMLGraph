@@ -94,3 +94,24 @@ AMLGraph is intended to be:
 * A reference implementation.
 * An example of clean F# architecture.
 * A foundation for future AML graph research.
+
+### Async Abstraction Boundary
+
+Decision:
+
+Use F# Async workflows above the Infrastructure layer and isolate .NET Tasks inside Infrastructure.
+
+Context:
+
+The Neo4j .NET driver exposes Task-based asynchronous APIs. Mixing Task and Async throughout the application would require every caller to understand the underlying database library.
+
+Reason:
+
+The application code should depend on application concepts, not implementation details of external libraries.
+
+Consequences:
+
+- Infrastructure modules convert Task to Async using Async.AwaitTask.
+- Graph modules expose Async workflows.
+- Program.fs coordinates Async workflows.
+- Future infrastructure libraries should follow the same pattern.
