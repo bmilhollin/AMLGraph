@@ -214,3 +214,62 @@ New graph concepts should generally require:
 4. Program orchestration.
 
 The architecture is intended to grow by extension rather than modification.
+
+# Graph Modeling Conventions
+
+## Nodes
+
+Entities that have an independent identity in the business domain are modeled as Neo4j nodes.
+
+Examples:
+
+- Customer
+- Account
+- Transaction
+
+Node modules are responsible for creating and updating node properties.
+
+Example:
+
+Graph.Nodes.Customer.create
+
+## Relationships
+
+Relationships represent meaningful connections between nodes.
+
+Examples:
+
+- Customer OWNS Account
+- Account SENDS Transaction
+- Customer ASSOCIATED_WITH Entity
+
+Relationship modules are responsible for creating relationships between existing nodes.
+
+Example:
+
+Graph.Relationships.Ownership.create
+
+## Identity
+
+Nodes should have a stable business identifier.
+
+Example:
+
+Customer.customerId
+Account.accountId
+
+Neo4j constraints should enforce uniqueness for node identities.
+
+## Account Ownership Modeling
+
+Decision:
+
+Customer-to-Account association will be modeled as an Ownership relationship rather than a CustomerId property on Account.
+
+Reason:
+
+An account may have multiple associated customers. Modeling ownership as a relationship allows the graph to represent joint ownership and future relationship attributes.
+
+Consequence:
+
+Account nodes represent accounts independently. Ownership relationships represent customer associations.
