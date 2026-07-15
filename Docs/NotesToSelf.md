@@ -1,6 +1,11 @@
 This project is a result of reading this article.
 https://www.drivewingrow.com/how-to-build-a-simple-fraud-alert-system-using-neo4j/
 
+README.md          <-- What is this project?
+ARCHITECTURE.md    <-- How is it organized?
+DECISIONS.md       <-- Why was it designed this way?
+
+
 All data is fabricated, does not represent real entities
 
 Nodes

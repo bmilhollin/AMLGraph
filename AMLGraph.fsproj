@@ -6,11 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Domain.fs" />
-    <Compile Include="DelimitedReader.fs" />
-    <Compile Include="Neo4j.fs" />
-    <Compile Include="CustomerNodes.fs" />
-    <Compile Include="Schema.fs" />
+    <Compile Include="Domain\Domain.fs" />
+    <Compile Include="Readers\Readers.fs" />
+    <Compile Include="Infrastructure\Neo4j.fs" />
+    <Compile Include="Infrastructure\Schema.fs" />
+    <Compile Include="Graph\Nodes\Customer.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

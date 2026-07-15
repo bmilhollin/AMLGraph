@@ -1,6 +1,9 @@
-namespace AMLGraph
+namespace AMLGraph.Graph.Nodes
 
-module CustomerNode =
+open AMLGraph.Domain
+open AMLGraph.Infrastructure
+
+module Customer =
 
     let private toParameters (customer:Customer) =
         dict [

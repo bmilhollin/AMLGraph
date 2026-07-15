@@ -1,20 +1,19 @@
-namespace AMLGraph
+namespace AMLGraph.Infrastructure
 
 module Schema =
 
     let initialize() =
 
+        let cypher =
+            """
+            CREATE CONSTRAINT customer_id_key
+            IF NOT EXISTS
+            FOR (c:Customer)
+            REQUIRE c.customerId IS NODE KEY
+            """
         async {
 
-            use session = Neo4j.driver.AsyncSession()
-
-            let cypher =
-                """
-                CREATE CONSTRAINT customer_id_key
-                IF NOT EXISTS
-                FOR (c:Customer)
-                REQUIRE c.customerId IS NODE KEY
-                """
+            use session = Neo4j.driver.AsyncSession()   
 
             do!
                 session.ExecuteWriteAsync(

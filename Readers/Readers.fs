@@ -1,6 +1,7 @@
-namespace AMLGraph
+namespace AMLGraph.Readers
 
 open System.IO
+open AMLGraph.Domain
 
 module DelimitedReader =
 

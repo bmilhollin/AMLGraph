@@ -1,5 +1,9 @@
 ﻿module AMLGraph.Program
 
+open AMLGraph.Infrastructure
+open AMLGraph.Readers
+open AMLGraph.Graph.Nodes
+
 async {
 
     do!
@@ -9,15 +13,15 @@ async {
     do!
         Schema.initialize()
 
-    let customerDtos =
+    let customers =
         DelimitedReader.readCustomersFromFile "Data/Customers.tsv"
 
-    printfn "Read %d customers" customerDtos.Length
+    printfn "Read %d customers" customers.Length
 
     do!
-        CustomerNode.create customerDtos
+        Customer.create customers
 
     Neo4j.driver.Dispose()
-
+    
 }
 |> Async.RunSynchronously

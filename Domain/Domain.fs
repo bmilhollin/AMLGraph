@@ -1,4 +1,4 @@
-namespace AMLGraph
+namespace AMLGraph.Domain
 
 // All Graph Entities
 

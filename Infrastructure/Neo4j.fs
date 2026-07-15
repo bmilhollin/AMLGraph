@@ -1,4 +1,4 @@
-namespace AMLGraph
+namespace AMLGraph.Infrastructure
 
 open Neo4j.Driver
 
