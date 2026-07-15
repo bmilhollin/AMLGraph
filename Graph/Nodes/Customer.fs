@@ -29,27 +29,12 @@ module Customer =
             """
 
         async {
-
-            use session = Neo4j.driver.AsyncSession()
-
             for customer in customers do
 
                 do!
-                    session.ExecuteWriteAsync(
-                        fun tx ->
-                            task {
-
-                                let parameters =
-                                    toParameters customer
-
-                                let! _ =
-                                    tx.RunAsync(
-                                        cypher,
-                                        parameters)
-
-                                return ()
-                            })
-                    |> Async.AwaitTask
+                    Neo4j.executeWriteAsync
+                        cypher
+                        (toParameters customer)
 
             printfn "Customers loaded"
         }
