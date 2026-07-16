@@ -42,13 +42,16 @@ Not responsible for:
 
 ## Readers
 
-Reads external data sources and converts them into domain records.
+Reads external data sources and converts them into domain records.  Readers translate source data into the graph domain model.
+
+The structure of the input files does not have to mirror the structure of the domain model. A single source record may produce multiple domain objects if that better represents the business concepts.
 
 Responsibilities:
 
-* File parsing
-* Basic validation
-* Record creation
+* Parse
+* Validate
+* Normalize
+* Split one source row into multiple domain objects
 
 Not responsible for:
 

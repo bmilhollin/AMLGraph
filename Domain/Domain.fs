@@ -25,9 +25,14 @@ type FinancialInstitution =
 type Account =
     {
         AccountId: string
-        CustomerId: string
         InstitutionId: string
         AccountType: string
         OpenDate: string
         Balance: decimal
+    }
+
+type Ownership =
+    {
+        CustomerId: string
+        AccountId: string
     }

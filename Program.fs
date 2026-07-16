@@ -17,6 +17,14 @@ async {
 
     do! Customer.create customers
 
+    let accounts, ownerships =
+        Readers.readAccountsFromFile "Data/Accounts.tsv"
+
+    printfn "Read %d accounts" accounts.Length
+    printfn "Read %d ownerships" ownerships.Length
+
+    do! Account.create accounts
+
     Neo4j.driver.Dispose()
     
 }

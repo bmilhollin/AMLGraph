@@ -10,6 +10,7 @@
     <Compile Include="Readers\Readers.fs" />
     <Compile Include="Infrastructure\Neo4j.fs" />
     <Compile Include="Infrastructure\Schema.fs" />
+    <Compile Include="Graph\Nodes\Account.fs" />
     <Compile Include="Graph\Nodes\Customer.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
