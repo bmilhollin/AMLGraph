@@ -7,8 +7,8 @@ module Account =
 
     let private toParameters (account:Account) =
         dict [
-            "accountId", box account.AccountId
-            "institutionId", box account.InstitutionId
+            "accountId", box (EntityId.accountIdValue account.AccountId)
+            "institutionId", box (EntityId.institutionIdValue account.InstitutionId)
             "accountType", box account.AccountType
             "openDate", box account.OpenDate
             "balance", box account.Balance

@@ -1,10 +1,21 @@
 namespace AMLGraph.Domain
 
-// All Graph Entities
+type CustomerId = CustomerId of string
+type AccountId = AccountId of string
+type InstitutionId = InstitutionId of string
+
+
+module EntityId =
+    
+    let customerIdValue (CustomerId id) = id
+
+    let accountIdValue (AccountId id) = id
+
+    let institutionIdValue (InstitutionId id) = id
 
 type Customer =
     {
-        CustomerId: string
+        CustomerId: CustomerId
         FirstName: string
         LastName: string
         DOB: string
@@ -15,7 +26,7 @@ type Customer =
 
 type FinancialInstitution =
     {
-        InstitutionId: string
+        InstitutionId: InstitutionId
         Name: string
         InstitutionType: string
         Country: string
@@ -24,8 +35,8 @@ type FinancialInstitution =
 
 type Account =
     {
-        AccountId: string
-        InstitutionId: string
+        AccountId: AccountId
+        InstitutionId: InstitutionId
         AccountType: string
         OpenDate: string
         Balance: decimal
@@ -33,6 +44,25 @@ type Account =
 
 type Ownership =
     {
-        CustomerId: string
-        AccountId: string
+        CustomerId: CustomerId
+        AccountId: AccountId
     }
+
+type EntityKey =
+    | CustomerKey of CustomerId
+    | AccountKey of AccountId
+    | InstitutionKey of InstitutionId
+
+type ValidationIssue =
+    | ConflictingAccountAttributes
+    | MissingCustomerReference
+    | MissingAccountReference
+type ValidationError =
+    {
+        Entity: EntityKey
+        Issue: ValidationIssue
+    }
+
+type AccountImportStatus =
+    | Valid of Account
+    | Conflicted of ValidationError

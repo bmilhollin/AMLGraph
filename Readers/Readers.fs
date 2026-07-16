@@ -21,7 +21,7 @@ module Readers =
 
                 yield
                     {
-                        CustomerId = fields[0].Trim()
+                        CustomerId = fields[0].Trim() |> CustomerId
                         FirstName = fields[1].Trim()
                         LastName = fields[2].Trim()
                         DOB = fields[3].Trim()
@@ -31,7 +31,7 @@ module Readers =
         }
         |> Seq.toList
     
-    let readAccountsFromFile (filePath:string) : Account list * Ownership list =
+    let readAccountsFromFile (filePath:string) : Account list * Ownership list  =
 
         use reader = new StreamReader(filePath)
 
@@ -47,9 +47,9 @@ module Readers =
                 if fields.Length <> 6 then
                     failwith $"Unexpected account record: {line}"
 
-                let accountId = fields[0].Trim()
-                let customerId = fields[1].Trim()
-                let institutionId = fields[2].Trim()
+                let accountId = fields[0].Trim() |> AccountId
+                let customerId = fields[1].Trim() |> CustomerId
+                let institutionId = fields[2].Trim() |> InstitutionId
                 let accountType = fields[3].Trim()
                 let openDate = fields[4].Trim()
                 let balance = decimal fields[5]
