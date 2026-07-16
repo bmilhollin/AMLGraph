@@ -3,6 +3,7 @@
 open AMLGraph.Infrastructure
 open AMLGraph.Readers
 open AMLGraph.Graph.Nodes
+open AMLGraph.Graph.Relationships
 
 async {
 
@@ -24,6 +25,7 @@ async {
     printfn "Read %d ownerships" ownerships.Length
 
     do! Account.create accounts
+    do! Ownership.create ownerships
 
     Neo4j.driver.Dispose()
     

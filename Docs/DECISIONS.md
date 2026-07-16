@@ -115,3 +115,45 @@ Consequences:
 - Graph modules expose Async workflows.
 - Program.fs coordinates Async workflows.
 - Future infrastructure libraries should follow the same pattern.
+
+## 2026-07-16
+
+### Relationship Creation Requires Existing Nodes
+
+Decision:
+
+Relationship imports will validate that referenced nodes exist before creating Neo4j relationships.
+
+Context:
+
+Graph relationships depend on existing nodes. Ownership data may reference customers or accounts that are missing from the source data or failed validation during import.
+
+Alternatives considered:
+
+1. Silently ignore missing nodes.
+2. Automatically create missing nodes using only identifiers.
+3. Validate references and report data quality issues.
+
+Decision rationale:
+
+Automatically creating nodes from incomplete relationship data can introduce incomplete or misleading entities into the graph. Silently ignoring relationships hides data quality problems.
+
+The import process will validate references and report missing entities.
+
+Consequences:
+
+- Nodes must be loaded before relationships.
+- Relationship imports can identify missing references.
+- Data quality issues are visible rather than silently lost.
+
+## Account Identity Conflicts
+
+Decision:
+
+When multiple source records share an AccountId, the account is only imported if all account attributes agree.
+
+If conflicting account attributes are found, the account is excluded from the graph along with associated ownership relationships.
+
+Rationale:
+
+The system cannot determine which source record is authoritative. Loading one version could create misleading investigative results.

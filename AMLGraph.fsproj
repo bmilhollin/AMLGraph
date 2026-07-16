@@ -12,6 +12,7 @@
     <Compile Include="Infrastructure\Schema.fs" />
     <Compile Include="Graph\Nodes\Account.fs" />
     <Compile Include="Graph\Nodes\Customer.fs" />
+    <Compile Include="Graph\Relationships\Ownership.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

@@ -276,3 +276,34 @@ An account may have multiple associated customers. Modeling ownership as a relat
 Consequence:
 
 Account nodes represent accounts independently. Ownership relationships represent customer associations.
+
+## Relationship Integrity
+
+Relationships are created only between existing nodes.
+
+The import workflow creates nodes before relationships:
+
+1. Load Customer nodes
+2. Load Account nodes
+3. Validate relationship references
+4. Create relationships
+
+Missing referenced nodes are treated as data quality issues rather than automatically creating incomplete nodes.
+
+The system should not create placeholder nodes from relationship data alone because this can introduce entities with insufficient supporting information.
+
+## Import Pipeline
+
+Source Data
+    |
+    ▼
+Domain Objects
+    |
+    ▼
+Node Creation
+    |
+    ▼
+Relationship Validation
+    |
+    ▼
+Relationship Creation
