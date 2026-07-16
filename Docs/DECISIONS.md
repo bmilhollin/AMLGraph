@@ -157,3 +157,37 @@ If conflicting account attributes are found, the account is excluded from the gr
 Rationale:
 
 The system cannot determine which source record is authoritative. Loading one version could create misleading investigative results.
+
+## Validation Errors Use Domain Types
+
+Decision:
+
+Validation errors are represented using domain types rather than string messages.
+
+Examples:
+- ValidationIssue is a discriminated union.
+- ValidationError contains the affected entity key and issue type.
+- Human-readable messages are generated only at the presentation boundary.
+
+Rationale:
+
+Strings describe how an issue is communicated, not what the issue means. Representing validation issues as domain types allows the compiler to enforce consistency and allows reporting, testing, and downstream processing to use the meaning of the error rather than parsing text.
+
+Consequences:
+
+- Validation logic does not contain user-facing messages.
+- Reports and logs are responsible for formatting messages.
+- New validation scenarios require adding domain cases rather than adding arbitrary strings.
+
+## Strongly Typed Entity Identifiers
+
+Decision:
+
+Entity identifiers are represented using distinct domain types rather than plain strings.
+
+Examples:
+
+```fsharp
+type CustomerId = CustomerId of string
+type AccountId = AccountId of string
+type InstitutionId = InstitutionId of string

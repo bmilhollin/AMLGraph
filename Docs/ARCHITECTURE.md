@@ -155,6 +155,24 @@ The project currently contains a small, cohesive domain model, and splitting rec
 
 This decision should be revisited only if the domain grows significantly.
 
+## Strongly Typed Domain Identifiers
+
+Entity identifiers are modeled as domain concepts rather than primitive strings. This reduces accidental misuse and keeps entity identity explicit throughout the application.
+
+## Domain Objects Represent Meaning, Not Formatting
+
+Domain types should capture business concepts and rules.
+
+Formatting decisions, including human-readable error messages, belong outside the domain layer.
+
+For example:
+
+Domain:
+    ConflictingAccountAttributes
+
+Presentation:
+    "Account A100 contains conflicting account attributes."
+
 ---
 
 # Async Strategy
