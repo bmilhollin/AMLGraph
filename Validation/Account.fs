@@ -18,7 +18,9 @@ module Account =
 
     /// An accountId can exists on multiple rows within Accounts.tsv.
     /// An account can have multiple owners (CustomerId),
-    /// but all the other fields must be identical to be valid.
+    /// but all the other fields must be identical to be considered a valid account.
+    /// If an account has multiple rows and fields other than CustomerId are different, it is considered an account with conflicting attributes,
+    /// and the account will not be used in the graph. Conflicted accounts are captured for review.
     let validate (accounts: Account list) : Validated<Account list> =
 
         let groups =

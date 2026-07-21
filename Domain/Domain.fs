@@ -50,6 +50,7 @@ type EntityKey =
     | InstitutionKey of InstitutionId
 
 type ValidationIssue =
+    | ConflictingCustomerAttributes
     | ConflictingAccountAttributes
     | MissingCustomer
     | MissingAccount
