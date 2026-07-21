@@ -8,9 +8,7 @@ type InstitutionId = InstitutionId of string
 module EntityId =
     
     let customerIdValue (CustomerId id) = id
-
     let accountIdValue (AccountId id) = id
-
     let institutionIdValue (InstitutionId id) = id
 
 type Customer =
@@ -23,7 +21,6 @@ type Customer =
         RiskRating: int
     }
 
-
 type FinancialInstitution =
     {
         InstitutionId: InstitutionId
@@ -31,7 +28,6 @@ type FinancialInstitution =
         InstitutionType: string
         Country: string
     }
-
 
 type Account =
     {
@@ -55,8 +51,9 @@ type EntityKey =
 
 type ValidationIssue =
     | ConflictingAccountAttributes
-    | MissingCustomerReference
-    | MissingAccountReference
+    | MissingCustomer
+    | MissingAccount
+    
 type ValidationError =
     {
         Entity: EntityKey
@@ -66,3 +63,9 @@ type ValidationError =
 type AccountImportStatus =
     | Valid of Account
     | Conflicted of ValidationError
+
+type Validated<'T> =
+    {
+        Valid: 'T
+        Errors: ValidationError list
+    }

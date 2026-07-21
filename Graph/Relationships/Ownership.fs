@@ -29,5 +29,5 @@ module Ownership =
                         cypher
                         (toParameters ownership)
 
-            printfn "Ownerships loaded"
+            printfn "Ownership relationships created"
         }

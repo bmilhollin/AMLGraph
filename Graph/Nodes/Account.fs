@@ -34,5 +34,5 @@ module Account =
                         cypher
                         (toParameters account)
 
-            printfn "Accounts loaded"
+            printfn "Accounts nodes created"
         }

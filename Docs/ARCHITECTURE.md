@@ -325,3 +325,13 @@ Relationship Validation
     |
     ▼
 Relationship Creation
+
+## Validation Pipeline
+
+External data is converted into domain objects before any business rules are applied.
+
+Validation occurs after parsing and before graph creation.
+
+Each validator has a single responsibility and operates only on domain objects. Readers are responsible for parsing; validators are responsible for business rules; graph modules are responsible for persistence.
+
+This separation keeps parsing, validation, and graph construction independent and testable.

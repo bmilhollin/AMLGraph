@@ -1,9 +1,7 @@
 ﻿module AMLGraph.Program
 
+open AMLGraph.Domain
 open AMLGraph.Infrastructure
-open AMLGraph.Readers
-open AMLGraph.Graph.Nodes
-open AMLGraph.Graph.Relationships
 
 async {
 
@@ -11,21 +9,36 @@ async {
 
     do! Schema.initialize()
 
-    let customers =
-        Readers.readCustomersFromFile "Data/Customers.tsv"
-
+    let customers = 
+        Readers.Customer.read "Data/Customers.tsv"
     printfn "Read %d customers" customers.Length
 
-    do! Customer.create customers
-
-    let accounts, ownerships =
-        Readers.readAccountsFromFile "Data/Accounts.tsv"
-
+    let accounts, ownerships = 
+        Readers.Account.read "Data/Accounts.tsv"
     printfn "Read %d accounts" accounts.Length
     printfn "Read %d ownerships" ownerships.Length
 
-    do! Account.create accounts
-    do! Ownership.create ownerships
+    let validatedAccounts =
+        Validation.Account.validate accounts
+    printfn "Validated %d accounts" validatedAccounts.Valid.Length
+
+    if not validatedAccounts.Errors.IsEmpty then
+        printfn "Found %d account validation errors" validatedAccounts.Errors.Length
+
+    let validatedOwnerships =
+        Validation.Ownership.validate 
+            customers
+            validatedAccounts.Valid
+            ownerships
+    printfn "Validated %d ownerships" validatedOwnerships.Valid.Length
+
+    if not validatedOwnerships.Errors.IsEmpty then
+        printfn "Found %d ownership validation errors" validatedOwnerships.Errors.Length
+
+    // create graph nodes and relationships
+    do! Graph.Nodes.Customer.create customers
+    do! Graph.Nodes.Account.create validatedAccounts.Valid
+    do! Graph.Relationships.Ownership.create validatedOwnerships.Valid
 
     Neo4j.driver.Dispose()
     

@@ -36,5 +36,5 @@ module Customer =
                         cypher
                         (toParameters customer)
 
-            printfn "Customers loaded"
+            printfn "Customers nodes created"
         }
