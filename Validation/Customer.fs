@@ -11,6 +11,11 @@ module Customer =
         left.Occupation = right.Occupation &&
         left.RiskRating = right.RiskRating 
 
+    let private isSingleton (_, group) =
+        match group with
+        | [_] -> true
+        | _ -> false
+
     let private conflictingCustomer customerId =
         {
             Entity = CustomerKey customerId
@@ -27,21 +32,25 @@ module Customer =
             customers
             |> List.groupBy (fun a -> a.CustomerId)
 
+        // Partition customer groups into:
+        //   • singleton groups (implicitly valid)
+        //   • duplicate groups (require validation)
+        let singletonGroups, duplicateGroups =
+            groups
+            |> List.partition isSingleton
+
         let validCustomers = ResizeArray<Customer>()
         let errors = ResizeArray<ValidationError>()
 
-        for (_, group) in groups do
+        // Add singletonGroups to validCustomers
+        for (_, group) in singletonGroups do
+            validCustomers.Add(group.Head)
+
+        // Validate groups with duplicates
+        for (_, group) in duplicateGroups do
 
             match group with
-
-            | [] ->
-                () // shouldn't happen, included for completeness
-
-            | [customer] ->
-                validCustomers.Add(customer)
-
             | customer :: others ->
-
                 if List.forall (customersMatch customer) others then
 
                     validCustomers.Add(customer)
@@ -49,6 +58,9 @@ module Customer =
                 else
 
                     errors.Add(conflictingCustomer customer.CustomerId)
+            | [] ->
+                invalidOp "Unexpected empty customer group."
+
 
         {
             Valid = List.ofSeq validCustomers

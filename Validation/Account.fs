@@ -10,13 +10,18 @@ module Account =
         left.OpenDate = right.OpenDate &&
         left.Balance = right.Balance
 
+    let private isSingleton (_, group) =
+        match group with
+        | [_] -> true
+        | _ -> false
+
     let private conflictingAccount accountId =
         {
             Entity = AccountKey accountId
             Issue = ConflictingAccountAttributes
         }
 
-    /// An accountId can exists on multiple rows within Accounts.tsv.
+    /// An accountId can exist on multiple rows within Accounts.tsv.
     /// An account can have multiple owners (CustomerId),
     /// but all the other fields must be identical to be considered a valid account.
     /// If an account has multiple rows and fields other than CustomerId are different, it is considered an account with conflicting attributes,
@@ -27,21 +32,25 @@ module Account =
             accounts
             |> List.groupBy (fun a -> a.AccountId)
 
+        // Partition account groups into:
+        //   • singleton groups (implicitly valid)
+        //   • duplicate groups (require validation)
+        let singletonGroups, duplicateGroups =
+            groups
+            |> List.partition isSingleton
+
         let validAccounts = ResizeArray<Account>()
         let errors = ResizeArray<ValidationError>()
 
-        for (_, group) in groups do
+        // Add singletonGroups to validAccounts
+        for (_, group) in singletonGroups do
+            validAccounts.Add(group.Head)
+
+        // Validate groups with duplicates
+        for (_, group) in duplicateGroups do
 
             match group with
-
-            | [] ->
-                () // shouldn't happen, included for completeness
-
-            | [account] ->
-                validAccounts.Add(account)
-
             | account :: others ->
-
                 if List.forall (accountsMatch account) others then
 
                     validAccounts.Add(account)
@@ -49,6 +58,9 @@ module Account =
                 else
 
                     errors.Add(conflictingAccount account.AccountId)
+            | [] ->
+                invalidOp "Unexpected empty account group."
+
 
         {
             Valid = List.ofSeq validAccounts

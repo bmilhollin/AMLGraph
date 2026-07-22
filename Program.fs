@@ -7,9 +7,9 @@ async {
 
     do! Neo4j.verifyConnectionAsync ()
 
-    do! Schema.initialize()
+    do! Schema.initialize ()
 
-    // read customers
+    // read and validate customers
     let customers = 
         Readers.Customer.read "Data/Customers.tsv"
     printfn "Read %d customers" customers.Length
@@ -24,6 +24,7 @@ async {
     // read and validate accounts and ownerships
     let accounts, ownerships = 
         Readers.Account.read "Data/Accounts.tsv"
+        // Readers.Account.read "TestData/Accounts.tsv"
     printfn "Read %d accounts" accounts.Length
     printfn "Read %d ownerships" ownerships.Length
 
@@ -50,6 +51,11 @@ async {
     do! Graph.Relationships.Ownership.create validatedOwnerships.Valid
 
     Neo4j.driver.Dispose()
-    
+
+    // it would be nice to see the number of customers read, the number of customers validated, and the number of customer nodes created
+    // to see the all together, so you can see if there are validation issues or node creation issues
+    // TODO: Add logic to print the number of customer nodes created
+
+        
 }
 |> Async.RunSynchronously
