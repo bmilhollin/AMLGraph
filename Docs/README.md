@@ -4,6 +4,8 @@ AMLGraph is a learning project and reference implementation for building Anti-Mo
 
 The project is intentionally designed to favor **clarity, maintainability, and idiomatic F#** over framework complexity or premature optimization.
 
+AMLGraph is organized around the graph model rather than the data import process.
+
 Its goals are to:
 
 * Learn Neo4j and Cypher through a realistic AML domain.
@@ -16,6 +18,7 @@ Its goals are to:
 ## Current Features
 
 * Read AML data from tab-delimited files
+• Validate customer, account, and ownership data
 * Create Neo4j nodes using `MERGE`
 * Enforce uniqueness with Neo4j constraints
 * Organize graph logic separately from business logic
@@ -39,13 +42,14 @@ Its goals are to:
 AMLGraph
 │
 ├── Domain
-├── Readers
+├── Reader
 ├── Validation
 ├── Graph
 │   ├── Nodes
 │   └── Relationships
-├── Neo4j
-├── Schema
+Infrastructure
+│     ├── Neo4j
+│     └── Schema
 └── Program
 ```
 
@@ -93,6 +97,18 @@ Planned
 * AML investigations
 
 ---
+
+# Extension Strategy
+
+New graph concepts should generally require:
+
+1. A new domain record.
+1. A reader function.
+1. A validation function.
+1. A graph node or relationship module.
+1. Program orchestration.
+
+The architecture is intended to grow by extension rather than modification.
 
 ## Design Goals
 

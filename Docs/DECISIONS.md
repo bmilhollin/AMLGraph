@@ -62,7 +62,7 @@ The API is self-describing and remains consistent throughout the project.
 
 **Decision**
 
-Readers return domain records.
+Reader modules return domain records.
 
 **Reason**
 
@@ -76,7 +76,7 @@ The domain layer remains independent of Neo4j and can be reused by future applic
 
 Neo4j operations are asynchronous.
 
-Readers remain synchronous.
+Reader modules remain synchronous.
 
 **Reason**
 

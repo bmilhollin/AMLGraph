@@ -4,7 +4,7 @@ open AMLGraph.Domain
 
 module Account =
 
-    let private accountsMatch left right =
+    let private accountAttributesMatch left right =
         left.InstitutionId = right.InstitutionId &&
         left.AccountType = right.AccountType &&
         left.OpenDate = right.OpenDate &&
@@ -46,7 +46,7 @@ module Account =
 
             match group with
             | account :: others ->
-                if List.forall (accountsMatch account) others then
+                if List.forall (accountAttributesMatch account) others then
 
                     validAccounts.Add(account)
 

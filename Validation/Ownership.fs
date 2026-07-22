@@ -16,13 +16,13 @@ module Ownership =
             Issue = MissingAccount
         }
 
-    let private validateOwnership customerIds accountIds ownership =
+    let private validateOwnership validCustomerIds validAccountIds ownership =
 
         let customerExists =
-            Set.contains ownership.CustomerId customerIds
+            Set.contains ownership.CustomerId validCustomerIds
 
         let accountExists =
-            Set.contains ownership.AccountId accountIds
+            Set.contains ownership.AccountId validAccountIds
 
         match customerExists, accountExists with
 
@@ -47,12 +47,14 @@ module Ownership =
         (accounts: Account list) 
         (ownerships: Ownership list) : Validated<Ownership list> =
 
-        let customerIds =
+        // Verify that every ownership references an existing customer and account.
+        
+        let validCustomerIds =
             customers
             |> List.map (fun c -> c.CustomerId)
             |> Set.ofList
 
-        let accountIds =
+        let validAccountIds =
             accounts
             |> List.map (fun a -> a.AccountId)
             |> Set.ofList
@@ -63,7 +65,7 @@ module Ownership =
         for ownership in ownerships do
 
             let validOwnership, validationErrors =
-                validateOwnership customerIds accountIds ownership
+                validateOwnership validCustomerIds validAccountIds ownership
 
             match validOwnership with
             | Some ownership ->

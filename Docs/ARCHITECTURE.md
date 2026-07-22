@@ -2,8 +2,6 @@
 
 ## Philosophy
 
-AMLGraph is organized around the graph model rather than the data import process.
-
 The architecture separates business concepts from persistence concerns while keeping the codebase easy to navigate and understand.
 
 ---
@@ -40,9 +38,9 @@ Not responsible for:
 
 ---
 
-## Readers
+## Reader
 
-Reads external data sources and converts them into domain records.  Readers translate source data into the graph domain model.
+Reads external data sources and converts them into domain records.  Reader modules translate source data into the graph domain model.
 
 The structure of the input files does not have to mirror the structure of the domain model. A single source record may produce multiple domain objects if that better represents the business concepts.
 
@@ -65,9 +63,9 @@ Not responsible for:
 
 External data is converted into domain objects before any business rules are applied.  Validation occurs after parsing and before graph creation.
 
-Each validator has a single responsibility and operates only on domain objects. Readers are responsible for parsing; validators are responsible for business rules; graph modules are responsible for persistence.  This separation keeps parsing, validation, and graph construction independent and testable.
+Each validator has a single responsibility and operates only on domain objects. Each reader are responsible for parsing; validators are responsible for business rules; graph modules are responsible for persistence.  This separation keeps parsing, validation, and graph construction independent and testable.
 
-Validation returns a validated entity and information on entities that could not be validated.
+Validation returns a validated entity and information on entities that could not be validated. Validation never modifies domain objects. It either accepts them or rejects them.
 
 ---
 
@@ -128,77 +126,9 @@ Responsibilities:
 
 # Naming Conventions
 
-## Readers modules
-
-```
-Readers.Customer
-Readers.Account
-Readers.Transaction
-```
-
-Each exposes a primary `read` function.
-
-Example:
-
-```fsharp
-Readers.Customer.read customers
-```
-
----
-
-## Validation modules
-
-```
-Validation.Customer
-Validation.Account
-Validation.Transaction
-```
-
-Each exposes a primary `validate` function.
-
-Example:
-
-```fsharp
-Validation.Customer.validate customers
-```
-
----
-
-## Node modules
-
-```
-Graph.Nodes.Customer
-Graph.Nodes.Account
-Graph.Nodes.Transaction
-```
-
-Each exposes a primary `create` function.
-
-Example:
-
-```fsharp
-Graph.Nodes.Customer.create customers
-```
-
----
-
-## Relationship modules
-
-```
-Graph.Relationships.Ownership
-Graph.Relationships.Transfer
-```
-
-Each exposes a primary `create` function.
-
-Example:
-
-```fsharp
-Graph.Relationships.Ownership.create ownerships
-```
----
-
-## Name predicates when they express a business concept, not just a programming operation
+Reader.Customer.read
+Validation.Customer.validate
+Graph.Nodes.Customer.create
 
 # Domain Organization
 
@@ -230,19 +160,8 @@ Presentation:
 
 # Async Strategy
 
-Neo4j operations are asynchronous because they involve network I/O.
-
-Readers currently remain synchronous because the application processes one file at a time.
-
-If future requirements involve concurrent file processing or streaming large datasets, asynchronous readers may be introduced.
-
-# Async v. Task Strategy
-
-AMLGraph uses F# async workflows at the application and graph layers.
-
+AMLGraph uses F# async workflows at the application and graph layers.  
 The Neo4j .NET driver is task-based, so the Infrastructure layer is responsible for converting Task-based APIs into F# Async workflows.
-
-## Async Boundary
 
 The dependency flow is:
 
@@ -269,6 +188,9 @@ Graph modules use async workflows:
 
 Program.fs orchestrates workflows using Async.RunSynchronously.
 
+Reader modules currently remain synchronous because the application processes one file at a time. 
+If future requirements involve concurrent file processing or streaming large datasets, asynchronous reader modules may be introduced.
+
 ## Design Rationale
 
 F# async workflows are used throughout the application because they provide a consistent programming model and keep .NET Task details isolated to the infrastructure layer.
@@ -276,18 +198,6 @@ F# async workflows are used throughout the application because they provide a co
 The application should not need to know whether an external dependency uses Task, Async, or another asynchronous abstraction.
 
 ---
-
-# Extension Strategy
-
-New graph concepts should generally require:
-
-1. A new domain record.
-1. A reader function.
-1. A validation function.
-1. A graph node or relationship module.
-1. Program orchestration.
-
-The architecture is intended to grow by extension rather than modification.
 
 # Graph Modeling Conventions
 
@@ -381,5 +291,11 @@ Create Account Nodes
       ↓
 Create Ownership Relationships
 
+# Coding Conventions
+
+* Name predicates after business concepts.
+* Prefer explicit helper functions over clever pipelines.
+* Use private for implementation details.
+* Public modules expose a single primary function where practical.
 
 

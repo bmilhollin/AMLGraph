@@ -4,7 +4,7 @@ open AMLGraph.Domain
 
 module Customer =
 
-    let private customersMatch left right =
+    let private customerAttributesMatch left right =
         left.FirstName = right.FirstName &&
         left.LastName = right.LastName &&
         left.DOB = right.DOB &&
@@ -46,7 +46,7 @@ module Customer =
 
             match group with
             | customer :: others ->
-                if List.forall (customersMatch customer) others then
+                if List.forall (customerAttributesMatch customer) others then
 
                     validCustomers.Add(customer)
 
