@@ -32,9 +32,6 @@ module Customer =
             customers
             |> List.groupBy (fun a -> a.CustomerId)
 
-        // Partition customer groups into:
-        //   • singleton groups (implicitly valid)
-        //   • duplicate groups (require validation)
         let singletonGroups, duplicateGroups =
             groups
             |> List.partition isSingleton
@@ -42,11 +39,9 @@ module Customer =
         let validCustomers = ResizeArray<Customer>()
         let errors = ResizeArray<ValidationError>()
 
-        // Add singletonGroups to validCustomers
         for (_, group) in singletonGroups do
             validCustomers.Add(group.Head)
 
-        // Validate groups with duplicates
         for (_, group) in duplicateGroups do
 
             match group with
