@@ -38,7 +38,10 @@ module Neo4j =
                                     cypher,
                                     parameters)
 
-                            return () //RunAsync returns an IResultCursor that we don't need to consume since we are writing
+                            // RunAsync returns an IResultCursor.
+                            // Constraint creation and MERGE statements do not produce results that this application needs.
+                            return ()        
+
                         })
                 |> Async.AwaitTask
         }

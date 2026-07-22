@@ -2,7 +2,7 @@ namespace AMLGraph.Infrastructure
 
 module Schema =
 
-    let private schemaStatements =
+    let private constraints =
         [
             """
             CREATE CONSTRAINT customer_id_key
@@ -19,12 +19,13 @@ module Schema =
             """
         ]
 
-    let initialize () =
+    let initializeAsync () =
         async {
-            for statement in schemaStatements do
+            for statement in constraints do
 
                 do!
-                    Neo4j.executeWriteAsync // not officially writing, but this executes constraints
+                    // Constraint creation executes inside a write transaction
+                    Neo4j.executeWriteAsync 
                         statement
                         (dict [])
 

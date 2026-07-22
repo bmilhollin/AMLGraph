@@ -5,7 +5,7 @@ type AccountId = AccountId of string
 type InstitutionId = InstitutionId of string
 
 
-module EntityId =
+module EntityIds =
     
     let customerIdValue (CustomerId id) = id
     let accountIdValue (AccountId id) = id
@@ -60,10 +60,6 @@ type ValidationError =
         Entity: EntityKey
         Issue: ValidationIssue
     }
-
-type AccountImportStatus =
-    | Valid of Account
-    | Conflicted of ValidationError
 
 type Validated<'T> =
     {

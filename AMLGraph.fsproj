@@ -9,8 +9,8 @@
     <Compile Include="Domain\Domain.fs" />
     <Compile Include="Infrastructure\Neo4j.fs" />
     <Compile Include="Infrastructure\Schema.fs" />
-    <Compile Include="Readers\Customer.fs" />
-    <Compile Include="Readers\Account.fs" />
+    <Compile Include="Reader\Customer.fs" />
+    <Compile Include="Reader\Account.fs" />
     <Compile Include="Validation\Account.fs" /> 
     <Compile Include="Validation\Customer.fs" />
     <Compile Include="Validation\Ownership.fs" />

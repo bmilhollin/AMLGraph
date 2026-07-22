@@ -1,4 +1,4 @@
-namespace AMLGraph.Readers
+namespace AMLGraph.Reader
 
 open System.IO
 open AMLGraph.Domain
@@ -17,6 +17,9 @@ module Customer =
                 let line = reader.ReadLine()
 
                 let fields = line.Split('\t')
+
+                if fields.Length <> 6 then
+                    failwith $"Unexpected customer record: {line}"
 
                 yield
                     {

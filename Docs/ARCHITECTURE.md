@@ -49,15 +49,25 @@ The structure of the input files does not have to mirror the structure of the do
 Responsibilities:
 
 * Parse
-* Validate
 * Normalize
 * Split one source row into multiple domain objects
 
 Not responsible for:
 
+* Validate
 * Neo4j
 * Graph relationships
 * Cypher
+
+---
+
+## Validation
+
+External data is converted into domain objects before any business rules are applied.  Validation occurs after parsing and before graph creation.
+
+Each validator has a single responsibility and operates only on domain objects. Readers are responsible for parsing; validators are responsible for business rules; graph modules are responsible for persistence.  This separation keeps parsing, validation, and graph construction independent and testable.
+
+Validation returns a validated entity and information on entities that could not be validated.
 
 ---
 
@@ -73,10 +83,10 @@ Graph
 
 Responsibilities:
 
+* Parameter mapping
+* Cypher
 * Node creation
 * Relationship creation
-* Cypher
-* Parameter mapping
 
 Not responsible for:
 
@@ -85,9 +95,15 @@ Not responsible for:
 
 ---
 
-## Neo4j
+## Infrastructure
 
-Contains infrastructure concerns.
+Contains Neo4j infrastructure concerns.
+
+```
+Infrastructure
+├── Neo4j
+└── Schema
+```
 
 Responsibilities:
 
@@ -111,6 +127,42 @@ Responsibilities:
 ---
 
 # Naming Conventions
+
+## Readers modules
+
+```
+Readers.Customer
+Readers.Account
+Readers.Transaction
+```
+
+Each exposes a primary `read` function.
+
+Example:
+
+```fsharp
+Readers.Customer.read customers
+```
+
+---
+
+## Validation modules
+
+```
+Validation.Customer
+Validation.Account
+Validation.Transaction
+```
+
+Each exposes a primary `validate` function.
+
+Example:
+
+```fsharp
+Validation.Customer.validate customers
+```
+
+---
 
 ## Node modules
 
@@ -144,8 +196,9 @@ Example:
 ```fsharp
 Graph.Relationships.Ownership.create ownerships
 ```
-
 ---
+
+## Name predicates when they express a business concept, not just a programming operation
 
 # Domain Organization
 
@@ -212,7 +265,6 @@ Infrastructure functions expose Async results:
 Graph modules use async workflows:
 
 - Graph.Nodes.Customer.create
-- Graph.Nodes.Account.create
 - Graph.Relationships.Ownership.create
 
 Program.fs orchestrates workflows using Async.RunSynchronously.
@@ -230,9 +282,10 @@ The application should not need to know whether an external dependency uses Task
 New graph concepts should generally require:
 
 1. A new domain record.
-2. A reader function.
-3. A graph node or relationship module.
-4. Program orchestration.
+1. A reader function.
+1. A validation function.
+1. A graph node or relationship module.
+1. Program orchestration.
 
 The architecture is intended to grow by extension rather than modification.
 
@@ -279,7 +332,7 @@ Example:
 Customer.customerId
 Account.accountId
 
-Neo4j constraints should enforce uniqueness for node identities.
+Neo4j constraints should enforce uniqueness for node identities.  These contraints are found in Infrastructure.Schema.
 
 ## Account Ownership Modeling
 
@@ -293,7 +346,7 @@ An account may have multiple associated customers. Modeling ownership as a relat
 
 Consequence:
 
-Account nodes represent accounts independently. Ownership relationships represent customer associations.
+Account nodes represent accounts independently. Ownership relationships represent customer associations.  The Account does not contain any ownership information.
 
 ## Relationship Integrity
 
@@ -301,9 +354,9 @@ Relationships are created only between existing nodes.
 
 The import workflow creates nodes before relationships:
 
-1. Load Customer nodes
-2. Load Account nodes
-3. Validate relationship references
+1. Load and validate Customer nodes
+2. Load and validate Account nodes
+3. Validate relationship references (do the nodes exist? did they survive validation?)
 4. Create relationships
 
 Missing referenced nodes are treated as data quality issues rather than automatically creating incomplete nodes.
@@ -312,28 +365,21 @@ The system should not create placeholder nodes from relationship data alone beca
 
 ## Import Pipeline
 
-Source Data
-    |
-    ▼
-Domain Objects
-    |
-    ▼
-Node Creation
-    |
-    ▼
-Relationship Validation
-    |
-    ▼
-Relationship Creation
+Read Customers
+      ↓
+Validate Customers
+      ↓
+Read Accounts + Ownerships
+      ↓
+Validate Accounts
+      ↓
+Validate Ownerships
+      ↓
+Create Customer Nodes
+      ↓
+Create Account Nodes
+      ↓
+Create Ownership Relationships
 
-## Validation Pipeline
 
-External data is converted into domain objects before any business rules are applied.
 
-Validation occurs after parsing and before graph creation.
-
-Each validator has a single responsibility and operates only on domain objects. Readers are responsible for parsing; validators are responsible for business rules; graph modules are responsible for persistence.
-
-This separation keeps parsing, validation, and graph construction independent and testable.
-
-# Name predicates when they express a business concept, not just a programming operation

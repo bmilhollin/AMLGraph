@@ -40,6 +40,7 @@ AMLGraph
 │
 ├── Domain
 ├── Readers
+├── Validation
 ├── Graph
 │   ├── Nodes
 │   └── Relationships
@@ -53,19 +54,21 @@ AMLGraph
 ## Data Flow
 
 ```
-Delimited Files
-      │
-      ▼
-Readers
-      │
-      ▼
-Domain Records
-      │
-      ▼
-Graph Nodes / Relationships
-      │
-      ▼
-Neo4j
+Read Customers
+      ↓
+Validate Customers
+      ↓
+Read Accounts + Ownerships
+      ↓
+Validate Accounts
+      ↓
+Validate Ownerships
+      ↓
+Create Customer Nodes
+      ↓
+Create Account Nodes
+      ↓
+Create Ownership Relationships
 ```
 
 ---
@@ -74,15 +77,15 @@ Neo4j
 
 Completed
 
-* Customer node import
 * Schema initialization
-* Duplicate prevention
+* Customer node import and validation
+* Account and Ownership node import and validation
+* Node creation for Customers and Accounts
+* Relationship creation for Ownership (Customer)-[:OWNS]->(Account)
 * Basic project architecture
 
 Planned
 
-* Account nodes
-* Customer ownership relationships
 * Transactions
 * Transfers
 * Entity Resolution

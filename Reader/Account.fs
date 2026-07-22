@@ -1,7 +1,11 @@
-namespace AMLGraph.Readers
+namespace AMLGraph.Reader
 
 open System.IO
 open AMLGraph.Domain
+
+// The Account.tsv file contains account and ownership information.
+// There is no distinct reader for ownership information.
+// Ownership information is read in with account information using the account reader.
 
 module Account =
 

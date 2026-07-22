@@ -7,11 +7,11 @@ async {
 
     do! Neo4j.verifyConnectionAsync ()
 
-    do! Schema.initialize ()
+    do! Schema.initializeAsync ()
 
     // read and validate customers
     let customers = 
-        Readers.Customer.read "Data/Customers.tsv"
+        Reader.Customer.read "Data/Customers.tsv"
     printfn "Read %d customers" customers.Length
 
     let validatedCustomers =
@@ -23,7 +23,7 @@ async {
 
     // read and validate accounts and ownerships
     let accounts, ownerships = 
-        Readers.Account.read "Data/Accounts.tsv"
+        Reader.Account.read "Data/Accounts.tsv"
         // Readers.Account.read "TestData/Accounts.tsv"
     printfn "Read %d accounts" accounts.Length
     printfn "Read %d ownerships" ownerships.Length

@@ -82,7 +82,7 @@ Readers remain synchronous.
 
 Database communication benefits from asynchronous execution.
 
-Current file processing is sequential and gains little from asynchronous complexity.
+Current file processing is necssarily sequential (customers before accounts) and gains little from asynchronous complexity.
 
 ---
 
@@ -150,9 +150,9 @@ Consequences:
 
 Decision:
 
-When multiple source records share an AccountId, the account is only imported if all account attributes agree.
+When multiple source records share an AccountId, the account is only imported if all account attributes agree except the CustomerId.  Multiple Customers can own the same account, but the other account identifying information must be consistent.
 
-If conflicting account attributes are found, the account is excluded from the graph along with associated ownership relationships.
+If conflicting account attributes are found (beyond CustomerId), the account is excluded from the graph along with associated ownership relationships.
 
 Rationale:
 

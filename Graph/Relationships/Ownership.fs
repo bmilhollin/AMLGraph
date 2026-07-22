@@ -7,8 +7,8 @@ module Ownership =
 
     let private toParameters (ownership:Ownership) =
         dict [
-            "customerId", box (EntityId.customerIdValue ownership.CustomerId)
-            "accountId", box (EntityId.accountIdValue ownership.AccountId)
+            "customerId", box (EntityIds.customerIdValue ownership.CustomerId)
+            "accountId", box (EntityIds.accountIdValue ownership.AccountId)
         ]
 
     let create (ownerships:Ownership list) =
