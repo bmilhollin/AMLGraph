@@ -124,11 +124,36 @@ Responsibilities:
 
 ---
 
+# Testing
+
+AMLGraph.Tests contains automated tests for business rules and domain behavior.
+
+Tests are organized to mirror production concepts.
+
+Example:
+Validation
+├── Customer
+├── Account
+└── Ownership
+
+Test data is maintained separately from production code.
+
+Synthetic test data is used to ensure tests contain no production records or personally identifiable information.
+
 # Naming Conventions
 
-Reader.Customer.read
-Validation.Customer.validate
-Graph.Nodes.Customer.create
+Examples
+- Reader.Customer.read
+- Validation.Customer.validate
+- Graph.Nodes.Customer.create
+
+## Synthetic Test Data
+
+Test data modules use the prefix `Synthetic` to distinguish generated test data from domain entities.  Synthetic data is intentionally created for testing and contains no production records.
+
+Examples
+- SyntheticCustomer.john
+- SyntheticAccount.checkingAccount
 
 # Domain Organization
 
@@ -191,7 +216,7 @@ Program.fs orchestrates workflows using Async.RunSynchronously.
 Reader modules currently remain synchronous because the application processes one file at a time. 
 If future requirements involve concurrent file processing or streaming large datasets, asynchronous reader modules may be introduced.
 
-## Design Rationale
+Design Rationale:
 
 F# async workflows are used throughout the application because they provide a consistent programming model and keep .NET Task details isolated to the infrastructure layer.
 

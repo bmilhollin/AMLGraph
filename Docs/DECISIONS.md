@@ -191,3 +191,46 @@ Examples:
 type CustomerId = CustomerId of string
 type AccountId = AccountId of string
 type InstitutionId = InstitutionId of string
+```
+---
+
+## 2026-07-23
+
+### Synthetic Test Data
+
+Decision:
+
+Test fixtures will use synthetic data rather than copied production-like records.
+
+Example:
+
+```fsharp
+CustomerId "SYN-C001"
+```
+
+Rationale:
+
+AML applications often process sensitive customer information. Synthetic identifiers and records make it clear that test data is not production data and prevent accidental exposure of PII.
+
+Consequences:
+
+- Test data remains safe to share.
+- Developers can recognize synthetic records immediately.
+- Test fixtures remain independent from source datasets.
+
+---
+
+### Expecto Testing Framework
+
+Decision:
+
+Use Expecto for automated testing.
+
+Rationale:
+
+Expecto provides a lightweight, idiomatic F# testing framework and integrates well with .NET tooling.
+
+Consequences:
+
+- Tests remain executable F# code.
+- Test organization can follow domain concepts.
