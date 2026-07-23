@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <Compile Include="SyntheticCustomer.fs" />
-    <Compile Include="Library.fs" />
   </ItemGroup>
 
   <ItemGroup>
