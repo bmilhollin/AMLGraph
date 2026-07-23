@@ -131,10 +131,12 @@ AMLGraph.Tests contains automated tests for business rules and domain behavior.
 Tests are organized to mirror production concepts.
 
 Example:
+```text
 Validation
 ├── Customer
 ├── Account
 └── Ownership
+```
 
 Test data is maintained separately from production code.
 
@@ -190,6 +192,8 @@ The Neo4j .NET driver is task-based, so the Infrastructure layer is responsible 
 
 The dependency flow is:
 
+
+```text
 Neo4j Driver
     |
     | Task
@@ -199,7 +203,7 @@ Infrastructure.Neo4j
     | Async
     ▼
 Graph / Program
-
+```
 
 Infrastructure functions expose Async results:
 
