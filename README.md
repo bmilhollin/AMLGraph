@@ -18,7 +18,7 @@ Its goals are to:
 ## Current Features
 
 * Read AML data from tab-delimited files
-• Validate customer, account, and ownership data
+* Validate customer, account, and ownership data
 * Create Neo4j nodes using `MERGE`
 * Enforce uniqueness with Neo4j constraints
 * Organize graph logic separately from business logic
@@ -41,16 +41,29 @@ Its goals are to:
 ```text
 AMLGraph
 │
-├── Domain
-├── Reader
-├── Validation
-├── Graph
-│   ├── Nodes
-│   └── Relationships
-Infrastructure
-│     ├── Neo4j
-│     └── Schema
-└── Program
+├── AMLGraph.slnx
+│
+├── AMLGraph.App
+│   ├── Program.fs
+│   ├── Reader
+│   ├── Graph
+│   └── Infrastructure
+│
+├── AMLGraph.Domain
+│   ├── Domain.fs
+│   └── Validation
+│       ├── Customer.fs
+│       ├── Account.fs
+│       └── Ownership.fs
+│
+├── AMLGraph.SyntheticData
+│   └── SyntheticCustomer.fs
+│
+├── AMLGraph.Tests
+│   └── Validation
+│       └── Customer.fs
+│
+└── Docs
 ```
 
 ---

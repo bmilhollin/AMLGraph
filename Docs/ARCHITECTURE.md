@@ -300,6 +300,7 @@ The system should not create placeholder nodes from relationship data alone beca
 
 ## Import Pipeline
 
+```text
 Read Customers
       ↓
 Validate Customers
@@ -315,6 +316,7 @@ Create Customer Nodes
 Create Account Nodes
       ↓
 Create Ownership Relationships
+```
 
 # Coding Conventions
 
