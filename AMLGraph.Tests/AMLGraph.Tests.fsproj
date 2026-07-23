@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AMLGraph\AMLGraph.fsproj" />
+    <ProjectReference Include="..\AMLGraph.App\AMLGraph.App.fsproj" />
   </ItemGroup>
 
 </Project>

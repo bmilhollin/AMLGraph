@@ -1,4 +1,4 @@
-﻿module AMLGraph.App.Program
+﻿module AMLGraph.Program
 
 open AMLGraph.Domain
 open AMLGraph.Infrastructure
