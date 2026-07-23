@@ -9,4 +9,8 @@
     <Compile Include="Library.fs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AMLGraph.Domain\AMLGraph.Domain.fsproj" />
+  </ItemGroup>
+
 </Project>

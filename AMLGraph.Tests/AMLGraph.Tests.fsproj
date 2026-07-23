@@ -16,7 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AMLGraph.App\AMLGraph.App.fsproj" />
+    <ProjectReference Include="..\AMLGraph.SyntheticData\AMLGraph.SyntheticData.fsproj" />
+    <ProjectReference Include="..\AMLGraph.Domain\AMLGraph.Domain.fsproj" />
   </ItemGroup>
 
 </Project>
