@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="TestData\Customer.fs" />
     <Compile Include="Validation\Customer.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

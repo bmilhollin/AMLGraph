@@ -1,4 +1,4 @@
-namespace AMLGraph.Tests.TestData
+namespace AMLGraph.SyntheticData
 
 open AMLGraph.Domain
 

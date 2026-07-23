@@ -4,7 +4,7 @@ open Expecto
 
 open AMLGraph.Domain
 open AMLGraph.Validation
-open AMLGraph.Tests.TestData
+open AMLGraph.SyntheticData
 
 module Customer =
 
