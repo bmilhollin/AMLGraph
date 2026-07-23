@@ -51,11 +51,6 @@ async {
     do! Graph.Relationships.Ownership.create validatedOwnerships.Valid
 
     Neo4j.driver.Dispose()
-
-    // it would be nice to see the number of customers read, the number of customers validated, and the number of customer nodes created
-    // to see the all together, so you can see if there are validation issues or node creation issues
-    // TODO: Add logic to print the number of customer nodes created
-
         
 }
 |> Async.RunSynchronously
