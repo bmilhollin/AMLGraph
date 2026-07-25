@@ -23,6 +23,7 @@ AMLGraph instead explores how to design a graph application from the ground up u
 
 ##Current Status
 
+```text
 ✔ Customer import
 ✔ Account import
 ✔ Validation
@@ -30,6 +31,7 @@ AMLGraph instead explores how to design a graph application from the ground up u
 ◻ Transactions
 ◻ Entity Resolution
 ◻ Investigations
+```
 
 ---
 
