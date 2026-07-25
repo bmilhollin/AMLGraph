@@ -2,20 +2,19 @@
 
 ## Philosophy
 
-The architecture separates business concepts from persistence concerns while keeping the codebase easy to navigate and understand.
+The architecture separates data wrangling from business concepts from persistence concerns while keeping the codebase easy to navigate and understand.
 
 ---
 
 # Guiding Principles
 
-1. Favor readability over cleverness.
-2. Prefer explicit code over hidden behavior.
-3. Build around the graph model.
-4. Delay abstraction until there is a demonstrated need.
-5. Keep business concepts independent of Neo4j.
-6. Keep modules cohesive.
-7. Optimize only after measuring.
-8. Isolate external technology details at system boundaries.
+1. Favor readability over cleverness
+2. Prefer explicit code over hidden behavior
+3. Build around the graph model
+4. Delay abstraction until there is a demonstrated need
+5. Keep business concepts independent of Neo4j
+7. Optimize only after measuring
+8. Isolate external technology details at system boundaries
 
 ---
 
@@ -23,11 +22,12 @@ The architecture separates business concepts from persistence concerns while kee
 
 ## Domain
 
-Defines the business concepts used throughout the application.
+Defines the business concepts used throughout the application
 
 Responsibilities:
 
 * Domain records
+* Validation
 * Business vocabulary
 
 Not responsible for:

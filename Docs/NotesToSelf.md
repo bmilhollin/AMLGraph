@@ -108,3 +108,15 @@ AMLGraph
 │   └── ...
 │
 └── Program.fs
+
+AMLGraph.App
+    Orchestration, Reader, Graph, Infrastructure
+
+AMLGraph.Domain
+    Domain types + Validation
+
+AMLGraph.SyntheticData
+    Reusable synthetic domain objects
+
+AMLGraph.Tests
+    Tests only

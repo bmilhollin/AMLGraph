@@ -234,3 +234,17 @@ Consequences:
 
 - Tests remain executable F# code.
 - Test organization can follow domain concepts.
+
+---
+
+## 2026-07-24
+
+### Domain Library Extraction
+
+Decision:
+
+Domain concepts and validation rules are isolated into AMLGraph.Domain.
+
+Reason:
+
+Multiple consumers require business concepts independently of application orchestration.
