@@ -6,33 +6,33 @@ open AMLGraph.Domain
 open AMLGraph.Validation
 open AMLGraph.SyntheticData
 
-module Customer =
+module Account =
 
     [<Tests>]
     let tests =
 
-        testList "Customer Validation" [
+        testList "Account Validation" [
 
             testCase 
-                "A single customer with unique CustomerId is valid"
+                "A single account with unique AccountId is valid"
                 (fun () ->
 
                     // Arrange
-                    let customers =
+                    let accounts =
                         [
-                            SyntheticCustomer.john
+                            SyntheticAccount.a100
                         ]
 
                     
                     // Act
                     let result =
-                        Customer.validate customers
+                        Account.validate accounts
 
                     // Assert
                     Expect.equal
                         result.Valid.Length
                         1
-                        "Expected 1 valid customer"
+                        "Expected 1 valid account"
 
                     Expect.isEmpty
                         result.Errors
@@ -40,26 +40,26 @@ module Customer =
                 )
 
             testCase 
-                "Duplicate customerIds with identical attributes produce one valid customer" 
+                "Duplicate accountIds with identical attributes produce one valid account" 
                 (fun () ->
 
                     // Arrange
-                    let customers =
+                    let accounts =
                         [
-                            SyntheticCustomer.john
-                            SyntheticCustomer.john
+                            SyntheticAccount.a100
+                            SyntheticAccount.a100
                         ]
 
                     
                     // Act
                     let result =
-                        Customer.validate customers
+                        Account.validate accounts
 
                     // Assert
                     Expect.equal
                         result.Valid.Length
                         1
-                        "Expected 1 valid customer"
+                        "Expected 1 valid account"
 
                     Expect.isEmpty
                         result.Errors
@@ -67,23 +67,23 @@ module Customer =
                 )
 
             testCase
-                "Duplicate customerIds with conflicting attributes are rejected"
+                "Duplicate accountIds with conflicting attributes are rejected"
                 (fun () ->
                     // Arrange
-                    let customers =
+                    let accounts =
                         [
-                            SyntheticCustomer.john
-                            SyntheticCustomer.johnDifferentOccupation
+                            SyntheticAccount.a100
+                            SyntheticAccount.a100DifferentBalance
                         ]
 
                     // Act
                     let result =
-                        Customer.validate customers
+                        Account.validate accounts
                         
                     // Assert
                     Expect.isEmpty
                         result.Valid
-                        "Expected 0 valid customers"
+                        "Expected 0 valid accounts"
 
                     Expect.hasLength
                         result.Errors
@@ -94,37 +94,37 @@ module Customer =
 
                     Expect.equal
                         error.Issue
-                        ConflictingCustomerAttributes
-                        "Expected conflicting customer attributes error"
+                        ConflictingAccountAttributes
+                        "Expected conflicting account attributes error"
 
                     Expect.equal
                         error.Entity
-                        (CustomerKey SyntheticCustomer.john.CustomerId)
-                        "Expected error to reference the conflicting customer"
+                        (AccountKey SyntheticAccount.a100.AccountId)
+                        "Expected error to reference the conflicting account"
                                     )
 
             testCase
-                "Conflicting customerId groups do not prevent valid customer groups from being imported"
+                "Conflicting account groups do not prevent valid account groups from being imported"
                 (fun () ->
                     // Arrange
-                    let customers =
+                    let accounts =
                         [
-                            SyntheticCustomer.john
-                            SyntheticCustomer.johnDifferentOccupation
-                            SyntheticCustomer.mary
-                            SyntheticCustomer.mary
-                            SyntheticCustomer.james
+                            SyntheticAccount.a100
+                            SyntheticAccount.a100DifferentBalance
+                            SyntheticAccount.a200
+                            SyntheticAccount.a300
+                            SyntheticAccount.a300
                         ]
 
                     // Act
                     let result =
-                        Customer.validate customers
+                        Account.validate accounts
                         
                     // Assert
                     Expect.hasLength
                         result.Valid
                         2
-                        "Expected 2 valid customers"
+                        "Expected 2 valid accounts"
 
                     Expect.hasLength
                         result.Errors
@@ -135,27 +135,27 @@ module Customer =
 
                     Expect.equal
                         error.Issue
-                        ConflictingCustomerAttributes
-                        "Expected conflicting customer attributes error"
+                        ConflictingAccountAttributes
+                        "Expected conflicting account attributes error"
 
                     Expect.equal
                         error.Entity
-                        (CustomerKey SyntheticCustomer.john.CustomerId)
-                        "Expected error to reference the conflicting customer"
+                        (AccountKey SyntheticAccount.a100.AccountId)
+                        "Expected error to reference the conflicting account"
 
                     let validIds =
                         result.Valid
-                        |> List.map (fun c -> c.CustomerId)
+                        |> List.map (fun c -> c.AccountId)
                         |> Set.ofList
 
                     Expect.equal
                         validIds
                         (   
                             set [
-                                    SyntheticCustomer.mary.CustomerId
-                                    SyntheticCustomer.james.CustomerId
+                                    SyntheticAccount.a200.AccountId
+                                    SyntheticAccount.a300.AccountId
                                 ]
                         )
-                        "Expected Mary and James to be valid customers"
+                        "Expected a200 and a300 to be valid accounts"
                 )
         ]

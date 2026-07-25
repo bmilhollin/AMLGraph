@@ -115,11 +115,11 @@ Planned
 
 New graph concepts should generally require:
 
-1. A new domain record.
-1. A reader function.
-1. A validation function.
-1. A graph node or relationship module.
-1. Program orchestration.
+1. A new domain record
+1. A reader function
+1. A validation function
+1. A graph node or relationship module
+1. Program orchestration
 
 The architecture is intended to grow by extension rather than modification.
 
