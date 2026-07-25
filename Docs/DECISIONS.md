@@ -248,3 +248,28 @@ Domain concepts and validation rules are isolated into AMLGraph.Domain.
 Reason:
 
 Multiple consumers require business concepts independently of application orchestration.
+
+---
+
+## 2026-07-25
+
+### Account Key Simplification
+
+Decision:
+
+AccountId is assumed to be globally unique. Real financial systems typically require (InstitutionId, AccountId) to uniquely identify an account
+
+Reason:
+
+This simplification keeps the example focused on graph modeling and validation. The model may be revised when institutions become first-class entities in the graph.
+
+### Currency
+
+Decision:
+
+All monetary values are assumed to be in U.S. dollars (USD). 
+
+Reason:
+
+Currency is intentionally omitted from the domain model to keep the project focused on graph modeling and 
+AML concepts. Multi-currency support can be introduced later by modeling monetary values as a Money type.
