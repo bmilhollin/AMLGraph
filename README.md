@@ -6,18 +6,30 @@
   <img src="Docs/images/amlgraph-overview.png" width="850">
 </p>
 
-AMLGraph is a learning project...t and reference implementation for building Anti-Money Laundering (AML) graph applications using **F#** and **Neo4j**.
+AMLGraph is a learning project and reference implementation for building Anti-Money Laundering (AML) graph applications using F# and Neo4j. The project emphasizes clean architecture, domain modeling, and graph-based analysis over framework complexity or premature optimization
 
-The project is intentionally designed to favor **clarity, maintainability, and idiomatic F#** over framework complexity or premature optimization.
+## Why this project?
 
-AMLGraph is organized around the graph model rather than the data import process.
+Many Neo4j examples focus on Cypher queries or graph algorithms.
 
-Its goals are to:
+AMLGraph instead explores how to design a graph application from the ground up using clean domain modeling, validation, and explicit architectural boundaries. The project intentionally favors readability and maintainability over framework magic.
+
+## Goals
 
 * Learn Neo4j and Cypher through a realistic AML domain.
 * Explore graph modeling techniques used in fraud detection and financial crime.
 * Demonstrate a clean F# architecture for graph applications.
 * Serve as a foundation for experimenting with graph algorithms, entity resolution, and AML analytics.
+
+##Current Status
+
+✔ Customer import
+✔ Account import
+✔ Validation
+✔ Tests
+◻ Transactions
+◻ Entity Resolution
+◻ Investigations
 
 ---
 
