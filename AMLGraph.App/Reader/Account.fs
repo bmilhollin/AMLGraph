@@ -41,7 +41,7 @@ module Account =
                     {
                         AccountId = accountId
                         InstitutionId = institutionId
-                        AccountType = fields[3].Trim()
+                        AccountType = fields[3].Trim() |> AccountType.ofString
                         OpenDate = fields[4].Trim()
                         Balance = decimal fields[5]
                     },

@@ -9,7 +9,7 @@ module Account =
         dict [
             "accountId", box (EntityIds.accountIdValue account.AccountId)
             "institutionId", box (EntityIds.institutionIdValue account.InstitutionId)
-            "accountType", box account.AccountType
+            "accountType", box (AccountType.value account.AccountType)
             "openDate", box account.OpenDate
             "balance", box account.Balance
         ]

@@ -11,6 +11,14 @@ module EntityIds =
     let accountIdValue (AccountId id) = id
     let institutionIdValue (InstitutionId id) = id
 
+type AccountType =
+    | Checking
+    | Savings
+    | Business
+    | CreditCard
+    | Loan
+    | Brokerage
+
 type Customer =
     {
         CustomerId: CustomerId
@@ -33,7 +41,7 @@ type Account =
     {
         AccountId: AccountId
         InstitutionId: InstitutionId
-        AccountType: string
+        AccountType: AccountType
         OpenDate: string
         Balance: decimal
     }
@@ -66,3 +74,22 @@ type Validated<'T> =
         Valid: 'T
         Errors: ValidationError list
     }
+
+module AccountType =
+
+    let ofString = function
+        | "Checking" -> Checking
+        | "Savings" -> Savings
+        | "Business" -> Business
+        | "Credit Card" -> CreditCard
+        | "Loan" -> Loan
+        | "Brokerage" -> Brokerage
+        | value -> failwith $"Unknown account type '{value}'."
+
+    let value = function
+        | Checking -> "Checking"
+        | Savings -> "Savings"
+        | Business -> "Business"
+        | CreditCard -> "Credit Card"
+        | Loan -> "Loan"
+        | Brokerage -> "Brokerage"
