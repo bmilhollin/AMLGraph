@@ -28,6 +28,8 @@ module Account =
     /// and the account will not be used in the graph. Conflicted accounts are captured for review.
     let validate (accounts: Account list) : Validated<Account list> =
 
+        // Are these rows one consistent account?
+
         let groups =
             accounts
             |> List.groupBy (fun a -> a.AccountId)

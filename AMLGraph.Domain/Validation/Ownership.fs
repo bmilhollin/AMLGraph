@@ -18,6 +18,8 @@ module Ownership =
 
     let private validateOwnership validCustomerIds validAccountIds ownership =
 
+        // Do these relationships reference existing entities?
+
         let customerExists =
             Set.contains ownership.CustomerId validCustomerIds
 
