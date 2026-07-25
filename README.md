@@ -62,6 +62,7 @@ AMLGraph
 ├── AMLGraph.Tests
 │   └── Validation
 │       └── Customer.fs
+│       └── Accounts.fs
 │
 └── Docs
 ```
@@ -100,6 +101,7 @@ Completed
 * Node creation for Customers and Accounts
 * Relationship creation for Ownership (Customer)-[:OWNS]->(Account)
 * Basic project architecture
+* Initial test suite
 
 Planned
 
