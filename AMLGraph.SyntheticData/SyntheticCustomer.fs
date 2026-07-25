@@ -38,3 +38,19 @@ module SyntheticCustomer =
             Occupation = "Nurse"
             RiskRating = 1
         }
+
+    let maryDifferentOccupation =
+        {
+            mary with
+                Occupation = "Accountant"
+        }
+
+    let james =
+        {
+            CustomerId = CustomerId "SYN-C003"
+            FirstName = "James"
+            LastName = "Browning"
+            DOB = "1985-07-22"
+            Occupation = "Software Engineer"
+            RiskRating = 3
+        }
