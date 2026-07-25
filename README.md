@@ -2,9 +2,7 @@
 
 > Building Anti-Money Laundering graph applications with F#, Neo4j, and a domain-driven architecture.
 
-<p align="center">
-  <img src="Docs/images/amlgraph-overview.png" width="850">
-</p>
+![Customer Account Graph](Docs/images/customer-account-graph.png)
 
 AMLGraph is a learning project and reference implementation for building Anti-Money Laundering (AML) graph applications using F# and Neo4j. The project emphasizes clean architecture, domain modeling, and graph-based analysis over framework complexity or premature optimization
 
