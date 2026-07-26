@@ -28,8 +28,6 @@ module Customer =
     /// and the customer will not be used in the graph. Conflicted customers are captured for review.
     let validate (customers: Customer list) : Validated<Customer list> =
 
-        // Are these rows one consistent customer?
-
         let groups =
             customers
             |> List.groupBy (fun a -> a.CustomerId)
