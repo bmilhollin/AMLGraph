@@ -9,8 +9,10 @@ let main argv =
         []
         argv
         (
-            testList "AMLGraph.Tests" [
-                Validation.Customer.tests
-                Validation.Account.tests
-            ]
+            testList "AMLGraph.Tests" 
+                [
+                    Validation.Customer.tests
+                    Validation.Account.tests
+                    Validation.Ownership.tests
+                ]
         )

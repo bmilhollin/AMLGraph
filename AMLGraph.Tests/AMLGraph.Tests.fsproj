@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="Validation\Customer.fs" />
     <Compile Include="Validation\Account.fs" />
+    <Compile Include="Validation\Ownership.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
