@@ -6,7 +6,7 @@
     <img src="Docs/images/neo4j.png" width="850">
 </p>
 
-AMLGraph is a learning project and reference implementation for building Anti-Money Laundering (AML) graph applications using F# and Neo4j. The project emphasizes clean architecture, domain modeling, and graph-based analysis over framework complexity or premature optimization
+AMLGraph is a learning project and reference implementation for building Anti-Money Laundering (AML) graph applications using F# and Neo4j. The project emphasizes clean architecture, domain modeling, and graph-based analysis over framework complexity or premature optimization.
 
 ## Why this project?
 
@@ -16,10 +16,10 @@ AMLGraph instead explores how to design a graph application from the ground up u
 
 ## Goals
 
-* Learn Neo4j and Cypher through a realistic AML domain.
-* Explore graph modeling techniques used in fraud detection and financial crime.
-* Demonstrate a clean F# architecture for graph applications.
-* Serve as a foundation for experimenting with graph algorithms, entity resolution, and AML analytics.
+* Learn Neo4j and Cypher through a realistic AML domain
+* Explore graph modeling techniques used in fraud detection and financial crime
+* Demonstrate a clean F# architecture for graph applications
+* Serve as a foundation for experimenting with graph algorithms, entity resolution, and AML analytics
 
 ##Current Status
 
@@ -27,10 +27,12 @@ AMLGraph instead explores how to design a graph application from the ground up u
 ✔ Customer import
 ✔ Account import
 ✔ Validation
-✔ Tests
+✔ Synthetic data Library
+✔ Expecto test suite
 ◻ Transactions
-◻ Entity Resolution
-◻ Investigations
+◻ Entity resolution
+◻ Graph analytics
+◻ AML investigations
 ```
 
 ---
@@ -79,11 +81,13 @@ AMLGraph
 ├── AMLGraph.SyntheticData
 │   └── SyntheticCustomer.fs
 │   └── SyntheticAccount.fs
+│   └── SyntheticOwnership.fs
 │
 ├── AMLGraph.Tests
 │   └── Validation
 │       └── Customer.fs
 │       └── Accounts.fs
+│       └── Ownerships.fs
 │
 └── Docs
 ```
@@ -112,28 +116,6 @@ Create Ownership Relationships
 
 ---
 
-## Current Status
-
-Completed
-
-* Schema initialization
-* Customer node import and validation
-* Account and Ownership node import and validation
-* Node creation for Customers and Accounts
-* Relationship creation for Ownership (Customer)-[:OWNS]->(Account)
-* Basic project architecture
-* Initial test suite
-
-Planned
-
-* Transactions
-* Transfers
-* Entity Resolution
-* Graph analytics
-* AML investigations
-
----
-
 # Extension Strategy
 
 New graph concepts should generally require:
@@ -145,16 +127,5 @@ New graph concepts should generally require:
 1. Program orchestration
 
 The architecture is intended to grow by extension rather than modification.
-
-## Design Goals
-
-The project favors:
-
-* Readability over cleverness
-* Explicit code over hidden behavior
-* Small, cohesive modules
-* Strong separation of concerns
-* Incremental development
-* Learning through implementation
 
 See **ARCHITECTURE.md** for architectural details and **DECISIONS.md** for the reasoning behind major design choices.
