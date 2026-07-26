@@ -49,7 +49,9 @@ module Ownership =
         (accounts: Account list) 
         (ownerships: Ownership list) : Validated<Ownership list> =
 
-        // Verify that every ownership references an existing customer and account.
+        let normalizedOwnerships =
+            ownerships
+            |> List.distinct
         
         let validCustomerIds =
             customers
@@ -64,7 +66,7 @@ module Ownership =
         let validOwnerships = ResizeArray<Ownership>()
         let errors = ResizeArray<ValidationError>()
 
-        for ownership in ownerships do
+        for ownership in normalizedOwnerships do
 
             let validOwnership, validationErrors =
                 validateOwnership validCustomerIds validAccountIds ownership
