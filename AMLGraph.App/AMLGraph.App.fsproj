@@ -10,6 +10,7 @@
     <Compile Include="Infrastructure\Schema.fs" />
     <Compile Include="Reader\Customer.fs" />
     <Compile Include="Reader\Account.fs" />
+    <Compile Include="Reader\Institution.fs" />
     <Compile Include="Graph\Nodes\Account.fs" />
     <Compile Include="Graph\Nodes\Customer.fs" />
     <Compile Include="Graph\Relationships\Ownership.fs" />

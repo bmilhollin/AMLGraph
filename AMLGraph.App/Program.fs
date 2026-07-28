@@ -21,15 +21,30 @@ async {
     if not validatedCustomers.Errors.IsEmpty then
         printfn "Found %d customer validation errors" validatedCustomers.Errors.Length
 
+    // read and validate institutions
+    let institutions =
+        Reader.Institution.read "Data/Institutions.tsv"
+    printfn "Read %d institutions" institutions.Length
+
+    let validatedInstitutions =
+        Validation.Institution.validate institutions
+    printfn "Validated %d institutions" validatedInstitutions.Valid.Length
+
+    if not validatedInstitutions.Errors.IsEmpty then
+        printfn "Found %d institution validation errors" validatedInstitutions.Errors.Length
+
     // read and validate accounts and ownerships
     let accounts, ownerships = 
         Reader.Account.read "Data/Accounts.tsv"
-        // Readers.Account.read "TestData/Accounts.tsv"
     printfn "Read %d accounts" accounts.Length
     printfn "Read %d ownerships" ownerships.Length
 
     let validatedAccounts =
-        Validation.Account.validate accounts
+        let validInstitutionIds =
+            validatedInstitutions.Valid
+            |> List.map (fun i -> i.InstitutionId)
+            |> Set.ofList
+        Validation.Account.validate validInstitutionIds accounts
     printfn "Validated %d accounts" validatedAccounts.Valid.Length
 
     if not validatedAccounts.Errors.IsEmpty then
@@ -47,6 +62,7 @@ async {
 
     // create graph nodes and relationships
     do! Graph.Nodes.Customer.create validatedCustomers.Valid
+    // do! Graph.Nodes.Institution.create validatedInstitutions.Valid
     do! Graph.Nodes.Account.create validatedAccounts.Valid
     do! Graph.Relationships.Ownership.create validatedOwnerships.Valid
 

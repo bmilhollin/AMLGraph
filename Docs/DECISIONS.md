@@ -279,6 +279,17 @@ AML concepts. Multi-currency support can be introduced later by modeling monetar
 Decision:
 
 This decision is a reversal.  No longer assuming the AccountId is globally unique.  Account identity = AccountKey = AccountId + InstitutionId
+```text
+InstitutionId
+    → identifies the institution
+
+AccountId
+    → identifies an account within that institution
+
+AccountKey
+    → identifies the real-world account globally
+       (AccountId + InstitutionId)
+```
 
 Reason:
 It is an oversimplification to use AccountId as a global identifier.

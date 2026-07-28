@@ -3,6 +3,7 @@ namespace AMLGraph.Domain
 type CustomerId = CustomerId of string
 type AccountId = AccountId of string
 type InstitutionId = InstitutionId of string
+type AccountKey = AccountKey of AccountId * InstitutionId
 
 
 module EntityIds =
@@ -29,12 +30,12 @@ type Customer =
         RiskRating: int
     }
 
-type FinancialInstitution =
+type Institution =
     {
         InstitutionId: InstitutionId
         Name: string
         InstitutionType: string
-        Country: string
+        CountryCode: string  // ISO alpha-2: US, GB, DE, etc.
     }
 
 type Account =
@@ -59,8 +60,10 @@ type EntityKey =
 
 type ValidationIssue =
     | ConflictingCustomerAttributes
+    | ConflictingInstitutionAttributes
     | ConflictingAccountAttributes
     | MissingCustomer
+    | MissingInstitution
     | MissingAccount
     
 type ValidationError =
