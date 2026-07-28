@@ -273,3 +273,12 @@ Reason:
 
 Currency is intentionally omitted from the domain model to keep the project focused on graph modeling and 
 AML concepts. Multi-currency support can be introduced later by modeling monetary values as a Money type.
+
+## 2026-07-28
+
+Decision:
+
+This decision is a reversal.  No longer assuming the AccountId is globally unique.  Account identity = AccountKey = AccountId + InstitutionId
+
+Reason:
+It is an oversimplification to use AccountId as a global identifier.

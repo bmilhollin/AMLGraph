@@ -21,6 +21,8 @@ AMLGraph instead explores how to design a graph application from the ground up u
 * Demonstrate a clean F# architecture for graph applications
 * Serve as a foundation for experimenting with graph algorithms, entity resolution, and AML analytics
 
+---
+
 ## Current Status
 
 ```text
