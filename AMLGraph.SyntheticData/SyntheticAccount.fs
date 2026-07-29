@@ -39,3 +39,12 @@ module SyntheticAccount =
             OpenDate = "2020-01-01"
             Balance = 500.00m
         }
+
+    let a400 = 
+        {
+            AccountId = AccountId "SYN-A004"
+            InstitutionId = InstitutionId "SYN-FI004"
+            AccountType = CreditCard
+            OpenDate = "2022-01-01"
+            Balance = 5000.00m
+        }

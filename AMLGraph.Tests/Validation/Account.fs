@@ -190,6 +190,56 @@ module Account =
                         result.Errors
                         1
                         "Expected 1 validation error"
+
+                    let error = result.Errors.Head
+
+                    Expect.equal
+                        error.Issue
+                        MissingInstitution
+                        "Expected missing institution error"
+                )
+
+            testCase 
+                "Account with valid InstitutionId is added and account with unknown InstitutionId is rejected"
+                (fun () ->
+                    // Arrange
+                    let accounts =
+                        [
+                            SyntheticAccount.a100
+                            SyntheticAccount.a400
+                        ]
+                    
+                    // Act
+                    let result =
+                        Account.validate validatedInstitutionIds accounts
+
+                    // Assert
+                    Expect.hasLength
+                        result.Valid
+                        1
+                        "Expected 1 valid account"
+
+                    Expect.hasLength
+                        result.Errors
+                        1
+                        "Expected 1 validation error"
+
+                    let error = result.Errors.Head
+
+                    Expect.equal
+                        error.Issue
+                        MissingInstitution
+                        "Expected missing institution error"
+
+                    Expect.equal
+                        result.Valid.Head.AccountId
+                        SyntheticAccount.a100.AccountId
+                        "Expected valid account to be a100"
+
+                    Expect.equal
+                        result.Errors.Head.Entity
+                        (AccountKey SyntheticAccount.a400.AccountId)
+                        "Expected invalid account to be a400"
                 )
         ]
 
