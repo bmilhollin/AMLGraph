@@ -10,7 +10,7 @@ module SyntheticAccount =
     let a100 =
         {
             AccountId = AccountId "SYN-A001"
-            InstitutionId = InstitutionId "SYN-I001"
+            InstitutionId = InstitutionId "SYN-FI001"
             AccountType = Checking
             OpenDate = "2020-01-01"
             Balance = 1000.00m  // m converts to decimal, money
@@ -25,7 +25,7 @@ module SyntheticAccount =
     let a200 = 
         {
             AccountId = AccountId "SYN-A002"
-            InstitutionId = InstitutionId "SYN-I001"
+            InstitutionId = InstitutionId "SYN-FI001"
             AccountType = Savings
             OpenDate = "2020-01-01"
             Balance = 2000.00m
@@ -34,7 +34,7 @@ module SyntheticAccount =
     let a300 = 
         {
             AccountId = AccountId "SYN-A003"
-            InstitutionId = InstitutionId "SYN-I001"
+            InstitutionId = InstitutionId "SYN-FI001"
             AccountType = CreditCard
             OpenDate = "2020-01-01"
             Balance = 500.00m

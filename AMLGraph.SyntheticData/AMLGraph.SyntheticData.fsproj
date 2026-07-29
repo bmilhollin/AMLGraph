@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Compile Include="SyntheticCustomer.fs" />
+    <Compile Include="SyntheticInstitution.fs" />
     <Compile Include="SyntheticAccount.fs" />
     <Compile Include="SyntheticOwnership.fs" />
   </ItemGroup>

@@ -13,8 +13,17 @@ module Account =
 
         testList "Account Validation" [
 
+            let validatedInstitutionIds =
+                        [
+                            SyntheticInstitution.bank01
+                            SyntheticInstitution.bank02
+                            SyntheticInstitution.bank03
+                        ]
+                        |> List.map (fun a -> a.InstitutionId)
+                        |> Set.ofList
+
             testCase 
-                "A single account with unique AccountId is valid"
+                "A single account with valid InstitutionId and unique AccountId is valid"
                 (fun () ->
 
                     // Arrange
@@ -26,7 +35,7 @@ module Account =
                     
                     // Act
                     let result =
-                        Account.validate accounts
+                        Account.validate validatedInstitutionIds accounts
 
                     // Assert
                     Expect.equal
@@ -53,7 +62,7 @@ module Account =
                     
                     // Act
                     let result =
-                        Account.validate accounts
+                        Account.validate validatedInstitutionIds accounts
 
                     // Assert
                     Expect.equal
@@ -78,7 +87,7 @@ module Account =
 
                     // Act
                     let result =
-                        Account.validate accounts
+                        Account.validate validatedInstitutionIds accounts
                         
                     // Assert
                     Expect.isEmpty
@@ -118,7 +127,7 @@ module Account =
 
                     // Act
                     let result =
-                        Account.validate accounts
+                        Account.validate validatedInstitutionIds accounts
                         
                     // Assert
                     Expect.hasLength
@@ -158,4 +167,30 @@ module Account =
                         )
                         "Expected a200 and a300 to be valid accounts"
                 )
+
+            testCase 
+                "Account with unknown InstitutionId is rejected"
+                (fun () ->
+                    // Arrange
+                    let accounts =
+                        [
+                            SyntheticAccount.a100
+                        ]
+                    
+                    // Act
+                    let result =
+                        Account.validate Set.empty accounts
+
+                    // Assert
+                    Expect.isEmpty
+                        result.Valid
+                        "Expected 0 valid accounts"
+
+                    Expect.hasLength
+                        result.Errors
+                        1
+                        "Expected 1 validation error"
+                )
         ]
+
+
