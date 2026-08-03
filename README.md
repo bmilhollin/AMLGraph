@@ -42,7 +42,7 @@ AMLGraph instead explores how to design a graph application from the ground up u
 ## Current Features
 
 * Read AML data from tab-delimited files
-* Validate customer, account, and ownership data
+* Validate customer, financial institution, account, and ownership data
 * Create Neo4j nodes using `MERGE`
 * Enforce uniqueness with Neo4j constraints
 * Organize graph logic separately from business logic
@@ -77,17 +77,20 @@ AMLGraph
 │   ├── Domain.fs
 │   └── Validation
 │       ├── Customer.fs
+│       ├── Institution.fs
 │       ├── Account.fs
 │       └── Ownership.fs
 │
 ├── AMLGraph.SyntheticData
 │   └── SyntheticCustomer.fs
+│   └── SyntheticInstitution.fs
 │   └── SyntheticAccount.fs
 │   └── SyntheticOwnership.fs
 │
 ├── AMLGraph.Tests
 │   └── Validation
 │       └── Customer.fs
+│       └── Institution.fs
 │       └── Accounts.fs
 │       └── Ownerships.fs
 │
@@ -102,6 +105,10 @@ AMLGraph
 Read Customers
       ↓
 Validate Customers
+      ↓
+Read Institutions
+      ↓
+Validate Institutions
       ↓
 Read Accounts + Ownerships
       ↓
