@@ -66,7 +66,7 @@ async {
     do! Graph.Nodes.Account.create validatedAccounts.Valid
     do! Graph.Relationships.Ownership.create validatedOwnerships.Valid
 
-    Neo4j.driver.Dispose()
+    Neo4j.driver.Dispose() // move this function to infrastructure
         
 }
 |> Async.RunSynchronously
