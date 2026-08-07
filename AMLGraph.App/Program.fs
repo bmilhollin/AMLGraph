@@ -62,7 +62,7 @@ async {
 
     // create graph nodes and relationships
     do! Graph.Nodes.Customer.create validatedCustomers.Valid
-    // do! Graph.Nodes.Institution.create validatedInstitutions.Valid
+    do! Graph.Nodes.Institution.create validatedInstitutions.Valid
     do! Graph.Nodes.Account.create validatedAccounts.Valid
     do! Graph.Relationships.Ownership.create validatedOwnerships.Valid
 
