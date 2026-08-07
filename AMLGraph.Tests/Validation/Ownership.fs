@@ -112,15 +112,16 @@ module Ownership =
                     Expect.equal
                         (
                             result.Valid 
-                            |> List.map (fun o -> o.AccountId) 
+                            |> List.map (fun o -> o.AccountKey)
+                            |> List.map EntityIds.uniqueAccountIdValues
                             |> set
                         )
                         (   
                             set [
-                                    AccountId "SYN-A001"
+                                    AccountId "SYN-A001", InstitutionId "SYN-FI001"
                                 ]
                         )
-                        "Expected single SYN-A001 account ID"
+                        "Expected single SYN-A001/SYN-FI001 unique account ID"
                 )
 
             testCase 
