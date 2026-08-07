@@ -65,7 +65,31 @@ module Account =
                     if not (validInstitutions.Contains(account.InstitutionId)) then   
                         errors.Add(missingInstitution account.Key)
             | [] ->
-                invalidOp "Unexpected empty account/institution group."
+                invalidOp "Unexpected empty account/institution group."       
+
+        
+        // errors
+        // |> List.ofSeq
+        // |> List.iter (fun x -> 
+        //     let entity =
+        //         match x.Entity with
+        //         | CustomerKey c -> EntityIds.customerIdValue c
+        //         | AccountKey a -> 
+        //             let a, i = EntityIds.uniqueAccountIdValues a
+        //             EntityIds.accountIdValue a + " " + EntityIds.institutionIdValue i
+        //         | InstitutionKey i-> EntityIds.institutionIdValue i
+            
+        //     let issue = 
+        //         match x.Issue with
+        //         | ConflictingCustomerAttributes -> "ConflictingCustomerAttributes"
+        //         | ConflictingInstitutionAttributes -> "ConflictingInstitutionAttributes"
+        //         | ConflictingAccountAttributes -> "ConflictingAccountAttributes"
+        //         | MissingCustomer -> "MissingCustomer"
+        //         | MissingInstitution -> "MissingInstitution"
+        //         | MissingAccount -> "MissingAccount"
+
+        //     printfn $"{entity} - {issue}"    
+        //     )
 
 
         {

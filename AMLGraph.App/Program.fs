@@ -47,8 +47,10 @@ async {
         Validation.Account.validate validInstitutionIds accounts
     printfn "Validated %d accounts" validatedAccounts.Valid.Length
 
+
     if not validatedAccounts.Errors.IsEmpty then
         printfn "Found %d account validation errors" validatedAccounts.Errors.Length
+
 
     let validatedOwnerships =
         Validation.Ownership.validate 

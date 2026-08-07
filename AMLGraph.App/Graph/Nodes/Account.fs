@@ -18,9 +18,8 @@ module Account =
 
         let cypher =
             """
-            MERGE (a:Account {accountId:$accountId})
+            MERGE (a:Account {accountId:$accountId, institutionId:$institutionId})
             SET
-                a.institutionId = $institutionId,
                 a.accountType = $accountType,
                 a.openDate = $openDate,
                 a.balance = $balance

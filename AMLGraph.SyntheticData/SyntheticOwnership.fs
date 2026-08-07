@@ -16,6 +16,7 @@ module SyntheticOwnership =
     let existingAccounts  = 
         [
             SyntheticAccount.a100
+            SyntheticAccount.a100DifferentInstitution
             SyntheticAccount.a200
         ]
 
@@ -25,6 +26,12 @@ module SyntheticOwnership =
             AccountKey = SyntheticAccount.a100.Key
         }
 
+    let johnOwnsA100DifferentInstitution = 
+        {
+            CustomerId = SyntheticCustomer.john.CustomerId
+            AccountKey = SyntheticAccount.a100DifferentInstitution.Key
+        }
+        
     let johnOwnsA200 = 
         {
             CustomerId = SyntheticCustomer.john.CustomerId

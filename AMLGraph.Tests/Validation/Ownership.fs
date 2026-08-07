@@ -17,7 +17,7 @@ module Ownership =
         testList "Ownership Validation" [
 
             testCase 
-                "valid customerId and valid accountId produce valid ownership"
+                "valid customerId and valid accountKey produce valid ownership"
                 
                 (fun () ->
 
@@ -169,7 +169,7 @@ module Ownership =
                 )
 
             testCase 
-                "valid customerId referencing a unknown account is rejected"
+                "valid customer referencing a unknown account is rejected"
                 
                 (fun () ->
 
@@ -211,7 +211,7 @@ module Ownership =
                 )
 
             testCase 
-                "unknown customerId referencing a valid account is rejected"
+                "unknown customer referencing a valid account is rejected"
                 
                 (fun () ->
 
@@ -253,7 +253,7 @@ module Ownership =
                 )
 
             testCase 
-                "unknown customerId and unknown accountId is rejected"
+                "unknown customer referencing a unknown account is rejected"
                 
                 (fun () ->
 
@@ -304,8 +304,7 @@ module Ownership =
                     let ownerships =
                         [
                             SyntheticOwnership.johnOwnsA100
-                            SyntheticOwnership.unknownCustomerOwnsA200
-                            SyntheticOwnership.maryOwnsA100WithJohn
+                            SyntheticOwnership.johnOwnsA100DifferentInstitution
                         ]
                     
                     // Act
@@ -323,15 +322,57 @@ module Ownership =
 
                     Expect.equal
                         result.Errors.Length
-                        1
-                        "Expected 1 validation error"
+                        0
+                        "Expected 0 validation errors"
 
                     Expect.equal
                         (result.Valid |> Set.ofList)
                         (
                             [
                                 SyntheticOwnership.johnOwnsA100
-                                SyntheticOwnership.maryOwnsA100WithJohn
+                                SyntheticOwnership.johnOwnsA100DifferentInstitution
+                            ] 
+                            |> Set.ofList
+                        )
+                        "Expected both ownership relationships"
+                )
+
+            testCase 
+                "Same accountId with different institutionIds are treated as different accounts"
+                
+                (fun () ->
+
+                    // Arrange
+                    let ownerships =
+                        [
+                            SyntheticOwnership.johnOwnsA100
+                            SyntheticOwnership.johnOwnsA100DifferentInstitution
+                        ]
+                    
+                    // Act
+                    let result =
+                        Ownership.validate 
+                            validatedCustomers
+                            validatedAccounts
+                            ownerships
+
+                    // Assert
+                    Expect.equal
+                        result.Valid.Length
+                        2
+                        "Expected 2 valid ownerships"
+
+                    Expect.equal
+                        result.Errors.Length
+                        0
+                        "Expected 0 validation errors"
+
+                    Expect.equal
+                        (result.Valid |> Set.ofList)
+                        (
+                            [
+                                SyntheticOwnership.johnOwnsA100
+                                SyntheticOwnership.johnOwnsA100DifferentInstitution
                             ] 
                             |> Set.ofList
                         )
