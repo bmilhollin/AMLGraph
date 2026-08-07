@@ -22,35 +22,35 @@ module SyntheticOwnership =
     let johnOwnsA100 = 
         {
             CustomerId = SyntheticCustomer.john.CustomerId
-            AccountId = SyntheticAccount.a100.AccountId
+            AccountKey = SyntheticAccount.a100.Key
         }
 
     let johnOwnsA200 = 
         {
             CustomerId = SyntheticCustomer.john.CustomerId
-            AccountId = SyntheticAccount.a200.AccountId
+            AccountKey = SyntheticAccount.a200.Key
         }
 
     let maryOwnsA100WithJohn = 
         {
             CustomerId = SyntheticCustomer.mary.CustomerId
-            AccountId = SyntheticAccount.a100.AccountId
+            AccountKey = SyntheticAccount.a100.Key
         }
 
     let unknownCustomerOwnsA200 = 
         {
             CustomerId = CustomerId "SYN-999"
-            AccountId = SyntheticAccount.a200.AccountId
+            AccountKey = SyntheticAccount.a200.Key
         }
 
     let jamesOwnsUnknownAccount = 
         {
             CustomerId = SyntheticCustomer.james.CustomerId
-            AccountId = AccountId "SYN-999"
+            AccountKey = (AccountId "SYN-999", InstitutionId "SYN-999") |> UniqueAccountId
         }
 
     let unknownCustomerOwnsUnknownAccount =
         {
             CustomerId = CustomerId "SYN-999"
-            AccountId = AccountId "SYN-999"
+            AccountKey = (AccountId "SYN-999", InstitutionId "SYN-999") |> UniqueAccountId
         }

@@ -14,15 +14,15 @@ module Account =
         | [_] -> true
         | _ -> false
 
-    let private conflictingAccount accountId =
+    let private conflictingAccount accountKey =
         {
-            Entity = AccountKey accountId
+            Entity = AccountKey accountKey
             Issue = ConflictingAccountAttributes
         }
 
-    let private missingInstitution accountId =
+    let private missingInstitution accountKey =
         {
-            Entity = AccountKey accountId
+            Entity = AccountKey accountKey
             Issue = MissingInstitution
         }
 
@@ -41,11 +41,11 @@ module Account =
             if validInstitutions.Contains(account.InstitutionId) then
                 validAccounts.Add(account)
             else
-                errors.Add(missingInstitution account.AccountId)
+                errors.Add(missingInstitution (account.Key))
 
         let groups =
             accounts
-            |> List.groupBy (fun a -> a.AccountId, a.InstitutionId)
+            |> List.groupBy (fun a -> a.Key)
 
         let singletonGroups, duplicateGroups =
             groups
@@ -61,9 +61,9 @@ module Account =
                 if List.forall (accountInstituteAttributesMatch account) others then
                     isValidInstitution account
                 else
-                    errors.Add(conflictingAccount account.AccountId)
+                    errors.Add(conflictingAccount account.Key)
                     if not (validInstitutions.Contains(account.InstitutionId)) then   
-                        errors.Add(missingInstitution account.AccountId)
+                        errors.Add(missingInstitution account.Key)
             | [] ->
                 invalidOp "Unexpected empty account/institution group."
 

@@ -46,8 +46,8 @@ module Account =
                         Balance = decimal fields[5]
                     },
                     {
-                        AccountId = accountId
                         CustomerId = customerId
+                        AccountKey = (accountId, institutionId) |> UniqueAccountId
                     }
         }
         |> Seq.toList

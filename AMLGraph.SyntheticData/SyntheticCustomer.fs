@@ -54,3 +54,5 @@ module SyntheticCustomer =
             Occupation = "Software Engineer"
             RiskRating = 3
         }
+
+    

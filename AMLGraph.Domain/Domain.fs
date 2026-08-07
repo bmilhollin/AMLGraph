@@ -3,14 +3,14 @@ namespace AMLGraph.Domain
 type CustomerId = CustomerId of string
 type AccountId = AccountId of string
 type InstitutionId = InstitutionId of string
-type AccountKey = AccountKey of AccountId * InstitutionId
-
+type UniqueAccountId = UniqueAccountId of (AccountId * InstitutionId)
 
 module EntityIds =
     
     let customerIdValue (CustomerId id) = id
     let accountIdValue (AccountId id) = id
     let institutionIdValue (InstitutionId id) = id
+    let uniqueAccountIdValues (UniqueAccountId (accountId, institutionId)) = (accountId, institutionId)
 
 type AccountType =
     | Checking
@@ -46,16 +46,19 @@ type Account =
         OpenDate: string
         Balance: decimal
     }
+    member this.Key =
+        UniqueAccountId (this.AccountId, this.InstitutionId)
+
 
 type Ownership =
     {
         CustomerId: CustomerId
-        AccountId: AccountId
+        AccountKey: UniqueAccountId
     }
 
 type EntityKey =
     | CustomerKey of CustomerId
-    | AccountKey of AccountId
+    | AccountKey of UniqueAccountId
     | InstitutionKey of InstitutionId
 
 type ValidationIssue =

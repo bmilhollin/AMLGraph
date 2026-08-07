@@ -31,7 +31,6 @@ module Account =
                         [
                             SyntheticAccount.a100
                         ]
-
                     
                     // Act
                     let result =
@@ -49,7 +48,7 @@ module Account =
                 )
 
             testCase 
-                "Duplicate accountIds with identical attributes produce one valid account" 
+                "Duplicate accountIds/institutionIds with identical attributes produce one valid unique account" 
                 (fun () ->
 
                     // Arrange
@@ -76,7 +75,7 @@ module Account =
                 )
 
             testCase
-                "Duplicate accountIds with conflicting attributes are rejected"
+                "Duplicate accountIds/institutionIds with conflicting attributes are rejected"
                 (fun () ->
                     // Arrange
                     let accounts =
@@ -108,12 +107,12 @@ module Account =
 
                     Expect.equal
                         error.Entity
-                        (AccountKey SyntheticAccount.a100.AccountId)
+                        (AccountKey SyntheticAccount.a100.Key)
                         "Expected error to reference the conflicting account"
                                     )
 
             testCase
-                "Conflicting account groups do not prevent valid account groups from being imported"
+                "Conflicting accountIds/institutionIds groups do not prevent valid groups from being imported"
                 (fun () ->
                     // Arrange
                     let accounts =
@@ -149,7 +148,7 @@ module Account =
 
                     Expect.equal
                         error.Entity
-                        (AccountKey SyntheticAccount.a100.AccountId)
+                        (AccountKey SyntheticAccount.a100.Key)
                         "Expected error to reference the conflicting account"
 
                     let validIds =
@@ -238,8 +237,44 @@ module Account =
 
                     Expect.equal
                         result.Errors.Head.Entity
-                        (AccountKey SyntheticAccount.a400.AccountId)
+                        (AccountKey SyntheticAccount.a400.Key)
                         "Expected invalid account to be a400"
+                )
+
+            testCase 
+                "Same accountId with different institutionIds are treated as separate accounts"
+                (fun () ->
+                    // Arrange
+                    let accounts =
+                        [
+                            SyntheticAccount.a100
+                            SyntheticAccount.a100DifferentInstitution
+                        ]
+                    
+                    // Act
+                    let result =
+                        Account.validate validatedInstitutionIds accounts
+
+                    // Assert
+                    Expect.hasLength
+                        result.Valid
+                        2
+                        "Expected 2 valid accounts"
+
+                    Expect.hasLength
+                        result.Errors
+                        0
+                        "Expected 0 validation errors"
+
+                    let institutions = 
+                        result.Valid
+                        |> List.map (fun c -> c.InstitutionId)
+                        |> Set.ofList
+
+                    Expect.equal
+                        institutions
+                        ([ InstitutionId "SYN-FI001"; InstitutionId "SYN-FI002" ] |> Set.ofList)
+                        "Expected SYN-FI001 and SYN-FI002 institutions"
                 )
         ]
 

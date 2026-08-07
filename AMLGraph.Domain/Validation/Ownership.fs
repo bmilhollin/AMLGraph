@@ -16,7 +16,7 @@ module Ownership =
             Issue = MissingAccount
         }
 
-    let private validateOwnership validCustomerIds validAccountIds ownership =
+    let private validateOwnership validCustomerIds validAccountKeys ownership =
 
         // Do these relationships reference existing entities?
 
@@ -24,7 +24,7 @@ module Ownership =
             Set.contains ownership.CustomerId validCustomerIds
 
         let accountExists =
-            Set.contains ownership.AccountId validAccountIds
+            Set.contains ownership.AccountKey validAccountKeys
 
         match customerExists, accountExists with
 
@@ -35,13 +35,13 @@ module Ownership =
             None, [ missingCustomer ownership.CustomerId ]
 
         | true, false ->
-            None, [ missingAccount ownership.AccountId ]
+            None, [ missingAccount ownership.AccountKey ]
 
         | false, false ->
             None,
             [
                 missingCustomer ownership.CustomerId
-                missingAccount ownership.AccountId
+                missingAccount ownership.AccountKey
             ]
 
     let validate 
@@ -58,9 +58,9 @@ module Ownership =
             |> List.map (fun c -> c.CustomerId)
             |> Set.ofList
 
-        let validAccountIds =
+        let validAccountKeys =
             accounts
-            |> List.map (fun a -> a.AccountId)
+            |> List.map (fun a -> a.Key)
             |> Set.ofList
 
         let validOwnerships = ResizeArray<Ownership>()
@@ -69,7 +69,7 @@ module Ownership =
         for ownership in normalizedOwnerships do
 
             let validOwnership, validationErrors =
-                validateOwnership validCustomerIds validAccountIds ownership
+                validateOwnership validCustomerIds validAccountKeys ownership
 
             match validOwnership with
             | Some ownership ->
