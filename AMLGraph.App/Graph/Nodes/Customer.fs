@@ -9,7 +9,7 @@ module Customer =
         dict [
             "customerId", box (EntityIds.customerIdValue customer.CustomerId)
             "institutionId", box (EntityIds.institutionIdValue customer.InstitutionId)
-            "entityId", box (EntityIds.entityIdValue customer.EntityId)
+            "personId", box (EntityIds.personIdValue customer.PersonId)
             "riskRating", box customer.RiskRating
         ]
 
@@ -20,7 +20,7 @@ module Customer =
             MERGE (c:Customer {customerId:$customerId})
             SET
                 c.institutionId = $institutionId,
-                c.entityId = $entityId,
+                c.personId = $personId,
                 c.riskRating = $riskRating
             """
 

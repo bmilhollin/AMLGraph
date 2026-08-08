@@ -1,6 +1,6 @@
 namespace AMLGraph.Domain
 
-type EntityId = EntityId of string
+type PersonId = PersonId of string
 type CustomerId = CustomerId of string
 type AccountId = AccountId of string
 type InstitutionId = InstitutionId of string
@@ -8,7 +8,7 @@ type UniqueCustomerId = UniqueCustomerId of (CustomerId * InstitutionId)
 type UniqueAccountId = UniqueAccountId of (AccountId * InstitutionId)
 
 module EntityIds =    
-    let entityIdValue (EntityId id) = id
+    let personIdValue (PersonId id) = id
     let customerIdValue (CustomerId id) = id
     let accountIdValue (AccountId id) = id
     let institutionIdValue (InstitutionId id) = id
@@ -23,11 +23,20 @@ type AccountType =
     | Loan
     | Brokerage
 
+type Person =
+    {
+        PersonId: PersonId
+        FirstName: string
+        LastName: string
+        Dob: string
+        Occupation: string
+    }
+
 type Customer =
     {
         CustomerId: CustomerId
         InstitutionId: InstitutionId
-        EntityId: EntityId
+        PersonId: PersonId
         RiskRating: int
     }
     member this.Key =
@@ -65,11 +74,13 @@ type Ownership =
     }
 
 type EntityKey =
+    | PersonKey of PersonId
     | CustomerKey of UniqueCustomerId
     | AccountKey of UniqueAccountId
     | InstitutionKey of InstitutionId
 
 type ValidationIssue =
+    | ConflictingPersonAttributes
     | ConflictingCustomerAttributes
     | ConflictingInstitutionAttributes
     | ConflictingAccountAttributes

@@ -25,7 +25,7 @@ module Customer =
                     {
                         CustomerId = fields[0].Trim() |> CustomerId
                         InstitutionId = fields[1].Trim() |> InstitutionId
-                        EntityId = fields[2].Trim() |> EntityId
+                        PersonId = fields[2].Trim() |> PersonId
                         RiskRating = int fields[3]
                     }
         }

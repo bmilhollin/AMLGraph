@@ -9,6 +9,18 @@ async {
 
     do! Schema.initializeAsync ()
 
+    // read and validate persons
+    let persons = 
+        Reader.Person.read "Data/Persons.tsv"
+    printfn "Read %d persons" persons.Length
+
+    let validatedPersons =
+        Validation.Person.validate persons
+    printfn "Validated %d persons" validatedPersons.Valid.Length
+
+    if not validatedPersons.Errors.IsEmpty then
+        printfn "Found %d person validation errors" validatedPersons.Errors.Length
+
     // read and validate customers
     let customers = 
         Reader.Customer.read "Data/Customers.tsv"
@@ -66,6 +78,7 @@ async {
         printfn "Found %d ownership validation errors" validatedOwnerships.Errors.Length
 
     // create graph nodes and relationships
+    do! Graph.Nodes.Person.create validatedPersons.Valid
     do! Graph.Nodes.Customer.create validatedCustomers.Valid
     do! Graph.Nodes.Institution.create validatedInstitutions.Valid
     do! Graph.Nodes.Account.create validatedAccounts.Valid

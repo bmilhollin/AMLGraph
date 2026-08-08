@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="Domain.fs" />
     <Compile Include="Validation\Institution.fs" />
+    <Compile Include="Validation\Person.fs" />
     <Compile Include="Validation\Account.fs" />
     <Compile Include="Validation\Customer.fs" />
     <Compile Include="Validation\Ownership.fs" />

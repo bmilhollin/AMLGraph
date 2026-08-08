@@ -8,9 +8,11 @@
   <ItemGroup>
     <Compile Include="Infrastructure\Neo4j.fs" />
     <Compile Include="Infrastructure\Schema.fs" />
+    <Compile Include="Reader\Person.fs" />
     <Compile Include="Reader\Customer.fs" />
     <Compile Include="Reader\Account.fs" />
     <Compile Include="Reader\Institution.fs" />
+    <Compile Include="Graph\Nodes\Person.fs" />
     <Compile Include="Graph\Nodes\Account.fs" />
     <Compile Include="Graph\Nodes\Institution.fs" />
     <Compile Include="Graph\Nodes\Customer.fs" />

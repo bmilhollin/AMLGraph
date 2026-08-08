@@ -6,7 +6,7 @@ module Customer =
 
     let private customerAttributesMatch (left: Customer) (right: Customer) =
 
-        left.EntityId = right.EntityId &&
+        left.PersonId = right.PersonId &&
         left.RiskRating = right.RiskRating 
 
     let private isSingleton (_, group) =
