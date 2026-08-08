@@ -18,17 +18,15 @@ module Customer =
 
                 let fields = line.Split('\t')
 
-                if fields.Length <> 6 then
-                    failwith $"Unexpected customer record: {line}"
+                if fields.Length <> 4 then
+                    failwith $"Unexpected customer record: {line}, expected 4 fields but found {fields.Length}"
 
                 yield
                     {
                         CustomerId = fields[0].Trim() |> CustomerId
-                        FirstName = fields[1].Trim()
-                        LastName = fields[2].Trim()
-                        DOB = fields[3].Trim()
-                        Occupation = fields[4].Trim()
-                        RiskRating = int fields[5]
+                        InstitutionId = fields[1].Trim() |> InstitutionId
+                        EntityId = fields[2].Trim() |> EntityId
+                        RiskRating = int fields[3]
                     }
         }
         |> Seq.toList

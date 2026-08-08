@@ -1,7 +1,9 @@
-CustomerId	FirstName	LastName	DOB	Occupation	RiskRating
-C001	Alice	Smith	1985-04-12	Teacher	15
-C002	Bob	Jones	1970-01-03	Consultant	75
-C003	Carol	Williams	1992-09-22	Engineer	10
-C004	David	Brown	1988-07-19	Restaurant Owner	40
-C005	Eve	Davis	1995-11-05	Unknown	85
-C006	Frank	Miller	1965-02-28	Retired	20
+CustomerId	InstitutionId	EntityId	RiskRating
+C001	FI001	E001	15
+C001	FI002	E001	15
+C002	FI001	E002	75
+C002	FI002	E002	75
+C003	FI001	E003	10
+C004	FI002	E004	40
+C005	FI003	E005	85
+C006	FI001	E006	20

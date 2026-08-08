@@ -4,11 +4,9 @@ open AMLGraph.Domain
 
 module Customer =
 
-    let private customerAttributesMatch left right =
-        left.FirstName = right.FirstName &&
-        left.LastName = right.LastName &&
-        left.DOB = right.DOB &&
-        left.Occupation = right.Occupation &&
+    let private customerAttributesMatch (left: Customer) (right: Customer) =
+
+        left.EntityId = right.EntityId &&
         left.RiskRating = right.RiskRating 
 
     let private isSingleton (_, group) =
@@ -16,21 +14,21 @@ module Customer =
         | [_] -> true
         | _ -> false
 
-    let private conflictingCustomer customerId =
+    let private conflictingCustomer uniqueCustomerId =
         {
-            Entity = CustomerKey customerId
+            Entity = CustomerKey uniqueCustomerId
             Issue = ConflictingCustomerAttributes
         }
 
-    /// A customerId could exist on multiple rows within Customers.tsv.
-    /// If a customer has multiple rows and any of the other fields besides customerId are different, 
-    /// that customerId is considered a customer with conflicting attributes,
-    /// and the customer will not be used in the graph. Conflicted customers are captured for review.
+    /// A customerId/institutionId pair could exist on multiple rows within Customers.tsv.
+    /// If a customerId/institutionId pair has multiple rows and any of the other fields are different, 
+    /// that customerId/institutionId pair is considered a uniqueCustomerId with conflicting attributes,
+    /// and the uniqueCustomerId will not be used in the graph. Conflicted uniqueCustomerId are captured for review.
     let validate (customers: Customer list) : Validated<Customer list> =
 
         let groups =
             customers
-            |> List.groupBy (fun a -> a.CustomerId)
+            |> List.groupBy (fun a -> a.Key)
 
         let singletonGroups, duplicateGroups =
             groups
@@ -52,7 +50,7 @@ module Customer =
 
                 else
 
-                    errors.Add(conflictingCustomer customer.CustomerId)
+                    errors.Add(conflictingCustomer customer.Key)
             | [] ->
                 invalidOp "Unexpected empty customer group."
 

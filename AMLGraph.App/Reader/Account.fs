@@ -46,7 +46,7 @@ module Account =
                         Balance = decimal fields[5]
                     },
                     {
-                        CustomerId = customerId
+                        CustomerKey = (customerId, institutionId) |> UniqueCustomerId
                         AccountKey = (accountId, institutionId) |> UniqueAccountId
                     }
         }

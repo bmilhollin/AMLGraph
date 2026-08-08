@@ -1,15 +1,18 @@
 namespace AMLGraph.Domain
 
+type EntityId = EntityId of string
 type CustomerId = CustomerId of string
 type AccountId = AccountId of string
 type InstitutionId = InstitutionId of string
+type UniqueCustomerId = UniqueCustomerId of (CustomerId * InstitutionId)
 type UniqueAccountId = UniqueAccountId of (AccountId * InstitutionId)
 
-module EntityIds =
-    
+module EntityIds =    
+    let entityIdValue (EntityId id) = id
     let customerIdValue (CustomerId id) = id
     let accountIdValue (AccountId id) = id
     let institutionIdValue (InstitutionId id) = id
+    let uniqueCustomerIdValues (UniqueCustomerId (customerId, institutionId)) = (customerId, institutionId)
     let uniqueAccountIdValues (UniqueAccountId (accountId, institutionId)) = (accountId, institutionId)
 
 type AccountType =
@@ -23,12 +26,13 @@ type AccountType =
 type Customer =
     {
         CustomerId: CustomerId
-        FirstName: string
-        LastName: string
-        DOB: string
-        Occupation: string
+        InstitutionId: InstitutionId
+        EntityId: EntityId
         RiskRating: int
     }
+    member this.Key =
+        UniqueCustomerId (this.CustomerId, this.InstitutionId)
+
 
 type Institution =
     {
@@ -49,15 +53,19 @@ type Account =
     member this.Key =
         UniqueAccountId (this.AccountId, this.InstitutionId)
 
+type Held_At =
+    {
+        AccountKey: UniqueAccountId
+    }
 
 type Ownership =
     {
-        CustomerId: CustomerId
+        CustomerKey: UniqueCustomerId
         AccountKey: UniqueAccountId
     }
 
 type EntityKey =
-    | CustomerKey of CustomerId
+    | CustomerKey of UniqueCustomerId
     | AccountKey of UniqueAccountId
     | InstitutionKey of InstitutionId
 

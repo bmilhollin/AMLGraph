@@ -14,15 +14,15 @@ module Account =
         | [_] -> true
         | _ -> false
 
-    let private conflictingAccount accountKey =
+    let private conflictingAccount uniqueAccountId =
         {
-            Entity = AccountKey accountKey
+            Entity = AccountKey uniqueAccountId
             Issue = ConflictingAccountAttributes
         }
 
-    let private missingInstitution accountKey =
+    let private missingInstitution uniqueAccountId =
         {
-            Entity = AccountKey accountKey
+            Entity = AccountKey uniqueAccountId
             Issue = MissingInstitution
         }
 
@@ -65,32 +65,7 @@ module Account =
                     if not (validInstitutions.Contains(account.InstitutionId)) then   
                         errors.Add(missingInstitution account.Key)
             | [] ->
-                invalidOp "Unexpected empty account/institution group."       
-
-        
-        // errors
-        // |> List.ofSeq
-        // |> List.iter (fun x -> 
-        //     let entity =
-        //         match x.Entity with
-        //         | CustomerKey c -> EntityIds.customerIdValue c
-        //         | AccountKey a -> 
-        //             let a, i = EntityIds.uniqueAccountIdValues a
-        //             EntityIds.accountIdValue a + " " + EntityIds.institutionIdValue i
-        //         | InstitutionKey i-> EntityIds.institutionIdValue i
-            
-        //     let issue = 
-        //         match x.Issue with
-        //         | ConflictingCustomerAttributes -> "ConflictingCustomerAttributes"
-        //         | ConflictingInstitutionAttributes -> "ConflictingInstitutionAttributes"
-        //         | ConflictingAccountAttributes -> "ConflictingAccountAttributes"
-        //         | MissingCustomer -> "MissingCustomer"
-        //         | MissingInstitution -> "MissingInstitution"
-        //         | MissingAccount -> "MissingAccount"
-
-        //     printfn $"{entity} - {issue}"    
-        //     )
-
+                invalidOp "Unexpected empty account/institution group."   
 
         {
             Valid = List.ofSeq validAccounts

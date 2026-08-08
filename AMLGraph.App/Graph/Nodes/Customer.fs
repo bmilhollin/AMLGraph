@@ -8,10 +8,8 @@ module Customer =
     let private toParameters (customer:Customer) =
         dict [
             "customerId", box (EntityIds.customerIdValue customer.CustomerId)
-            "firstName", box customer.FirstName
-            "lastName", box customer.LastName
-            "dob", box customer.DOB
-            "occupation", box customer.Occupation
+            "institutionId", box (EntityIds.institutionIdValue customer.InstitutionId)
+            "entityId", box (EntityIds.entityIdValue customer.EntityId)
             "riskRating", box customer.RiskRating
         ]
 
@@ -21,10 +19,8 @@ module Customer =
             """
             MERGE (c:Customer {customerId:$customerId})
             SET
-                c.firstName = $firstName,
-                c.lastName = $lastName,
-                c.dob = $dob,
-                c.occupation = $occupation,
+                c.institutionId = $institutionId,
+                c.entityId = $entityId,
                 c.riskRating = $riskRating
             """
 

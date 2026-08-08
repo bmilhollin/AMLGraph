@@ -4,45 +4,56 @@ open AMLGraph.Domain
 
 module Ownership =
 
-    let private missingCustomer customerId =
+    let private missingCustomer uniqueCustomerId =
         {
-            Entity = CustomerKey customerId
+            Entity = CustomerKey uniqueCustomerId
             Issue = MissingCustomer
         }
 
-    let private missingAccount accountId =
+    let private missingAccount uniqueAccountId =
         {
-            Entity = AccountKey accountId
+            Entity = AccountKey uniqueAccountId
             Issue = MissingAccount
         }
 
-    let private validateOwnership validCustomerIds validAccountKeys ownership =
+    let private validateOwnership validCustomerKeys validAccountKeys ownership =
 
         // Do these relationships reference existing entities?
 
         let customerExists =
-            Set.contains ownership.CustomerId validCustomerIds
+            Set.contains ownership.CustomerKey validCustomerKeys
 
         let accountExists =
             Set.contains ownership.AccountKey validAccountKeys
 
-        match customerExists, accountExists with
+        let customerInstitutionId = 
+            snd (EntityIds.uniqueCustomerIdValues ownership.CustomerKey)
+            |> EntityIds.institutionIdValue
 
-        | true, true ->
-            Some ownership, []
+        let accountInstitutionId = 
+            snd (EntityIds.uniqueAccountIdValues ownership.AccountKey)
+            |> EntityIds.institutionIdValue
 
-        | false, true ->
-            None, [ missingCustomer ownership.CustomerId ]
+        if customerInstitutionId <> accountInstitutionId then
+            invalidOp ("Ownership created with single institution from accounts.tsv row, should not be able to have mismatched " + 
+                "institution IDs of {customerInstitutionId} and {accountInstitutionId} for customer {customerId}")
+        else
+            match customerExists, accountExists with 
+            | true, true ->
+                Some ownership, []
 
-        | true, false ->
-            None, [ missingAccount ownership.AccountKey ]
+            | false, true ->
+                None, [ missingCustomer ownership.CustomerKey ]
 
-        | false, false ->
-            None,
-            [
-                missingCustomer ownership.CustomerId
-                missingAccount ownership.AccountKey
-            ]
+            | true, false ->
+                None, [ missingAccount ownership.AccountKey ]
+
+            | false, false ->
+                None,
+                [
+                    missingCustomer ownership.CustomerKey
+                    missingAccount ownership.AccountKey
+                ]
 
     let validate 
         (customers: Customer list) 
@@ -55,7 +66,7 @@ module Ownership =
         
         let validCustomerIds =
             customers
-            |> List.map (fun c -> c.CustomerId)
+            |> List.map (fun c -> c.Key)
             |> Set.ofList
 
         let validAccountKeys =
