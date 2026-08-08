@@ -304,7 +304,7 @@ module Ownership =
                     let ownerships =
                         [
                             SyntheticOwnership.johnOwnsA100
-                            SyntheticOwnership.johnOwnsA100DifferentInstitution
+                            SyntheticOwnership.jamesOwnsUnknownAccount
                         ]
                     
                     // Act
@@ -330,7 +330,7 @@ module Ownership =
                         (
                             [
                                 SyntheticOwnership.johnOwnsA100
-                                SyntheticOwnership.johnOwnsA100DifferentInstitution
+                                SyntheticOwnership.jamesOwnsUnknownAccount
                             ] 
                             |> Set.ofList
                         )
