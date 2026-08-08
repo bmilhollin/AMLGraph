@@ -47,10 +47,13 @@ async {
         Validation.Account.validate validInstitutionIds accounts
     printfn "Validated %d accounts" validatedAccounts.Valid.Length
 
-
     if not validatedAccounts.Errors.IsEmpty then
         printfn "Found %d account validation errors" validatedAccounts.Errors.Length
 
+    // no validation is needed for Held_At relationships since they are derived from valid accounts
+    let held_ats =
+        validatedAccounts.Valid
+        |> List.map (fun a -> { AccountKey = a.Key })
 
     let validatedOwnerships =
         Validation.Ownership.validate 
@@ -66,6 +69,7 @@ async {
     do! Graph.Nodes.Customer.create validatedCustomers.Valid
     do! Graph.Nodes.Institution.create validatedInstitutions.Valid
     do! Graph.Nodes.Account.create validatedAccounts.Valid
+    do! Graph.Relationships.Held_At.create held_ats
     do! Graph.Relationships.Ownership.create validatedOwnerships.Valid
 
     Neo4j.driver.Dispose() // move this function to infrastructure
