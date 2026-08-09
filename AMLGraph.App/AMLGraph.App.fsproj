@@ -16,6 +16,7 @@
     <Compile Include="Graph\Nodes\Account.fs" />
     <Compile Include="Graph\Nodes\Institution.fs" />
     <Compile Include="Graph\Nodes\Customer.fs" />
+    <Compile Include="Graph\Relationships\Has_Customer_Record.fs" />
     <Compile Include="Graph\Relationships\Held_At.fs" />
     <Compile Include="Graph\Relationships\Ownership.fs" />
     <Compile Include="Program.fs" />

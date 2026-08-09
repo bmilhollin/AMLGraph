@@ -62,6 +62,12 @@ type Account =
     member this.Key =
         UniqueAccountId (this.AccountId, this.InstitutionId)
 
+
+type Has_Customer_Record =
+    {
+        PersonId: PersonId
+        CustomerKey: UniqueCustomerId
+    }
 type Held_At =
     {
         AccountKey: UniqueAccountId
