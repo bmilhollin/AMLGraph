@@ -17,9 +17,11 @@ module Customer =
 
         let cypher =
             """
-            MERGE (c:Customer {customerId:$customerId})
+            MERGE (c:Customer   {
+                customerId:$customerId, 
+                institutionId:$institutionId
+                })
             SET
-                c.institutionId = $institutionId,
                 c.personId = $personId,
                 c.riskRating = $riskRating
             """

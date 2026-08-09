@@ -10,10 +10,10 @@ module Schema =
             """
             
             """
-            CREATE CONSTRAINT customer_id_key
+            CREATE CONSTRAINT customer_key
             IF NOT EXISTS
             FOR (c:Customer)
-            REQUIRE c.customerId IS NODE KEY
+            REQUIRE (c.customerId, c.institutionId) IS NODE KEY
             """
 
             """
