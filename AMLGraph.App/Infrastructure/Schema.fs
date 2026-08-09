@@ -10,7 +10,7 @@ module Schema =
             """
             
             """
-            CREATE CONSTRAINT customer_key
+            CREATE CONSTRAINT customer_id_key
             IF NOT EXISTS
             FOR (c:Customer)
             REQUIRE (c.customerId, c.institutionId) IS NODE KEY
@@ -25,6 +25,28 @@ module Schema =
             IF NOT EXISTS
             FOR (a:Account)
             REQUIRE (a.accountId, a.institutionId) IS NODE KEY
+            """
+
+            """
+            DROP CONSTRAINT institution_id_key IF EXISTS
+            """
+            
+            """
+            CREATE CONSTRAINT institution_id_key
+            IF NOT EXISTS
+            FOR (a:Institution)
+            REQUIRE (a.institutionId) IS NODE KEY
+            """
+
+            """
+            DROP CONSTRAINT person_id_key IF EXISTS
+            """
+            
+            """
+            CREATE CONSTRAINT person_id_key
+            IF NOT EXISTS
+            FOR (a:Person)
+            REQUIRE (a.personId) IS NODE KEY
             """
         ]
 
