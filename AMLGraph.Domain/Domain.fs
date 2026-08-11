@@ -6,6 +6,7 @@ type AccountId = AccountId of string
 type InstitutionId = InstitutionId of string
 type UniqueCustomerId = UniqueCustomerId of (CustomerId * InstitutionId)
 type UniqueAccountId = UniqueAccountId of (AccountId * InstitutionId)
+type OwnershipId = OwnershipId of (UniqueCustomerId * UniqueAccountId)
 
 module EntityIds =    
     let personIdValue (PersonId id) = id
@@ -14,6 +15,7 @@ module EntityIds =
     let institutionIdValue (InstitutionId id) = id
     let uniqueCustomerIdValues (UniqueCustomerId (customerId, institutionId)) = (customerId, institutionId)
     let uniqueAccountIdValues (UniqueAccountId (accountId, institutionId)) = (accountId, institutionId)
+    let uniqueOwnershipIdValues (OwnershipId (customerId, accountId)) = (customerId, accountId)
 
 type AccountType =
     | Checking
@@ -84,6 +86,7 @@ type EntityKey =
     | CustomerKey of UniqueCustomerId
     | AccountKey of UniqueAccountId
     | InstitutionKey of InstitutionId
+    | OwnershipKey of OwnershipId
 
 type ValidationIssue =
     | ConflictingPersonAttributes
@@ -93,6 +96,7 @@ type ValidationIssue =
     | MissingCustomer
     | MissingInstitution
     | MissingAccount
+    | MismatchedInstitutions
     
 type ValidationError =
     {

@@ -22,42 +22,43 @@ module SyntheticOwnership =
 
     let johnOwnsA100 = 
         {
-            CustomerId = SyntheticCustomer.john.CustomerId
+            CustomerKey = SyntheticCustomer.john.Key
             AccountKey = SyntheticAccount.a100.Key
         }
 
     let johnOwnsA100DifferentInstitution = 
         {
-            CustomerId = SyntheticCustomer.john.CustomerId
+            CustomerKey = SyntheticCustomer.john.Key
             AccountKey = SyntheticAccount.a100DifferentInstitution.Key
         }
         
     let johnOwnsA200 = 
         {
-            CustomerId = SyntheticCustomer.john.CustomerId
+            CustomerKey = SyntheticCustomer.john.Key
             AccountKey = SyntheticAccount.a200.Key
         }
 
     let maryOwnsA100WithJohn = 
         {
-            CustomerId = SyntheticCustomer.mary.CustomerId
+            CustomerKey = SyntheticCustomer.mary.Key
             AccountKey = SyntheticAccount.a100.Key
         }
 
     let unknownCustomerOwnsA200 = 
+
         {
-            CustomerId = CustomerId "SYN-999"
+            CustomerKey = (CustomerId "SYN-C999", InstitutionId "SYN-FI001") |> UniqueCustomerId
             AccountKey = SyntheticAccount.a200.Key
         }
 
     let jamesOwnsUnknownAccount = 
         {
-            CustomerId = SyntheticCustomer.james.CustomerId
+            CustomerKey = SyntheticCustomer.james.Key
             AccountKey = (AccountId "SYN-999", InstitutionId "SYN-999") |> UniqueAccountId
         }
 
     let unknownCustomerOwnsUnknownAccount =
         {
-            CustomerId = CustomerId "SYN-999"
+            CustomerKey = (CustomerId "SYN-C999", InstitutionId "SYN-FI001") |> UniqueCustomerId
             AccountKey = (AccountId "SYN-999", InstitutionId "SYN-999") |> UniqueAccountId
         }

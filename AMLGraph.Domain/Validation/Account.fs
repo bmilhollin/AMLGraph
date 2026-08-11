@@ -36,7 +36,7 @@ module Account =
     /// If an account has an institutionId that does not exist in the Institutions.tsv file, it is considered invalid because the 
     /// institutionId is significant to the uniqueCustomerId, if the institutionId is invalid, the account will not be used in the graph.
     /// Invalid accounts are captured for review.
-    /// It is important not to perform a similar check on personId, we do not want to lose an account bc we cannot find a personId in the Persons.tsv file.
+    /// It is important NOT to perform a similar check on personId, we do not want to lose an account bc we cannot find a personId in the Persons.tsv file.
     /// The personId may be fraudulent in a money laundering context, but we still want to capture the account and its ownership for review.
     let validate (validInstitutions: Set<InstitutionId>) (accounts: Account list) : Validated<Account list> =
 

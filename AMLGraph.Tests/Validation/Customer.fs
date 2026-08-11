@@ -14,7 +14,7 @@ module Customer =
         testList "Customer Validation" [
 
             testCase 
-                "A single customer with unique CustomerId is valid"
+                "A single customer with unique CustomerKey is valid"
                 (fun () ->
 
                     // Arrange
@@ -22,7 +22,6 @@ module Customer =
                         [
                             SyntheticCustomer.john
                         ]
-
                     
                     // Act
                     let result =
@@ -40,7 +39,7 @@ module Customer =
                 )
 
             testCase 
-                "Duplicate customerIds with identical attributes produce one valid customer" 
+                "Duplicate CustomerKeys with identical attributes produce one valid customer" 
                 (fun () ->
 
                     // Arrange
@@ -67,13 +66,13 @@ module Customer =
                 )
 
             testCase
-                "Duplicate customerIds with conflicting attributes are rejected"
+                "Duplicate CustomerKeys with conflicting attributes are rejected"
                 (fun () ->
                     // Arrange
                     let customers =
                         [
                             SyntheticCustomer.john
-                            SyntheticCustomer.johnDifferentOccupation
+                            SyntheticCustomer.johnHigherRisk
                         ]
 
                     // Act
@@ -99,9 +98,9 @@ module Customer =
 
                     Expect.equal
                         error.Entity
-                        (CustomerKey SyntheticCustomer.john.CustomerId)
+                        (CustomerKey SyntheticCustomer.john.Key)
                         "Expected error to reference the conflicting customer"
-                                    )
+                )
 
             testCase
                 "Conflicting customerId groups do not prevent valid customer groups from being imported"
@@ -110,7 +109,7 @@ module Customer =
                     let customers =
                         [
                             SyntheticCustomer.john
-                            SyntheticCustomer.johnDifferentOccupation
+                            SyntheticCustomer.johnHigherRisk
                             SyntheticCustomer.mary
                             SyntheticCustomer.mary
                             SyntheticCustomer.james
@@ -140,7 +139,7 @@ module Customer =
 
                     Expect.equal
                         error.Entity
-                        (CustomerKey SyntheticCustomer.john.CustomerId)
+                        (CustomerKey SyntheticCustomer.john.Key)
                         "Expected error to reference the conflicting customer"
 
                     let validIds =

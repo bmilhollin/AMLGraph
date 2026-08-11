@@ -10,48 +10,30 @@ module SyntheticCustomer =
     let john =
         {
             CustomerId = CustomerId "SYN-C001"
-            FirstName = "John"
-            LastName = "Smith"
-            DOB = "1970-01-01"
-            Occupation = "Teacher"
-            RiskRating = 2
-        }
-
-    let johnDifferentOccupation =
-        {
-            john with
-                Occupation = "Engineer"
+            InstitutionId = InstitutionId "SYN-FI001"
+            PersonId = PersonId "SYN-P001"
+            RiskRating = 1
         }
 
     let johnHigherRisk =
         {
             john with
-                RiskRating = 5
+                RiskRating = 10
         }
 
     let mary =
         {
             CustomerId = CustomerId "SYN-C002"
-            FirstName = "Mary"
-            LastName = "Jones"
-            DOB = "1980-05-12"
-            Occupation = "Nurse"
-            RiskRating = 1
-        }
-
-    let maryDifferentOccupation =
-        {
-            mary with
-                Occupation = "Accountant"
+            InstitutionId = InstitutionId "SYN-FI002"
+            PersonId = PersonId "SYN-P002"
+            RiskRating = 2
         }
 
     let james =
         {
             CustomerId = CustomerId "SYN-C003"
-            FirstName = "James"
-            LastName = "Browning"
-            DOB = "1985-07-22"
-            Occupation = "Software Engineer"
+            InstitutionId = InstitutionId "SYN-FI003"
+            PersonId = PersonId "SYN-P003"
             RiskRating = 3
         }
 

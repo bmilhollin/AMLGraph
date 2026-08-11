@@ -18,11 +18,8 @@ module SyntheticAccount =
 
     let a100DifferentInstitution =
         {
-            AccountId = AccountId "SYN-A001"
-            InstitutionId = InstitutionId "SYN-FI002"
-            AccountType = Checking
-            OpenDate = "2020-01-01"
-            Balance = 1000.00m
+            a100 with
+                InstitutionId = InstitutionId "SYN-FI002"
         }
 
     let a100DifferentBalance =

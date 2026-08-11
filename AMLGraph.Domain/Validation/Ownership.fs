@@ -16,6 +16,13 @@ module Ownership =
             Issue = MissingAccount
         }
 
+    let private mismatchedInstitutions ownership=
+        
+        {
+            Entity = (ownership.CustomerKey, ownership.AccountKey) |> OwnershipId |> OwnershipKey
+            Issue = MismatchedInstitutions
+        }
+
     let private validateOwnership validCustomerKeys validAccountKeys ownership =
 
         // Do these relationships reference existing entities?
@@ -35,8 +42,8 @@ module Ownership =
             |> EntityIds.institutionIdValue
 
         if customerInstitutionId <> accountInstitutionId then
-            invalidOp ("Ownership created with single institution from accounts.tsv row, should not be able to have mismatched " + 
-                "institution IDs of {customerInstitutionId} and {accountInstitutionId} for customer {customerId}")
+            None,
+            [ mismatchedInstitutions ownership ]
         else
             match customerExists, accountExists with 
             | true, true ->

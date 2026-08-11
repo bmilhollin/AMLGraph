@@ -156,13 +156,13 @@ module Ownership =
                     Expect.equal
                         (
                             result.Valid 
-                            |> List.map (fun o -> o.CustomerId) 
+                            |> List.map (fun o -> o.CustomerKey) 
                             |> set
                         )
                         (   
                             set [
-                                    SyntheticOwnership.johnOwnsA100.CustomerId
-                                    SyntheticOwnership.johnOwnsA200.CustomerId
+                                    SyntheticOwnership.johnOwnsA100.CustomerKey
+                                    SyntheticOwnership.johnOwnsA200.CustomerKey
                                 ]
                         )
                         "Expected single SYN-C001 customer ID"
