@@ -166,15 +166,66 @@ Responsibilities:
 
 ---
 
+## Import
+
+Coordinates the application-level read and validation workflow. `Import.loadAndValidate` calls Reader and Validation modules in dependency order and returns an `ImportResults` aggregate rather than writing directly to the console.
+
+Each imported concept retains both the number of source records read and its typed validation result. This allows the application to report read, valid, and error counts without mixing presentation concerns into Reader or Validation modules.
+
+Responsibilities:
+
+* Coordinate Readers and Validators
+* Preserve validation dependency ordering
+* Aggregate import results
+* Retain source read counts for summary reporting
+
+Not responsible for:
+
+* Neo4j persistence
+* Validation rules
+* Human-readable validation error formatting
+
+---
+
+## GraphData
+
+Builds graph relationship records that are deterministically derived from validated entities before persistence.
+
+Current derived graph data includes:
+
+* `HAS_CUSTOMER_RECORD` records derived from validated Customers
+* `HELD_AT` records derived from validated Accounts
+
+A validated Customer may reference a Person that does not exist. In that case creation of `HAS_CUSTOMER_RECORD` is attempted, but no placeholder Person is created and the Customer remains in the graph.
+
+---
+
+## Reporting
+
+Converts typed validation results into human-readable diagnostic output without adding presentation concerns to the Domain or Validation layers.
+
+`AMLGraph.Reporting.ValidationReport` formats `ValidationError` values and groups multiple validation issues by `EntityKey`. This makes it clear whether several issues belong to one invalid entity or relationship rather than to several separate instances.
+
+The same formatter is available to the application and automated tests. Expecto tests can therefore display useful validation details only when an assertion fails, without temporary print statements in validation code.
+
+Import summary statistics are currently formatted by the application-level `Import` module because `ImportResults` is an application workflow type rather than a Domain type.
+
+---
+
 ## Program
 
-Coordinates the application workflow.
+Acts as the application composition root and coordinates the high-level workflow. The details of reading, validation, reporting, and derived relationship construction are delegated to their respective modules.
 
 Responsibilities:
 
 * Application startup
-* Orchestration
-* Ordering of operations
+* Verify database connectivity and initialize schema
+* Invoke `Import.loadAndValidate`
+* Present import and validation summaries
+* Invoke `GraphData` for derived relationships
+* Order graph node and relationship creation
+
+`Program.fs` intentionally remains thin so that the application workflow is readable without containing the implementation details of each stage.
 
 ---
 
@@ -531,46 +582,59 @@ The system does not create generic placeholder nodes from relationship data beca
 
 # Import Pipeline
 
-The application imports foundational entities before dependent entities and creates nodes before relationships.
+`Program.fs` delegates the read and validation portion of the workflow to `Import.loadAndValidate`. The Import module reads foundational entities before dependent entities and preserves the dependency ordering required by validation.
 
 Conceptually:
 
 ```text
-Read Persons
-      ↓
-Validate Persons
+Program
+  ↓
+Import.loadAndValidate
+  │
+  ├─ Read Persons
+  │    ↓
+  │  Validate Persons
+  │
+  ├─ Read Institutions
+  │    ↓
+  │  Validate Institutions
+  │
+  ├─ Read Customers
+  │    ↓
+  │  Validate Customers
+  │    ↓
+  │  requires validated Institutions
+  │
+  ├─ Read Accounts + Ownerships
+  │    ↓
+  │  Validate Accounts
+  │    ↓
+  │  requires validated Institutions
+  │
+  └─ Validate Ownerships
+       ↓
+     requires validated Customers + Accounts
 
-Read Institutions
-      ↓
-Validate Institutions
-
-Read Customers
-      ↓
-Validate Customers
-      ↓
-requires validated Institutions
-
-Read Accounts + Ownerships
-      ↓
-Validate Accounts
-      ↓
-requires validated Institutions
-
-Validate Ownerships
-      ↓
-requires validated Customers + Accounts
-
+ImportResults
+  ├─ source read counts
+  ├─ validated entities
+  └─ validation errors
+       ↓
+Import summary + ValidationReport
+       ↓
+GraphData derives HAS_CUSTOMER_RECORD and HELD_AT
+       ↓
 Create Person Nodes
-Create Institution Nodes
 Create Customer Nodes
+Create Institution Nodes
 Create Account Nodes
-      ↓
+       ↓
 Create HAS_CUSTOMER_RECORD Relationships
 Create OWNS Relationships
 Create HELD_AT Relationships
 ```
 
-The ordering ensures that dependent validation uses only entities that survived earlier validation.
+The ordering ensures that dependent validation uses only entities that survived earlier validation. `ImportResults` keeps the original read count beside each validation result so summary statistics such as records read, records validated, and validation errors can be produced after the workflow completes.
 
 ---
 
