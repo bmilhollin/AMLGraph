@@ -9,18 +9,6 @@ async {
 
     do! Schema.initializeAsync ()
 
-    // read and validate institutions
-    let institutions =
-        Reader.Institution.read "Data/Institutions.tsv"
-    printfn "Read %d institutions" institutions.Length
-
-    let validatedInstitutions =
-        Validation.Institution.validate institutions
-    printfn "Validated %d institutions" validatedInstitutions.Valid.Length
-
-    if not validatedInstitutions.Errors.IsEmpty then
-        printfn "Found %d institution validation errors" validatedInstitutions.Errors.Length
-
     // read and validate persons
     let persons = 
         Reader.Person.read "Data/Persons.tsv"
@@ -32,6 +20,18 @@ async {
 
     if not validatedPersons.Errors.IsEmpty then
         printfn "Found %d person validation errors" validatedPersons.Errors.Length
+
+    // read and validate institutions
+    let institutions =
+        Reader.Institution.read "Data/Institutions.tsv"
+    printfn "Read %d institutions" institutions.Length
+
+    let validatedInstitutions =
+        Validation.Institution.validate institutions
+    printfn "Validated %d institutions" validatedInstitutions.Valid.Length
+
+    if not validatedInstitutions.Errors.IsEmpty then
+        printfn "Found %d institution validation errors" validatedInstitutions.Errors.Length
 
     // read and validate customers
     let customers = 
@@ -84,13 +84,13 @@ async {
         printfn "Found %d ownership validation errors" validatedOwnerships.Errors.Length
 
     // create graph nodes and relationships
+    do! Graph.Nodes.Person.create validatedPersons.Valid
+    do! Graph.Nodes.Customer.create validatedCustomers.Valid
     do! Graph.Nodes.Institution.create validatedInstitutions.Valid
     do! Graph.Nodes.Account.create validatedAccounts.Valid
-    do! Graph.Nodes.Customer.create validatedCustomers.Valid
-    do! Graph.Nodes.Person.create validatedPersons.Valid
-    do! Graph.Relationships.Held_At.create held_ats
-    do! Graph.Relationships.Ownership.create validatedOwnerships.Valid
     do! Graph.Relationships.Has_Customer_Record.create has_customer_records
+    do! Graph.Relationships.Ownership.create validatedOwnerships.Valid
+    do! Graph.Relationships.Held_At.create held_ats
 
     Neo4j.driver.Dispose() // move this function to infrastructure
         
