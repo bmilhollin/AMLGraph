@@ -258,6 +258,10 @@ This distinction prevents institution-specific customer identifiers and attribut
 
 For example, `RiskRating` belongs to Customer rather than Person because different Institutions may assign different risk ratings to the same Person.
 
+A Customer may exist without a corresponding validated Person. The Customer represents an Institution's customer record, while Person represents a resolved real-world individual.
+
+This distinction is important in AML analysis because customer records may contain false, stolen, or otherwise unreliable identity information. An unresolved Person therefore does not invalidate the Customer or its Accounts and may itself represent information relevant to investigation.
+
 ---
 
 # Domain Objects Represent Meaning, Not Formatting
@@ -482,6 +486,8 @@ UniqueCustomerId
 A separate validation module is not currently required for this relationship.
 
 If the referenced Person does not exist, no placeholder Person is automatically created.
+
+The Customer remains in the graph without the relationship because inability to resolve a Person does not invalidate the Institution's Customer record.
 
 ## HELD_AT
 

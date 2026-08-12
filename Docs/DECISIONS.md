@@ -679,7 +679,11 @@ CustomerId + InstitutionId
 
 **Reason**
 
-A Customer record remains valid institution data even if the Person record cannot currently be resolved or validated.
+A Customer record represents information held by a financial institution and may remain valid institution data even when the referenced Person cannot be resolved or validated.
+
+In an AML context, this distinction is important. A customer or account may have been created using false, stolen, or otherwise unreliable identity information. Rejecting the Customer because no valid Person exists would discard potentially significant investigative information.
+
+Person resolution and Customer validity are therefore separate concerns.
 
 **Consequence**
 

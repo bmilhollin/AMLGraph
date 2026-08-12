@@ -63,7 +63,9 @@ async {
     if not validatedAccounts.Errors.IsEmpty then
         printfn "Found %d account validation errors" validatedAccounts.Errors.Length
 
-    // no validation is needed for Has_Customer_Record relationships since they are derived from valid customers
+    // no additional validation is required before attempting creation
+    // note that we are not guaranteeing that all persons exist
+    // a customer record without a person relationship can represent a potential AML risk
     let has_customer_records =
         validatedCustomers.Valid
         |> List.map (fun c -> { PersonId = c.PersonId; CustomerKey = c.Key })
