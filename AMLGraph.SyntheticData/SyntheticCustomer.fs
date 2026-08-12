@@ -14,6 +14,12 @@ module SyntheticCustomer =
             PersonId = PersonId "SYN-P001"
             RiskRating = 1
         }
+    
+    let johnDifferentInstitution =
+        {
+            john with
+                InstitutionId = InstitutionId "SYN-FI002"
+        }
 
     let johnHigherRisk =
         {
@@ -24,7 +30,7 @@ module SyntheticCustomer =
     let mary =
         {
             CustomerId = CustomerId "SYN-C002"
-            InstitutionId = InstitutionId "SYN-FI002"
+            InstitutionId = InstitutionId "SYN-FI001"
             PersonId = PersonId "SYN-P002"
             RiskRating = 2
         }

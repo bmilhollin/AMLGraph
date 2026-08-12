@@ -25,42 +25,34 @@ module Ownership =
 
     let private validateOwnership validCustomerKeys validAccountKeys ownership =
 
-        // Do these relationships reference existing entities?
-
         let customerExists =
             Set.contains ownership.CustomerKey validCustomerKeys
 
         let accountExists =
             Set.contains ownership.AccountKey validAccountKeys
 
-        let customerInstitutionId = 
+        let customerInstitutionId =
             snd (EntityIds.uniqueCustomerIdValues ownership.CustomerKey)
-            |> EntityIds.institutionIdValue
 
-        let accountInstitutionId = 
+        let accountInstitutionId =
             snd (EntityIds.uniqueAccountIdValues ownership.AccountKey)
-            |> EntityIds.institutionIdValue
 
-        if customerInstitutionId <> accountInstitutionId then
-            None,
-            [ mismatchedInstitutions ownership ]
-        else
-            match customerExists, accountExists with 
-            | true, true ->
-                Some ownership, []
-
-            | false, true ->
-                None, [ missingCustomer ownership.CustomerKey ]
-
-            | true, false ->
-                None, [ missingAccount ownership.AccountKey ]
-
-            | false, false ->
-                None,
-                [
+        let errors =
+            [
+                if not customerExists then
                     missingCustomer ownership.CustomerKey
+
+                if not accountExists then
                     missingAccount ownership.AccountKey
-                ]
+
+                if customerInstitutionId <> accountInstitutionId then
+                    mismatchedInstitutions ownership
+            ]
+
+        if List.isEmpty errors then
+            Some ownership, []
+        else
+            None, errors
 
     let validate 
         (customers: Customer list) 

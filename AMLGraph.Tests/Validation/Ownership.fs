@@ -17,7 +17,7 @@ module Ownership =
         testList "Ownership Validation" [
 
             testCase 
-                "valid customerId and valid accountKey produce valid ownership"
+                "valid customerKey and valid accountKey produce valid ownership"
                 
                 (fun () ->
 
@@ -193,8 +193,8 @@ module Ownership =
 
                     Expect.equal
                         result.Errors.Length
-                        1
-                        "Expected 1 validation error"
+                        2
+                        "Expected 2 validation errors"
 
                     Expect.equal
                         (
@@ -205,9 +205,10 @@ module Ownership =
                         (   
                             set [
                                     ValidationIssue.MissingAccount
+                                    ValidationIssue.MismatchedInstitutions
                                 ]
                         )
-                        "Expected MissingAccount issues"
+                        "Expected MissingAccount and MismatchedInstitutions issues"
                 )
 
             testCase 
@@ -277,8 +278,8 @@ module Ownership =
 
                     Expect.equal
                         result.Errors.Length
-                        2
-                        "Expected 2 validation errors"
+                        3
+                        "Expected 3 validation errors"
 
                     Expect.equal
                         (
@@ -290,9 +291,10 @@ module Ownership =
                             set [
                                     ValidationIssue.MissingCustomer
                                     ValidationIssue.MissingAccount
+                                    ValidationIssue.MismatchedInstitutions
                                 ]
                         )
-                        "Expected MissingCustomer and MissingAccount issues"
+                        "Expected MissingCustomer, MissingAccount, and MismatchedInstitutions issues"
                 )
 
             testCase 
@@ -303,8 +305,8 @@ module Ownership =
                     // Arrange
                     let ownerships =
                         [
-                            SyntheticOwnership.johnOwnsA100
                             SyntheticOwnership.jamesOwnsUnknownAccount
+                            SyntheticOwnership.johnOwnsA100
                         ]
                     
                     // Act
@@ -317,20 +319,28 @@ module Ownership =
                     // Assert
                     Expect.equal
                         result.Valid.Length
-                        2
-                        "Expected 2 valid ownerships"
+                        1
+                        "Expected 1 valid ownership"
 
                     Expect.equal
-                        result.Errors.Length
-                        0
-                        "Expected 0 validation errors"
+                        (
+                            result.Errors 
+                            |> List.map (fun o -> o.Issue)
+                            |> Set.ofList
+                        )
+                        (   
+                            set [
+                                    ValidationIssue.MissingAccount
+                                    ValidationIssue.MismatchedInstitutions
+                                ]
+                        )
+                        "Expected MissingAccount and MismatchedInstitutions issues"
 
                     Expect.equal
                         (result.Valid |> Set.ofList)
                         (
                             [
                                 SyntheticOwnership.johnOwnsA100
-                                SyntheticOwnership.jamesOwnsUnknownAccount
                             ] 
                             |> Set.ofList
                         )
