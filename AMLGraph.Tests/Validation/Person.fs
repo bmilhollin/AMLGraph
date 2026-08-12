@@ -4,6 +4,7 @@ open Expecto
 
 open AMLGraph.Domain
 open AMLGraph.Validation
+open AMLGraph.Reporting
 open AMLGraph.SyntheticData
 
 module Person =
@@ -14,7 +15,7 @@ module Person =
         testList "Person Validation" [
 
             testCase 
-                "A single person with unique personId is valid"
+                "A single person with unique PersonId is valid"
                 (fun () ->
 
                     // Arrange
@@ -35,11 +36,11 @@ module Person =
 
                     Expect.isEmpty
                         result.Errors
-                        "Expected 0 validation errors"
+                        (ValidationReport.formatErrors result.Errors)
                 )
 
             testCase 
-                "Duplicate personIds with identical attributes produce one valid person" 
+                "Duplicate PersonIds with identical attributes produce one valid person" 
                 (fun () ->
 
                     // Arrange
@@ -48,7 +49,6 @@ module Person =
                             SyntheticPerson.john
                             SyntheticPerson.john
                         ]
-
                     
                     // Act
                     let result =
@@ -62,11 +62,11 @@ module Person =
 
                     Expect.isEmpty
                         result.Errors
-                        "Expected 0 validation errors"
+                        (ValidationReport.formatErrors result.Errors)
                 )
 
             testCase
-                "Duplicate personIds with conflicting attributes are rejected"
+                "Duplicate PersonIds with conflicting attributes are rejected"
                 (fun () ->
                     // Arrange
                     let persons =
@@ -87,7 +87,7 @@ module Person =
                     Expect.hasLength
                         result.Errors
                         1
-                        "Expected 1 validation error"
+                        (ValidationReport.formatErrors result.Errors)
 
                     let error = result.Errors.Head
 
@@ -103,7 +103,7 @@ module Person =
                     )
 
             testCase
-                "Conflicting personIds groups do not prevent valid person groups from being imported"
+                "Conflicting PersonIds groups do not prevent valid person groups from being imported"
                 (fun () ->
                     // Arrange
                     let persons =
@@ -127,7 +127,7 @@ module Person =
                     Expect.hasLength
                         result.Errors
                         1
-                        "Expected 1 validation error"
+                        (ValidationReport.formatErrors result.Errors)
 
                     let error = result.Errors.Head
 
@@ -154,6 +154,6 @@ module Person =
                                     SyntheticPerson.james.PersonId
                                 ]
                         )
-                        "Expected mary and james to be valid persons"
+                        "Expected Mary and James to be valid persons"
                 )
         ]
