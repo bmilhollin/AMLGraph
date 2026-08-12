@@ -12,8 +12,8 @@ let main argv =
             testList "AMLGraph.Tests" 
                 [
                     Validation.Person.tests
-                    Validation.Customer.tests
                     Validation.Institution.tests
+                    Validation.Customer.tests
                     Validation.Account.tests
                     Validation.Ownership.tests
                 ]

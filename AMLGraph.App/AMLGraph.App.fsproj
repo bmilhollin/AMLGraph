@@ -19,6 +19,8 @@
     <Compile Include="Graph\Relationships\Has_Customer_Record.fs" />
     <Compile Include="Graph\Relationships\Held_At.fs" />
     <Compile Include="Graph\Relationships\Ownership.fs" />
+    <Compile Include="GraphData.fs" />
+    <Compile Include="Import.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
@@ -29,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AMLGraph.Domain\AMLGraph.Domain.fsproj" />
+    <ProjectReference Include="..\AMLGraph.Reporting\AMLGraph.Reporting.fsproj" />
   </ItemGroup>
 
 </Project>
