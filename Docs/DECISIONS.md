@@ -978,6 +978,80 @@ HELD_AT
 
 ---
 
+### Import Workflow Is Encapsulated in the Import Module
+
+**Decision**
+
+Keep `Program.fs` focused on application orchestration and move the read-and-validate workflow into `Import.loadAndValidate`.
+
+`Import.loadAndValidate` reads source files, validates entities in dependency order, and returns an `ImportResults` value.
+
+**Reason**
+
+As additional domain concepts and validation rules were added, `Program.fs` became responsible for too many low-level workflow details. The read-and-validate sequence is a cohesive application concern and can be expressed more clearly behind a single import function.
+
+Keeping this logic in `Import` allows `Program.fs` to describe the high-level application flow rather than the mechanics of each import step.
+
+**Consequences**
+
+* `Program.fs` coordinates connection setup, schema initialization, import, reporting, graph creation, and shutdown.
+* `Import` coordinates Readers and Validators in the required dependency order.
+* `ImportResult<'T>` retains both the number of source records read and the corresponding `Validated<'T list>` result.
+* `ImportResults` aggregates the results for Person, Institution, Customer, Account, and Ownership imports.
+* Validation errors can be collected from the aggregate result without duplicating that logic in `Program.fs`.
+* Reader and Validation modules remain responsible only for parsing and business-rule validation respectively.
+
+---
+
+### Validation Reporting Is Separate From Validation Logic
+
+**Decision**
+
+Keep validation issues as typed domain values and format them for human consumption in `AMLGraph.Reporting.ValidationReport`.
+
+Validation reporting groups errors by `EntityKey` so multiple issues associated with one entity or relationship are presented together.
+
+**Reason**
+
+Validation modules should describe what is wrong, not how the problem is displayed. Human-readable formatting is a presentation concern and should remain outside the Domain and Validation layers.
+
+Grouping by `EntityKey` also makes it clear whether several validation issues belong to one invalid instance or to several different instances. This is especially important for relationships such as Ownership, where one source record may produce multiple independent validation issues.
+
+**Consequences**
+
+* Validators continue to return `ValidationError` values containing domain-level `EntityKey` and `ValidationIssue` values.
+* `ValidationReport` converts identifiers and issues into readable text.
+* Multiple issues for the same entity or relationship are reported as one grouped block.
+* Expecto tests can reuse the same formatter in assertion failure messages instead of adding temporary `printfn` statements.
+* Reporting can later write to console, file, or another destination without changing validation behavior.
+
+---
+
+### Derived Graph Data Is Constructed Outside Program
+
+**Decision**
+
+Construct deterministically derived relationship records in `GraphData` rather than directly in `Program.fs`.
+
+Current derived graph data includes:
+
+```text
+HAS_CUSTOMER_RECORD
+HELD_AT
+```
+
+**Reason**
+
+The relationship records are derived from validated domain entities and do not represent application orchestration. Moving their construction out of `Program.fs` keeps the composition root focused on sequencing while keeping graph-specific preparation explicit and reusable.
+
+**Consequences**
+
+* `GraphData.hasCustomerRecords` derives Person-to-Customer relationship records from validated Customers.
+* `GraphData.heldAts` derives Account-to-Institution relationship records from validated Accounts.
+* The documented rule remains in force that an unresolved Person does not invalidate a Customer; a derived `HAS_CUSTOMER_RECORD` may therefore fail to match a Person without removing the Customer from the graph.
+
+---
+
 # Current Core Identity Model
 
 The current AMLGraph identity rules are:
