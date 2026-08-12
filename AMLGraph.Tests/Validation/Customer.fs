@@ -13,6 +13,15 @@ module Customer =
 
         testList "Customer Validation" [
 
+            let validatedInstitutionIds =
+                [
+                    SyntheticInstitution.bank01
+                    SyntheticInstitution.bank02
+                    SyntheticInstitution.bank03
+                ]
+                |> List.map (fun a -> a.InstitutionId)
+                |> Set.ofList
+
             testCase 
                 "A single customer with unique CustomerKey is valid"
                 (fun () ->
@@ -25,7 +34,7 @@ module Customer =
                     
                     // Act
                     let result =
-                        Customer.validate customers
+                        Customer.validate validatedInstitutionIds customers
 
                     // Assert
                     Expect.equal
@@ -52,7 +61,7 @@ module Customer =
                     
                     // Act
                     let result =
-                        Customer.validate customers
+                        Customer.validate validatedInstitutionIds customers
 
                     // Assert
                     Expect.equal
@@ -77,7 +86,7 @@ module Customer =
 
                     // Act
                     let result =
-                        Customer.validate customers
+                        Customer.validate validatedInstitutionIds customers
                         
                     // Assert
                     Expect.isEmpty
@@ -103,7 +112,7 @@ module Customer =
                 )
 
             testCase
-                "Conflicting customerId groups do not prevent valid customer groups from being imported"
+                "Conflicting customer key groups do not prevent valid customer groups from being imported"
                 (fun () ->
                     // Arrange
                     let customers =
@@ -117,7 +126,7 @@ module Customer =
 
                     // Act
                     let result =
-                        Customer.validate customers
+                        Customer.validate validatedInstitutionIds customers
                         
                     // Assert
                     Expect.hasLength
@@ -142,19 +151,60 @@ module Customer =
                         (CustomerKey SyntheticCustomer.john.Key)
                         "Expected error to reference the conflicting customer"
 
-                    let validIds =
+                    let validKeys =
                         result.Valid
-                        |> List.map (fun c -> c.CustomerId)
+                        |> List.map (fun c -> c.Key)
                         |> Set.ofList
 
                     Expect.equal
-                        validIds
+                        validKeys
                         (   
                             set [
-                                    SyntheticCustomer.mary.CustomerId
-                                    SyntheticCustomer.james.CustomerId
-                                ]
+                                SyntheticCustomer.mary.Key
+                                SyntheticCustomer.james.Key
+                            ]
                         )
                         "Expected Mary and James to be valid customers"
+                )
+
+            testCase
+                "Same CustomerId at different institutions are treated as different customers"
+                (fun () ->
+
+                    // Arrange
+                    let customers =
+                        [
+                            SyntheticCustomer.john
+                            SyntheticCustomer.johnDifferentInstitution
+                        ]
+
+                    // Act
+                    let result =
+                        Customer.validate validatedInstitutionIds customers
+
+                    // Assert
+                    Expect.hasLength
+                        result.Valid
+                        2
+                        "Expected 2 valid customers"
+
+                    Expect.isEmpty
+                        result.Errors
+                        "Expected 0 validation errors"
+
+                    let validKeys =
+                        result.Valid
+                        |> List.map (fun c -> c.Key)
+                        |> Set.ofList
+
+                    Expect.equal
+                        validKeys
+                        (
+                            set [
+                                SyntheticCustomer.john.Key
+                                SyntheticCustomer.johnDifferentInstitution.Key
+                            ]
+                        )
+                        "Expected same CustomerId at different institutions to produce distinct customer keys"
                 )
         ]

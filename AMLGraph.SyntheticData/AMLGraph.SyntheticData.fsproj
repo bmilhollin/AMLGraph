@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="SyntheticPerson.fs" />
     <Compile Include="SyntheticCustomer.fs" />
     <Compile Include="SyntheticInstitution.fs" />
     <Compile Include="SyntheticAccount.fs" />

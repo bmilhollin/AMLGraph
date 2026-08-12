@@ -63,3 +63,9 @@ module SyntheticOwnership =
             CustomerKey = (CustomerId "SYN-C999", InstitutionId "SYN-FI001") |> UniqueCustomerId
             AccountKey = (AccountId "SYN-999", InstitutionId "SYN-999") |> UniqueAccountId
         }
+    
+    let mismatchedInstitutionsOwnership =
+        {
+            CustomerKey = SyntheticCustomer.john.Key                     // InstitutionId = SYN-FI001
+            AccountKey = SyntheticAccount.a100DifferentInstitution.Key   // InstitutionId = SYN-FI002
+        }

@@ -9,6 +9,18 @@ async {
 
     do! Schema.initializeAsync ()
 
+    // read and validate institutions
+    let institutions =
+        Reader.Institution.read "Data/Institutions.tsv"
+    printfn "Read %d institutions" institutions.Length
+
+    let validatedInstitutions =
+        Validation.Institution.validate institutions
+    printfn "Validated %d institutions" validatedInstitutions.Valid.Length
+
+    if not validatedInstitutions.Errors.IsEmpty then
+        printfn "Found %d institution validation errors" validatedInstitutions.Errors.Length
+
     // read and validate persons
     let persons = 
         Reader.Person.read "Data/Persons.tsv"
@@ -26,24 +38,17 @@ async {
         Reader.Customer.read "Data/Customers.tsv"
     printfn "Read %d customers" customers.Length
 
+    let validInstitutionIds =
+            validatedInstitutions.Valid
+            |> List.map (fun i -> i.InstitutionId)
+            |> Set.ofList
+
     let validatedCustomers =
-        Validation.Customer.validate customers
+        Validation.Customer.validate validInstitutionIds  customers
     printfn "Validated %d customers" validatedCustomers.Valid.Length
 
     if not validatedCustomers.Errors.IsEmpty then
         printfn "Found %d customer validation errors" validatedCustomers.Errors.Length
-
-    // read and validate institutions
-    let institutions =
-        Reader.Institution.read "Data/Institutions.tsv"
-    printfn "Read %d institutions" institutions.Length
-
-    let validatedInstitutions =
-        Validation.Institution.validate institutions
-    printfn "Validated %d institutions" validatedInstitutions.Valid.Length
-
-    if not validatedInstitutions.Errors.IsEmpty then
-        printfn "Found %d institution validation errors" validatedInstitutions.Errors.Length
 
     // read and validate accounts and ownerships
     let accounts, ownerships = 
@@ -51,11 +56,7 @@ async {
     printfn "Read %d accounts" accounts.Length
     printfn "Read %d ownerships" ownerships.Length
 
-    let validatedAccounts =
-        let validInstitutionIds =
-            validatedInstitutions.Valid
-            |> List.map (fun i -> i.InstitutionId)
-            |> Set.ofList
+    let validatedAccounts =        
         Validation.Account.validate validInstitutionIds accounts
     printfn "Validated %d accounts" validatedAccounts.Valid.Length
 

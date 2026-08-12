@@ -12,7 +12,7 @@ module SyntheticPerson =
             PersonId = PersonId "SYN-P001"
             FirstName = "John"
             LastName = "Smith"
-            DOB = "1970-01-01"
+            Dob = "1970-01-01"
             Occupation = "Teacher"
         }
 
@@ -27,7 +27,7 @@ module SyntheticPerson =
             PersonId = PersonId "SYN-P002"
             FirstName = "Mary"
             LastName = "Jones"
-            DOB = "1980-05-12"
+            Dob = "1980-05-12"
             Occupation = "Nurse"
         }
 
@@ -42,7 +42,7 @@ module SyntheticPerson =
             PersonId = PersonId "SYN-P003"
             FirstName = "James"
             LastName = "Browning"
-            DOB = "1985-07-22"
+            Dob = "1985-07-22"
             Occupation = "Software Engineer"
         }
 

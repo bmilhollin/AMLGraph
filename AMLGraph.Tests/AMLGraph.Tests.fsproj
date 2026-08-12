@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Validation\Person.fs" />
     <Compile Include="Validation\Customer.fs" />
     <Compile Include="Validation\Institution.fs" />
     <Compile Include="Validation\Account.fs" />

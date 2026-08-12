@@ -6,32 +6,32 @@ open AMLGraph.Domain
 open AMLGraph.Validation
 open AMLGraph.SyntheticData
 
-module Institution =
+module Person =
 
     [<Tests>]
     let tests =
 
-        testList "Institution Validation" [
+        testList "Person Validation" [
 
             testCase 
-                "A single institution with unique InstitutionId is valid"
+                "A single person with unique personId is valid"
                 (fun () ->
 
                     // Arrange
-                    let institutions =
+                    let persons =
                         [
-                            SyntheticInstitution.bank01
+                            SyntheticPerson.john
                         ]
                     
                     // Act
                     let result =
-                        Institution.validate institutions
+                        Person.validate persons
 
                     // Assert
                     Expect.equal
                         result.Valid.Length
                         1
-                        "Expected 1 valid institution"
+                        "Expected 1 valid person"
 
                     Expect.isEmpty
                         result.Errors
@@ -39,26 +39,26 @@ module Institution =
                 )
 
             testCase 
-                "Duplicate institutionIds with identical attributes produce one valid institution" 
+                "Duplicate personIds with identical attributes produce one valid person" 
                 (fun () ->
 
                     // Arrange
-                    let institutions =
+                    let persons =
                         [
-                            SyntheticInstitution.bank01
-                            SyntheticInstitution.bank01
+                            SyntheticPerson.john
+                            SyntheticPerson.john
                         ]
 
                     
                     // Act
                     let result =
-                        Institution.validate institutions
+                        Person.validate persons
 
                     // Assert
                     Expect.equal
                         result.Valid.Length
                         1
-                        "Expected 1 valid institution"
+                        "Expected 1 valid person"
 
                     Expect.isEmpty
                         result.Errors
@@ -66,23 +66,23 @@ module Institution =
                 )
 
             testCase
-                "Duplicate institutionIds with conflicting attributes are rejected"
+                "Duplicate personIds with conflicting attributes are rejected"
                 (fun () ->
                     // Arrange
-                    let institutions =
+                    let persons =
                         [
-                            SyntheticInstitution.bank01
-                            SyntheticInstitution.bank01DifferentCountryCode
+                            SyntheticPerson.john
+                            SyntheticPerson.johnDifferentOccupation
                         ]
 
                     // Act
                     let result =
-                        Institution.validate institutions
+                        Person.validate persons
                         
                     // Assert
                     Expect.isEmpty
                         result.Valid
-                        "Expected 0 valid institutions"
+                        "Expected 0 valid persons"
 
                     Expect.hasLength
                         result.Errors
@@ -93,36 +93,36 @@ module Institution =
 
                     Expect.equal
                         error.Issue
-                        ConflictingInstitutionAttributes
-                        "Expected conflicting institution attributes error"
+                        ConflictingPersonAttributes
+                        "Expected conflicting person attributes error"
 
                     Expect.equal
                         error.Entity
-                        (InstitutionKey SyntheticInstitution.bank01.InstitutionId)
-                        "Expected error to reference the conflicting institution"
-                                    )
+                        (PersonKey SyntheticPerson.john.PersonId)
+                        "Expected error to reference the conflicting person"
+                    )
 
             testCase
-                "Conflicting institutionId groups do not prevent valid institution groups from being imported"
+                "Conflicting personIds groups do not prevent valid person groups from being imported"
                 (fun () ->
                     // Arrange
-                    let institutions =
+                    let persons =
                         [
-                            SyntheticInstitution.bank01
-                            SyntheticInstitution.bank01DifferentCountryCode
-                            SyntheticInstitution.bank02
-                            SyntheticInstitution.bank03
+                            SyntheticPerson.john
+                            SyntheticPerson.johnDifferentOccupation
+                            SyntheticPerson.mary
+                            SyntheticPerson.james
                         ]
 
                     // Act
                     let result =
-                        Institution.validate institutions
+                        Person.validate persons
                         
                     // Assert
                     Expect.hasLength
                         result.Valid
                         2
-                        "Expected 2 valid institutions"
+                        "Expected 2 valid persons"
 
                     Expect.hasLength
                         result.Errors
@@ -133,27 +133,27 @@ module Institution =
 
                     Expect.equal
                         error.Issue
-                        ConflictingInstitutionAttributes
-                        "Expected conflicting institution attributes error"
+                        ConflictingPersonAttributes
+                        "Expected conflicting person attributes error"
 
                     Expect.equal
                         error.Entity
-                        (InstitutionKey SyntheticInstitution.bank01.InstitutionId)
-                        "Expected error to reference the conflicting institution"
+                        (PersonKey SyntheticPerson.john.PersonId)
+                        "Expected error to reference the conflicting person"
 
                     let validIds =
                         result.Valid
-                        |> List.map (fun i -> i.InstitutionId)
+                        |> List.map (fun p -> p.PersonId)
                         |> Set.ofList
 
                     Expect.equal
                         validIds
                         (   
                             set [
-                                    SyntheticInstitution.bank02.InstitutionId
-                                    SyntheticInstitution.bank03.InstitutionId
+                                    SyntheticPerson.mary.PersonId
+                                    SyntheticPerson.james.PersonId
                                 ]
                         )
-                        "Expected bank02 and bank03 to be valid institutions"
+                        "Expected mary and james to be valid persons"
                 )
         ]

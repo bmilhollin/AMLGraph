@@ -165,7 +165,7 @@ module Ownership =
                                     SyntheticOwnership.johnOwnsA200.CustomerKey
                                 ]
                         )
-                        "Expected single SYN-C001 customer ID"
+                        "Expected single SYN-C001/SYN-FI001 customer key"
                 )
 
             testCase 
@@ -344,7 +344,7 @@ module Ownership =
                             ] 
                             |> Set.ofList
                         )
-                        "Expected both ownership relationships"
+                        "Expected valid ownership relationship"
                 )
 
             testCase 
@@ -387,5 +387,45 @@ module Ownership =
                             |> Set.ofList
                         )
                         "Expected both ownership relationships"
+                )
+
+            testCase 
+                "Valid customer and valid account with different institutionIds are rejected"
+                
+                (fun () ->
+
+                    // Arrange
+                    let ownerships =
+                        [
+                            SyntheticOwnership.mismatchedInstitutionsOwnership
+                        ]
+                    
+                    // Act
+                    let result =
+                        Ownership.validate 
+                            validatedCustomers
+                            validatedAccounts
+                            ownerships
+
+                    // Assert
+                    Expect.equal
+                        result.Valid.Length
+                        0
+                        "Expected 0 valid ownerships"
+
+                    Expect.equal
+                        result.Errors.Length
+                        1
+                        "Expected 1 validation error"
+
+                    Expect.equal
+                        (result.Errors |> List.map (fun e -> e.Issue) |> Set.ofList)
+                        (
+                            [
+                                ValidationIssue.MismatchedInstitutions
+                            ] 
+                            |> Set.ofList
+                        )
+                        "Expected single MismatchedInstitutions issue"
                 )
         ]
