@@ -6,32 +6,42 @@
     <img src="Docs/images/neo4j.png" width="850">
 </p>
 
-AMLGraph is a learning project and reference implementation for building Anti-Money Laundering (AML) graph applications using F# and Neo4j. The project emphasizes clean architecture, domain modeling, and graph-based analysis over framework complexity or premature optimization.
+AMLGraph is a learning project and reference implementation for building Anti-Money Laundering (AML) graph applications using F# and Neo4j. The project emphasizes clean architecture, explicit domain modeling, validation, and graph-based analysis over framework complexity or premature optimization.
 
 ## Why this project?
 
-Many Neo4j examples focus on Cypher queries or graph algorithms.
+Many Neo4j examples focus primarily on Cypher queries or graph algorithms.
 
-AMLGraph instead explores how to design a graph application from the ground up using clean domain modeling, validation, and explicit architectural boundaries. The project intentionally favors readability and maintainability over framework magic.
+AMLGraph instead explores how to design a graph application from the ground up using strongly typed domain models, validation, explicit identity rules, and clear architectural boundaries.
+
+The project intentionally favors readability, explicit behavior, and maintainability over framework magic.
 
 ## Goals
 
 * Learn Neo4j and Cypher through a realistic AML domain
 * Explore graph modeling techniques used in fraud detection and financial crime
 * Demonstrate a clean F# architecture for graph applications
-* Serve as a foundation for experimenting with graph algorithms, entity resolution, and AML analytics
+* Model institution-scoped customer and account identities explicitly
+* Serve as a foundation for experimenting with entity resolution, graph analytics, and AML investigations
 
 ---
 
 ## Current Status
 
 ```text
+✔ Person import
 ✔ Customer import
+✔ Institution import
 ✔ Account import
-✔ Validation
-✔ Synthetic data Library
-✔ Expecto test suite
+✔ Composite Customer and Account identities
+✔ Person-to-Customer relationships
+✔ Customer-to-Account ownership relationships
+✔ Account-to-Institution relationships
+✔ Domain validation
+✔ Synthetic data library
+✔ Expecto validation test suite
 ◻ Transactions
+◻ Contact and identity relationships
 ◻ Entity resolution
 ◻ Graph analytics
 ◻ AML investigations
@@ -39,14 +49,57 @@ AMLGraph instead explores how to design a graph application from the ground up u
 
 ---
 
+## Current Graph Model
+
+```text
+(Person)
+    |
+    | HAS_CUSTOMER_RECORD
+    ▼
+(Customer)
+    |
+    | OWNS
+    ▼
+(Account)
+    |
+    | HELD_AT
+    ▼
+(Institution)
+```
+
+The model distinguishes a real-world `Person` from an institution-specific `Customer`.
+
+A Person may have Customer records at multiple Institutions. A Customer may own multiple Accounts, and multiple Customers may jointly own the same Account.
+
+Customer and Account identifiers are institution-scoped:
+
+```text
+Person       → PersonId
+Institution  → InstitutionId
+Customer     → CustomerId + InstitutionId
+Account      → AccountId + InstitutionId
+```
+
+This allows the same `CustomerId` or `AccountId` to appear at different financial institutions without incorrectly representing them as the same node.
+
+---
+
 ## Current Features
 
 * Read AML data from tab-delimited files
-* Validate customer, financial institution, account, and ownership data
+* Convert source records into strongly typed domain objects
+* Validate Person, Customer, Institution, Account, and Ownership data
+* Detect conflicting duplicate records
+* Validate references between dependent domain objects
+* Accumulate multiple validation errors when appropriate
 * Create Neo4j nodes using `MERGE`
-* Enforce uniqueness with Neo4j constraints
-* Organize graph logic separately from business logic
-* Idempotent imports (running the importer multiple times does not create duplicate nodes)
+* Create `HAS_CUSTOMER_RECORD`, `OWNS`, and `HELD_AT` relationships
+* Represent joint account ownership
+* Represent one Person as a Customer of multiple Institutions
+* Enforce node identity using Neo4j constraints and composite node keys
+* Organize parsing, validation, graph persistence, and infrastructure separately
+* Support idempotent imports so repeated runs do not create duplicate graph objects
+* Use synthetic data for automated tests with no production records or personally identifiable information
 
 ---
 
@@ -57,6 +110,7 @@ AMLGraph instead explores how to design a graph application from the ground up u
 * Neo4j
 * Cypher
 * Neo4j .NET Driver
+* Expecto
 
 ---
 
@@ -71,70 +125,189 @@ AMLGraph
 │   ├── Program.fs
 │   ├── Reader
 │   ├── Graph
+│   │   ├── Nodes
+│   │   └── Relationships
 │   └── Infrastructure
+│       ├── Neo4j.fs
+│       └── Schema.fs
 │
 ├── AMLGraph.Domain
 │   ├── Domain.fs
 │   └── Validation
+│       ├── Person.fs
 │       ├── Customer.fs
 │       ├── Institution.fs
 │       ├── Account.fs
 │       └── Ownership.fs
 │
 ├── AMLGraph.SyntheticData
-│   └── SyntheticCustomer.fs
-│   └── SyntheticInstitution.fs
-│   └── SyntheticAccount.fs
+│   ├── SyntheticPerson.fs
+│   ├── SyntheticCustomer.fs
+│   ├── SyntheticInstitution.fs
+│   ├── SyntheticAccount.fs
 │   └── SyntheticOwnership.fs
 │
 ├── AMLGraph.Tests
 │   └── Validation
-│       └── Customer.fs
-│       └── Institution.fs
-│       └── Accounts.fs
-│       └── Ownerships.fs
+│       ├── Person.fs
+│       ├── Customer.fs
+│       ├── Institution.fs
+│       ├── Account.fs
+│       └── Ownership.fs
 │
 └── Docs
+    ├── ARCHITECTURE.md
+    └── DECISIONS.md
 ```
+
+---
+
+## Domain Identity
+
+AMLGraph uses strongly typed identifiers rather than primitive strings.
+
+Basic identifiers include:
+
+```text
+PersonId
+CustomerId
+AccountId
+InstitutionId
+```
+
+Customer and Account identities are institution-scoped:
+
+```text
+UniqueCustomerId = CustomerId + InstitutionId
+UniqueAccountId  = AccountId + InstitutionId
+```
+
+Ownership explicitly identifies both endpoints:
+
+```text
+OwnershipId = UniqueCustomerId + UniqueAccountId
+```
+
+These identity rules are enforced by domain validation and, for Neo4j nodes, schema constraints.
+
+---
+
+## Validation
+
+Validation occurs after parsing and before graph creation.
+
+Each validator operates on domain objects rather than raw file data.
+
+Current validation covers:
+
+```text
+Person
+Customer
+Institution
+Account
+Ownership
+```
+
+Validation includes:
+
+* Deduplication of identical records
+* Detection of conflicting records with the same identity
+* Institution validation for Customer and Account records
+* Customer and Account reference validation for Ownership
+* Institution consistency between the Customer and Account in an Ownership
+* Accumulation of multiple validation errors when multiple rules fail
+
+`HAS_CUSTOMER_RECORD` and `HELD_AT` do not require independent validation because they are derived from validated Customer and Account records.
 
 ---
 
 ## Import Pipeline
 
-```
+```text
+Read Persons
+      ↓
+Validate Persons
+
+Read Institutions
+      ↓
+Validate Institutions
+
 Read Customers
       ↓
 Validate Customers
       ↓
-Read Institutions
-      ↓
-Validate Institutions
-      ↓
+requires validated Institutions
+
 Read Accounts + Ownerships
       ↓
 Validate Accounts
       ↓
+requires validated Institutions
+
 Validate Ownerships
       ↓
+requires validated Customers + Accounts
+
+Create Person Nodes
+Create Institution Nodes
 Create Customer Nodes
-      ↓
 Create Account Nodes
       ↓
-Create Ownership Relationships
+Create HAS_CUSTOMER_RECORD Relationships
+Create OWNS Relationships
+Create HELD_AT Relationships
 ```
+
+---
+
+## Example Graph Behavior
+
+The current model can represent a Person who:
+
+* Is a Customer of multiple financial institutions
+* Owns multiple Accounts at one Institution
+* Has Accounts at multiple Institutions
+* Jointly owns an Account with another Customer
+
+For example:
+
+```text
+                    Person Alice
+                    /          \
+                   /            \
+          Customer/FI001     Customer/FI002
+             /     \               |
+            /       \              |
+           ▼         ▼             ▼
+       Account     Account       Account
+                      ▲
+                      |
+                     OWNS
+                      |
+                Customer/FI001
+                      |
+                  Person Bob
+```
+
+This structure preserves the distinction between real-world identity, institution-specific customer records, accounts, and financial institutions.
 
 ---
 
 # Extension Strategy
 
-New graph concepts should generally require:
+New graph concepts should be introduced according to the needs of the domain rather than through a fixed amount of scaffolding.
 
-1. A new domain record
-1. A reader function
-1. A validation function
-1. A graph node or relationship module
-1. Program orchestration
+A new concept may require:
 
-The architecture is intended to grow by extension rather than modification.
+1. A domain type or identifier
+2. Reader support if the concept originates in source data
+3. Validation if the concept has independent business rules
+4. A graph node or relationship module
+5. Program orchestration
+6. Synthetic data and automated tests where business behavior needs verification
+
+Relationships that can be deterministically derived from already validated domain objects do not necessarily require their own reader or validation module.
+
+The architecture is intended to grow by extension while avoiding abstractions that have not yet demonstrated a need.
 
 See **ARCHITECTURE.md** for architectural details and **DECISIONS.md** for the reasoning behind major design choices.
