@@ -1,9 +1,9 @@
 namespace AMLGraph.Domain
 
 type PersonId = PersonId of string
+type InstitutionId = InstitutionId of string
 type CustomerId = CustomerId of string
 type AccountId = AccountId of string
-type InstitutionId = InstitutionId of string
 type UniqueCustomerId = UniqueCustomerId of (CustomerId * InstitutionId)
 type UniqueAccountId = UniqueAccountId of (AccountId * InstitutionId)
 type OwnershipId = OwnershipId of (UniqueCustomerId * UniqueAccountId)
