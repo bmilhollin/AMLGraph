@@ -13,24 +13,27 @@ async {
     let importResult =
         Import.loadAndValidate ()
 
-    ValidationReport.formatErrors importResult.Errors
-    |> printfn "Validation Errors:\n%s"
+    Import.summarize importResult
+    |> printfn "%s"
+
+    ValidationReport.summarizeErrors importResult.Errors
+    |> printfn "%s"
 
     let hasCustomerRecords =
-        GraphData.hasCustomerRecords importResult.Customers.Valid
+        GraphData.hasCustomerRecords importResult.Customers.Validation.Valid
 
     let heldAts =
-        GraphData.heldAts importResult.Accounts.Valid
+        GraphData.heldAts importResult.Accounts.Validation.Valid
 
-    do! Graph.Nodes.Person.create importResult.Persons.Valid
-    do! Graph.Nodes.Customer.create importResult.Customers.Valid
-    do! Graph.Nodes.Institution.create importResult.Institutions.Valid
-    do! Graph.Nodes.Account.create importResult.Accounts.Valid
+    do! Graph.Nodes.Person.create importResult.Persons.Validation.Valid
+    do! Graph.Nodes.Customer.create importResult.Customers.Validation.Valid
+    do! Graph.Nodes.Institution.create importResult.Institutions.Validation.Valid
+    do! Graph.Nodes.Account.create importResult.Accounts.Validation.Valid
     do! Graph.Relationships.Has_Customer_Record.create hasCustomerRecords
-    do! Graph.Relationships.Ownership.create importResult.Ownerships.Valid
+    do! Graph.Relationships.Ownership.create importResult.Ownerships.Validation.Valid
     do! Graph.Relationships.Held_At.create heldAts
 
-    Neo4j.driver.Dispose() // move this function to infrastructure
+    Neo4j.dispose ()
         
 }
 |> Async.RunSynchronously

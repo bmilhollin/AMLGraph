@@ -23,6 +23,9 @@ module Neo4j =
             printfn "Verified connection"
         }
 
+    let dispose () =
+        driver.Dispose()
+
     let executeWriteAsync cypher parameters =
         async {
 
