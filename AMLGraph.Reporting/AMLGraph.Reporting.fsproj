@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="ValidationReport.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AMLGraph.Domain\AMLGraph.Domain.fsproj" />
+  </ItemGroup>
+
+</Project>

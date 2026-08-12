@@ -1,6 +1,7 @@
 <Solution>
   <Project Path="AMLGraph.App/AMLGraph.App.fsproj" />
   <Project Path="AMLGraph.Domain/AMLGraph.Domain.fsproj" />
+  <Project Path="AMLGraph.Reporting/AMLGraph.Reporting.fsproj" />
   <Project Path="AMLGraph.SyntheticData/AMLGraph.SyntheticData.fsproj" />
   <Project Path="AMLGraph.Tests/AMLGraph.Tests.fsproj" />
 </Solution>

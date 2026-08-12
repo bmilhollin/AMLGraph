@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AMLGraph.SyntheticData\AMLGraph.SyntheticData.fsproj" />
+    <ProjectReference Include="..\AMLGraph.Reporting\AMLGraph.Reporting.fsproj" />
     <ProjectReference Include="..\AMLGraph.Domain\AMLGraph.Domain.fsproj" />
   </ItemGroup>
 

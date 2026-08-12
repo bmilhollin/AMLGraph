@@ -4,6 +4,7 @@ open Expecto
 
 open AMLGraph.Domain
 open AMLGraph.Validation
+open AMLGraph.Reporting
 open AMLGraph.SyntheticData
 
 module Account =
@@ -44,7 +45,7 @@ module Account =
 
                     Expect.isEmpty
                         result.Errors
-                        "Expected 0 validation errors"
+                        (ValidationReport.formatErrors result.Errors)
                 )
 
             testCase 
@@ -71,7 +72,7 @@ module Account =
 
                     Expect.isEmpty
                         result.Errors
-                        "Expected 0 validation errors"
+                        (ValidationReport.formatErrors result.Errors)
                 )
 
             testCase
@@ -96,7 +97,7 @@ module Account =
                     Expect.hasLength
                         result.Errors
                         1
-                        "Expected 1 validation error"
+                        (ValidationReport.formatErrors result.Errors)
 
                     let error = result.Errors.Head
 
@@ -137,7 +138,7 @@ module Account =
                     Expect.hasLength
                         result.Errors
                         1
-                        "Expected 1 validation error"
+                        (ValidationReport.formatErrors result.Errors)
 
                     let error = result.Errors.Head
 
@@ -188,7 +189,7 @@ module Account =
                     Expect.hasLength
                         result.Errors
                         1
-                        "Expected 1 validation error"
+                        (ValidationReport.formatErrors result.Errors)
 
                     let error = result.Errors.Head
 
@@ -221,7 +222,7 @@ module Account =
                     Expect.hasLength
                         result.Errors
                         1
-                        "Expected 1 validation error"
+                        (ValidationReport.formatErrors result.Errors)
 
                     let error = result.Errors.Head
 
@@ -261,10 +262,9 @@ module Account =
                         2
                         "Expected 2 valid accounts"
 
-                    Expect.hasLength
+                    Expect.isEmpty
                         result.Errors
-                        0
-                        "Expected 0 validation errors"
+                        (ValidationReport.formatErrors result.Errors)
 
                     let institutions = 
                         result.Valid
