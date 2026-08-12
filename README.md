@@ -162,6 +162,16 @@ AMLGraph
 
 ---
 
+## Execution
+
+```text
+dotnet run --project AMLGraph.Tests
+
+dotnet run --project AMLGraph.App
+```
+
+---
+
 ## Domain Identity
 
 AMLGraph uses strongly typed identifiers rather than primitive strings.
