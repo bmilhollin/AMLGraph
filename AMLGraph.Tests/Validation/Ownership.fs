@@ -4,6 +4,7 @@ open Expecto
 
 open AMLGraph.Domain
 open AMLGraph.Validation
+open AMLGraph.Reporting
 open AMLGraph.SyntheticData
 
 module Ownership =
@@ -17,7 +18,7 @@ module Ownership =
         testList "Ownership Validation" [
 
             testCase 
-                "valid customerKey and valid accountKey produce valid ownership"
+                "Valid CustomerKey and valid AccountKey produce valid ownership"
                 
                 (fun () ->
 
@@ -42,11 +43,11 @@ module Ownership =
 
                     Expect.isEmpty
                         result.Errors
-                        "Expected 0 validation errors"
+                        (ValidationReport.formatErrors result.Errors)
                 )
 
             testCase 
-                "duplicate ownership rows produce one valid ownership"
+                "Duplicate ownership rows produce one valid ownership"
                 
                 (fun () ->
 
@@ -72,11 +73,11 @@ module Ownership =
 
                     Expect.isEmpty
                         result.Errors
-                        "Expected 0 validation errors"
+                        (ValidationReport.formatErrors result.Errors)
                 )
 
             testCase 
-                "multiple customers may own the same account"
+                "Multiple customers may own the same account"
                 
                 (fun () ->
 
@@ -102,7 +103,7 @@ module Ownership =
 
                     Expect.isEmpty
                         result.Errors
-                        "Expected 0 validation errors"
+                        (ValidationReport.formatErrors result.Errors)
 
                     Expect.equal
                         (result.Valid |> Set.ofList)
@@ -125,7 +126,7 @@ module Ownership =
                 )
 
             testCase 
-                "one customer may own multiple accounts"
+                "One customer may own multiple accounts"
                 
                 (fun () ->
 
@@ -151,7 +152,7 @@ module Ownership =
 
                     Expect.isEmpty
                         result.Errors
-                        "Expected 0 validation errors"
+                        (ValidationReport.formatErrors result.Errors)
 
                     Expect.equal
                         (
@@ -169,7 +170,7 @@ module Ownership =
                 )
 
             testCase 
-                "valid customer referencing a unknown account is rejected"
+                "Valid customer referencing an unknown account is rejected"
                 
                 (fun () ->
 
@@ -194,7 +195,7 @@ module Ownership =
                     Expect.equal
                         result.Errors.Length
                         2
-                        "Expected 2 validation errors"
+                        (ValidationReport.formatErrors result.Errors)
 
                     Expect.equal
                         (
@@ -212,7 +213,7 @@ module Ownership =
                 )
 
             testCase 
-                "unknown customer referencing a valid account is rejected"
+                "Unknown customer referencing a valid account is rejected"
                 
                 (fun () ->
 
@@ -237,7 +238,7 @@ module Ownership =
                     Expect.equal
                         result.Errors.Length
                         1
-                        "Expected 1 validation error"
+                        (ValidationReport.formatErrors result.Errors)
 
                     Expect.equal
                         (
@@ -254,7 +255,7 @@ module Ownership =
                 )
 
             testCase 
-                "unknown customer referencing a unknown account is rejected"
+                "Unknown customer referencing an unknown account is rejected"
                 
                 (fun () ->
 
@@ -279,7 +280,7 @@ module Ownership =
                     Expect.equal
                         result.Errors.Length
                         3
-                        "Expected 3 validation errors"
+                        (ValidationReport.formatErrors result.Errors)
 
                     Expect.equal
                         (
@@ -298,7 +299,7 @@ module Ownership =
                 )
 
             testCase 
-                "invalid ownerships do not prevent valid ownerships from being imported"
+                "Invalid ownerships do not prevent valid ownerships from being imported"
                 
                 (fun () ->
 
@@ -321,6 +322,11 @@ module Ownership =
                         result.Valid.Length
                         1
                         "Expected 1 valid ownership"
+
+                    Expect.hasLength
+                        result.Errors
+                        2
+                        (ValidationReport.formatErrors result.Errors)
 
                     Expect.equal
                         (
@@ -348,7 +354,7 @@ module Ownership =
                 )
 
             testCase 
-                "Same accountId with different institutionIds are treated as different accounts"
+                "Same AccountId with different InstitutionIds are treated as different accounts"
                 
                 (fun () ->
 
@@ -372,10 +378,9 @@ module Ownership =
                         2
                         "Expected 2 valid ownerships"
 
-                    Expect.equal
-                        result.Errors.Length
-                        0
-                        "Expected 0 validation errors"
+                    Expect.isEmpty
+                        result.Errors
+                        (ValidationReport.formatErrors result.Errors)
 
                     Expect.equal
                         (result.Valid |> Set.ofList)
@@ -390,7 +395,7 @@ module Ownership =
                 )
 
             testCase 
-                "Valid customer and valid account with different institutionIds are rejected"
+                "Valid customer and valid account with different InstitutionIds are rejected"
                 
                 (fun () ->
 
@@ -408,15 +413,14 @@ module Ownership =
                             ownerships
 
                     // Assert
-                    Expect.equal
-                        result.Valid.Length
-                        0
+                    Expect.isEmpty
+                        result.Valid
                         "Expected 0 valid ownerships"
 
                     Expect.equal
                         result.Errors.Length
                         1
-                        "Expected 1 validation error"
+                        (ValidationReport.formatErrors result.Errors)
 
                     Expect.equal
                         (result.Errors |> List.map (fun e -> e.Issue) |> Set.ofList)

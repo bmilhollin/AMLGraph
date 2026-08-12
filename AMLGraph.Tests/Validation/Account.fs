@@ -200,13 +200,13 @@ module Account =
                 )
 
             testCase 
-                "Account with valid InstitutionId is added and account with unknown InstitutionId is rejected"
+                "Account with unknown InstitutionId is rejected and Account with valid InstitutionId is added"
                 (fun () ->
                     // Arrange
                     let accounts =
                         [
-                            SyntheticAccount.a100
                             SyntheticAccount.a400
+                            SyntheticAccount.a100
                         ]
                     
                     // Act
@@ -243,7 +243,7 @@ module Account =
                 )
 
             testCase 
-                "Same accountId with different institutionIds are treated as separate accounts"
+                "Same AccountId at different InstitutionIds are treated as separate accounts"
                 (fun () ->
                     // Arrange
                     let accounts =

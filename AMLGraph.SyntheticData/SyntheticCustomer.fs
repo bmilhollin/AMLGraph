@@ -43,4 +43,10 @@ module SyntheticCustomer =
             RiskRating = 3
         }
 
+    let jamesWithInvalidInstitutionId =
+        {
+            james with
+                InstitutionId = InstitutionId "SYN-FI999"
+        }
+
     

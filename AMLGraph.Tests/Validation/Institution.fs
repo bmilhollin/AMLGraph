@@ -4,6 +4,7 @@ open Expecto
 
 open AMLGraph.Domain
 open AMLGraph.Validation
+open AMLGraph.Reporting
 open AMLGraph.SyntheticData
 
 module Institution =
@@ -35,11 +36,11 @@ module Institution =
 
                     Expect.isEmpty
                         result.Errors
-                        "Expected 0 validation errors"
+                        (ValidationReport.formatErrors result.Errors)
                 )
 
             testCase 
-                "Duplicate institutionIds with identical attributes produce one valid institution" 
+                "Duplicate InstitutionIds with identical attributes produce one valid institution" 
                 (fun () ->
 
                     // Arrange
@@ -62,11 +63,11 @@ module Institution =
 
                     Expect.isEmpty
                         result.Errors
-                        "Expected 0 validation errors"
+                        (ValidationReport.formatErrors result.Errors)
                 )
 
             testCase
-                "Duplicate institutionIds with conflicting attributes are rejected"
+                "Duplicate InstitutionIds with conflicting attributes are rejected"
                 (fun () ->
                     // Arrange
                     let institutions =
@@ -87,7 +88,7 @@ module Institution =
                     Expect.hasLength
                         result.Errors
                         1
-                        "Expected 1 validation error"
+                        (ValidationReport.formatErrors result.Errors)
 
                     let error = result.Errors.Head
 
@@ -100,10 +101,10 @@ module Institution =
                         error.Entity
                         (InstitutionKey SyntheticInstitution.bank01.InstitutionId)
                         "Expected error to reference the conflicting institution"
-                                    )
+                )
 
             testCase
-                "Conflicting institutionId groups do not prevent valid institution groups from being imported"
+                "Conflicting InstitutionId groups do not prevent valid institution groups from being imported"
                 (fun () ->
                     // Arrange
                     let institutions =
@@ -127,7 +128,7 @@ module Institution =
                     Expect.hasLength
                         result.Errors
                         1
-                        "Expected 1 validation error"
+                        (ValidationReport.formatErrors result.Errors)
 
                     let error = result.Errors.Head
 
