@@ -162,10 +162,10 @@ AMLGraph
 
 ---
 
-## Execution
+## Execution from Root
 
 ```text
-dotnet run --project AMLGraph.Tests
+dotnet test
 
 dotnet run --project AMLGraph.App
 ```
