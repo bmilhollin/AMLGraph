@@ -1,13 +1,14 @@
 namespace AMLGraph.Infrastructure
 
+open System
 open Neo4j.Driver
-open System.Threading.Tasks
+// open System.Threading.Tasks
 module Neo4j =
 
+    // intital, throwaway Neo4j dev database
     let uri = "bolt://localhost:7687"
     let username = "neo4j"
-    let password = "FraudAlertSystem"
-
+    let password = Environment.GetEnvironmentVariable("NEO4J_PASSWORD")
     let driver =
         GraphDatabase.Driver(
             uri,
