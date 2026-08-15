@@ -365,10 +365,10 @@ dotnet build AMLGraph.slnx
 dotnet test AMLGraph.slnx
 ```
 
-### Run AMLGraph
+### Run AMLGraph from AMLGraph.App directory
 
 ```powershell
-dotnet run --project AMLGraph.App
+dotnet run
 ```
 
 The application initializes the Neo4j schema, reads and validates the synthetic AML data, and creates the corresponding nodes and relationships in Neo4j.
