@@ -371,7 +371,6 @@ dotnet test AMLGraph.slnx
 dotnet run
 ```
 
-The application initializes the Neo4j schema, reads and validates the synthetic AML data, and creates the corresponding nodes and relationships in Neo4j.
+The application initializes the Neo4j schema, reads and validates the synthetic AML data, and creates the corresponding nodes and relationships in Neo4j. With the small data set found in AMLGraph.App/Data, there are currently a few validation errors to demo error reporting.
 
 
-[def]: https://www.drivewingrow.com/how-to-build-a-simple-fraud-alert-system-using-neo4j/
