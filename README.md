@@ -10,9 +10,11 @@ AMLGraph is a learning project and reference implementation for building Anti-Mo
 
 ## Why this project?
 
-Many Neo4j examples focus primarily on Cypher queries or graph algorithms.
+AMLGraph was inspired by the article [How to Build a Simple Fraud Alert System Using Neo4j](https://www.drivewingrow.com/how-to-build-a-simple-fraud-alert-system-using-neo4j) from DriveWinGrow. The article demonstrates how graph databases can be used to model financial relationships and identify potentially suspicious transaction patterns.
 
-AMLGraph instead explores how to design a graph application from the ground up using strongly typed domain models, validation, explicit identity rules, and clear architectural boundaries.
+This project uses that idea as a starting point to explore domain modeling, data validation, and graph construction in F# and Neo4j.  F# is used to model the financial domain with strongly typed identifiers, discriminated unions, immutable records, and explicit validation of data before it is persisted to the graph.
+
+Many Neo4j examples focus primarily on Cypher queries or graph algorithms.  AMLGraph instead explores how to design a graph application from the ground up using strongly typed domain models, validation, explicit identity rules, and clear architectural boundaries.
 
 The project intentionally favors readability, explicit behavior, and maintainability over framework magic.
 
@@ -22,7 +24,7 @@ The project intentionally favors readability, explicit behavior, and maintainabi
 * Explore graph modeling techniques used in fraud detection and financial crime
 * Demonstrate a clean F# architecture for graph applications
 * Model institution-scoped customer and account identities explicitly
-* Serve as a foundation for experimenting with entity resolution, graph analytics, and AML investigations
+* Serve as a foundation for experimenting with entity resolution, graph analytics, and AML detection techniques
 
 ---
 
@@ -140,6 +142,9 @@ AMLGraph
 │       ├── Account.fs
 │       └── Ownership.fs
 │
+├── AMLGraph.Reporting
+│   ├── ValidationReport.fs
+│
 ├── AMLGraph.SyntheticData
 │   ├── SyntheticPerson.fs
 │   ├── SyntheticCustomer.fs
@@ -158,16 +163,6 @@ AMLGraph
 └── Docs
     ├── ARCHITECTURE.md
     └── DECISIONS.md
-```
-
----
-
-## Execution from Root
-
-```text
-dotnet test
-
-dotnet run --project AMLGraph.App
 ```
 
 ---
@@ -321,3 +316,62 @@ Relationships that can be deterministically derived from already validated domai
 The architecture is intended to grow by extension while avoiding abstractions that have not yet demonstrated a need.
 
 See **ARCHITECTURE.md** for architectural details and **DECISIONS.md** for the reasoning behind major design choices.
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+To build and run AMLGraph locally, you will need:
+
+* [.NET 10 SDK](https://dotnet.microsoft.com/download) - inlcudes the F# complier and tooling
+* [Neo4j Desktop](https://neo4j.com/download/)
+* Git
+
+AMLGraph is designed to run against a local Neo4j database.
+
+### Clone the Repository
+
+```powershell
+git clone <repository-url>
+cd AMLGraph
+```
+
+### Configure Neo4j
+
+Start a local Neo4j database using the standard `neo4j` username.
+
+AMLGraph connects to Neo4j at:
+
+```text
+bolt://localhost:7687
+```
+
+The Neo4j password is supplied through the `NEO4J_PASSWORD` environment variable and is not stored in the repository.
+
+In PowerShell, set the password for the current terminal session:
+
+```powershell
+$env:NEO4J_PASSWORD = "your-neo4j-password"
+```
+
+### Build and Test
+
+From the repository root:
+
+```powershell
+dotnet build AMLGraph.slnx
+dotnet test AMLGraph.slnx
+```
+
+### Run AMLGraph
+
+```powershell
+dotnet run --project AMLGraph.App
+```
+
+The application initializes the Neo4j schema, reads and validates the synthetic AML data, and creates the corresponding nodes and relationships in Neo4j.
+
+
+[def]: https://www.drivewingrow.com/how-to-build-a-simple-fraud-alert-system-using-neo4j/
