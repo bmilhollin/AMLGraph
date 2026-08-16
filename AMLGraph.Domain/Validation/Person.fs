@@ -25,6 +25,8 @@ module Person =
     /// If a person has multiple rows and any of the other fields besides personId are different, 
     /// that personId is considered a person with conflicting attributes,
     /// and the person will not be used in the graph. Conflicted persons are captured for review.
+    /// Later, we may build out the capability to capture aliases and other conflicting data
+    /// that can be used of entity resolution
     let validate (persons: Person list) : Validated<Person list> =
 
         let groups =

@@ -327,7 +327,7 @@ To build and run AMLGraph locally, you will need:
 
 * [.NET 10 SDK](https://dotnet.microsoft.com/download) - inlcudes the F# complier and tooling
 * [Neo4j Desktop](https://neo4j.com/download/)
-* Git
+* Neo4j Driver - install with `dotnet add package Neo4j.Driver`
 
 AMLGraph is designed to run against a local Neo4j database.
 
@@ -371,6 +371,6 @@ dotnet test AMLGraph.slnx
 dotnet run
 ```
 
-The application initializes the Neo4j schema, reads and validates the synthetic AML data, and creates the corresponding nodes and relationships in Neo4j. With the small data set found in AMLGraph.App/Data, there are currently a few validation errors to demo error reporting.
+The application initializes the Neo4j schema, reads and validates the synthetic AML data, and creates the corresponding nodes and relationships in Neo4j. With the small data set found in AMLGraph.App/Data, there are currently a few validation errors to demo error reporting. Later, the data set will be external and the app can run from the root directory with `dotnet run --project AMLGraph.App`
 
 
