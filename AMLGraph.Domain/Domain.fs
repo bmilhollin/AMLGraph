@@ -1,12 +1,16 @@
 namespace AMLGraph.Domain
 
+open System
+
 type PersonId = PersonId of string
 type InstitutionId = InstitutionId of string
 type CustomerId = CustomerId of string
 type AccountId = AccountId of string
+type TransactionId = TransactionId of string
 type UniqueCustomerId = UniqueCustomerId of (CustomerId * InstitutionId)
 type UniqueAccountId = UniqueAccountId of (AccountId * InstitutionId)
 type OwnershipId = OwnershipId of (UniqueCustomerId * UniqueAccountId)
+type UniqueTransactionId = UniqueTransactionId of (TransactionId * InstitutionId)
 
 module EntityIds =    
     let personIdValue (PersonId id) = id
@@ -63,6 +67,16 @@ type Account =
     }
     member this.Key =
         UniqueAccountId (this.AccountId, this.InstitutionId)
+
+type Transaction =
+    {
+        TransactionId : TransactionId
+        InstitutionId : InstitutionId
+        Amount : decimal
+        Timestamp : DateTime
+    }
+    member this.Key =
+        UniqueTransactionId (this.TransactionId, this.InstitutionId)
 
 type Has_Customer_Record =
     {
