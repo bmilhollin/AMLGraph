@@ -17,9 +17,11 @@ module EntityIds =
     let customerIdValue (CustomerId id) = id
     let accountIdValue (AccountId id) = id
     let institutionIdValue (InstitutionId id) = id
+    let transactionIdValue (TransactionId id) = id
     let uniqueCustomerIdValues (UniqueCustomerId (customerId, institutionId)) = (customerId, institutionId)
     let uniqueAccountIdValues (UniqueAccountId (accountId, institutionId)) = (accountId, institutionId)
     let uniqueOwnershipIdValues (OwnershipId (customerId, accountId)) = (customerId, accountId)
+    let uniqueTransactionIdValues (UniqueTransactionId (transactionId, institutionId)) = (transactionId, institutionId)
 
 type AccountType =
     | Checking
@@ -48,7 +50,6 @@ type Customer =
     member this.Key =
         UniqueCustomerId (this.CustomerId, this.InstitutionId)
 
-
 type Institution =
     {
         InstitutionId: InstitutionId
@@ -68,10 +69,38 @@ type Account =
     member this.Key =
         UniqueAccountId (this.AccountId, this.InstitutionId)
 
+// ACH is Automated Clearing House, U.S. electronic payment network banks use to move money between accounts.
+// Includes Direct Deposit, Automatic bill payment, Bank-to-Bank electronic transfers, Electronic payments to businesses or people, etc.
+type DepositMethod =
+    | Cash
+    | Check
+    | ACH
+
+type WithdrawalMethod =
+    | Cash
+    | ATM
+
+type TransferMethod =
+    | ACH
+    | Wire
+    | Internal
+
+type PaymentMethod =
+    | Check
+    | Card
+    | ACH
+
+type TransactionType =
+    | Deposit of DepositMethod
+    | Withdrawal of WithdrawalMethod
+    | Transfer of TransferMethod
+    | Payment of PaymentMethod
+
 type Transaction =
     {
         TransactionId : TransactionId
         InstitutionId : InstitutionId
+        TransactionType : TransactionType
         Amount : decimal
         Timestamp : DateTime
     }
