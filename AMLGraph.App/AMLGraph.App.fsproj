@@ -11,11 +11,13 @@
     <Compile Include="Reader\Person.fs" />
     <Compile Include="Reader\Customer.fs" />
     <Compile Include="Reader\Account.fs" />
+    <Compile Include="Reader\Transaction.fs" />
     <Compile Include="Reader\Institution.fs" />
     <Compile Include="Graph\Nodes\Person.fs" />
     <Compile Include="Graph\Nodes\Account.fs" />
     <Compile Include="Graph\Nodes\Institution.fs" />
     <Compile Include="Graph\Nodes\Customer.fs" />
+    <Compile Include="Graph\Nodes\Transaction.fs" />
     <Compile Include="Graph\Relationships\Has_Customer_Record.fs" />
     <Compile Include="Graph\Relationships\Held_At.fs" />
     <Compile Include="Graph\Relationships\Ownership.fs" />

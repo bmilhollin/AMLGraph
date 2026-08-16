@@ -29,6 +29,7 @@ async {
     do! Graph.Nodes.Customer.create importResult.Customers.Validation.Valid
     do! Graph.Nodes.Institution.create importResult.Institutions.Validation.Valid
     do! Graph.Nodes.Account.create importResult.Accounts.Validation.Valid
+    do! Graph.Nodes.Transaction.create importResult.Transactions.Validation.Valid
     do! Graph.Relationships.Has_Customer_Record.create hasCustomerRecords
     do! Graph.Relationships.Ownership.create importResult.Ownerships.Validation.Valid
     do! Graph.Relationships.Held_At.create heldAts

@@ -104,7 +104,7 @@ type Transaction =
         Amount : decimal
         Timestamp : DateTime
     }
-    member this.Key =
+    member this.Key : UniqueTransactionId =
         UniqueTransactionId (this.TransactionId, this.InstitutionId)
 
 type Has_Customer_Record =
@@ -130,12 +130,14 @@ type EntityKey =
     | AccountKey of UniqueAccountId
     | InstitutionKey of InstitutionId
     | OwnershipKey of OwnershipId
+    | TransactionKey of UniqueTransactionId
 
 type ValidationIssue =
     | ConflictingPersonAttributes
     | ConflictingCustomerAttributes
     | ConflictingInstitutionAttributes
     | ConflictingAccountAttributes
+    | ConflictingTransactionAttributes
     | MissingCustomer
     | MissingInstitution
     | MissingAccount
@@ -171,3 +173,59 @@ module AccountType =
         | CreditCard -> "Credit Card"
         | Loan -> "Loan"
         | Brokerage -> "Brokerage"
+
+module TransactionType =
+
+    let ofString transactionType transactionMethod =
+        match transactionType with
+        | "Deposit" ->
+            match transactionMethod with
+            | "Cash" -> DepositMethod.Cash
+            | "Check" -> DepositMethod.Check
+            | "ACH" -> DepositMethod.ACH
+            | value -> failwith $"Unknown deposit method {value}"
+            |> Deposit
+        | "Withdrawal" ->
+            match transactionMethod with
+            | "Cash" -> WithdrawalMethod.Cash
+            | "ATM" -> WithdrawalMethod.ATM
+            | value -> failwith $"Unknown withdrawal method {value}"
+            |> Withdrawal
+        | "Transfer" ->
+            match transactionMethod with
+            | "ACH" -> TransferMethod.ACH
+            | "Wire" -> TransferMethod.Wire
+            | "Internal" -> TransferMethod.Internal
+            | value -> failwith $"Unknown transfer method {value}"
+            |> Transfer
+        | "Payment" -> 
+            match transactionMethod with
+            | "Check" -> PaymentMethod.Check
+            | "Card" -> PaymentMethod.Card
+            | "ACH" -> PaymentMethod.ACH
+            | value -> failwith $"Unknown payment method {value}"
+            |> Payment
+        | value -> failwith $"Unknown transaction type '{value}'"
+    
+    let value (transactionType: TransactionType) = 
+        match transactionType with
+        | Deposit d ->
+            match d with
+            | DepositMethod.Cash -> "Deposit/Cash"
+            | DepositMethod.Check -> "Deposit/Check"
+            | DepositMethod.ACH -> "Deposit/ACH"
+        | Withdrawal w -> 
+            match w with
+            | WithdrawalMethod.Cash -> "Withdrawal/Cash"
+            | WithdrawalMethod.ATM -> "Withdrawal/ATM"
+        | Transfer t -> 
+            match t with
+            | TransferMethod.ACH -> "Transfer/ACH"
+            | TransferMethod.Wire -> "Transfer/Wire"
+            | TransferMethod.Internal -> "Transfer/Internal"
+        | Payment p -> 
+            match p with
+            | PaymentMethod.Check -> "Payment/Check"
+            | PaymentMethod.Card -> "Payment/Card"
+            | PaymentMethod.ACH -> "Payment/ACH"    
+                

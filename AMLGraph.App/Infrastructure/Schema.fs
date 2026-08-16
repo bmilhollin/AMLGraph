@@ -34,8 +34,8 @@ module Schema =
             """
             CREATE CONSTRAINT institution_id_key
             IF NOT EXISTS
-            FOR (a:Institution)
-            REQUIRE (a.institutionId) IS NODE KEY
+            FOR (i:Institution)
+            REQUIRE (i.institutionId) IS NODE KEY
             """
 
             """
@@ -45,8 +45,19 @@ module Schema =
             """
             CREATE CONSTRAINT person_id_key
             IF NOT EXISTS
-            FOR (a:Person)
-            REQUIRE (a.personId) IS NODE KEY
+            FOR (c:Person)
+            REQUIRE (c.personId) IS NODE KEY
+            """
+
+            """
+            DROP CONSTRAINT transaction_id_key IF EXISTS
+            """
+            
+            """
+            CREATE CONSTRAINT transaction_id_key
+            IF NOT EXISTS
+            FOR (t:Transaction)
+            REQUIRE (t.transactionId, t.institutionId) IS NODE KEY
             """
         ]
 

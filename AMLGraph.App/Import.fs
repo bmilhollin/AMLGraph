@@ -17,6 +17,7 @@ module Import =
             Customers : ImportResult<Customer>
             Accounts : ImportResult<Account>
             Ownerships : ImportResult<Ownership>
+            Transactions : ImportResult<Transaction>
         }
         member this.Errors =
             [
@@ -67,6 +68,17 @@ module Import =
                 validatedCustomers.Valid
                 validatedAccounts.Valid
                 ownerships
+        
+        let transactions =
+            Reader.Transaction.read "Data/Transactions.tsv"
+
+        let validatedTransactions =
+            Validation.Transaction.validate
+                validInstitutionIds
+                transactions
+        
+        transactions
+        |> List.iter (printfn "%A")
 
         {
             Persons =
@@ -98,6 +110,12 @@ module Import =
                     Read = ownerships.Length
                     Validation = validatedOwnerships
                 }
+
+            Transactions =
+                {
+                    Read = transactions.Length
+                    Validation = validatedTransactions
+                }
         }
 
     let summarize (results: ImportResults) =
@@ -107,7 +125,8 @@ module Import =
             Institutions Read: %d, Valid: %d, Errors: %d\n\
             Customers Read: %d, Valid: %d, Errors: %d\n\
             Accounts Read: %d, Valid: %d, Errors: %d\n\
-            Ownerships Read: %d, Valid: %d, Errors: %d"
+            Ownerships Read: %d, Valid: %d, Errors: %d\n\
+            Transactions Read: %d, Valid: %d, Errors: %d"
             results.Persons.Read
             results.Persons.Validation.Valid.Length
             results.Persons.Validation.Errors.Length
@@ -123,3 +142,6 @@ module Import =
             results.Ownerships.Read
             results.Ownerships.Validation.Valid.Length
             results.Ownerships.Validation.Errors.Length
+            results.Transactions.Read
+            results.Transactions.Validation.Valid.Length
+            results.Transactions.Validation.Errors.Length

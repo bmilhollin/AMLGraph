@@ -22,6 +22,15 @@ module ValidationReport =
             (EntityIds.accountIdValue accountId)
             (EntityIds.institutionIdValue institutionId)
 
+    let private formatUniqueTransactionId uniqueTransactionId =
+        let transactionId, institutionId =
+            EntityIds.uniqueTransactionIdValues uniqueTransactionId
+
+        sprintf
+            "Transaction %s / Institution %s"
+            (EntityIds.transactionIdValue transactionId)
+            (EntityIds.institutionIdValue institutionId)
+
     let private formatEntity entity =
         match entity with
         | PersonKey personId ->
@@ -49,6 +58,9 @@ module ValidationReport =
                 (formatUniqueCustomerId customerKey)
                 (formatUniqueAccountId accountKey)
 
+        | TransactionKey transactionId ->
+            formatUniqueTransactionId transactionId
+
     let private formatIssue issue =
         match issue with
         | ConflictingPersonAttributes ->
@@ -62,6 +74,9 @@ module ValidationReport =
 
         | ConflictingAccountAttributes ->
             "Multiple records for this account contain conflicting attributes."
+
+        | ConflictingTransactionAttributes ->
+            "Multiple records for this transaction contain conflicting attributes."
 
         | MissingInstitution ->
             "Referenced institution does not exist or failed validation."
