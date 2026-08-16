@@ -26,6 +26,7 @@ module Import =
                 yield! this.Customers.Validation.Errors
                 yield! this.Accounts.Validation.Errors
                 yield! this.Ownerships.Validation.Errors
+                yield! this.Transactions.Validation.Errors
             ]
 
     let loadAndValidate () =
