@@ -78,9 +78,6 @@ module Import =
                 validInstitutionIds
                 transactions
         
-        transactions
-        |> List.iter (printfn "%A")
-
         {
             Persons =
                 {
