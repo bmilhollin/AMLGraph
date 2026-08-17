@@ -224,29 +224,7 @@ module TransactionType =
             | value -> failwith $"Unknown payment method {value}"
             |> Payment
         | value -> failwith $"Unknown transaction type '{value}'"
-    
-    // let value (transactionType: TransactionType) = 
-    //     match transactionType with
-    //     | Deposit d ->
-    //         match d with
-    //         | DepositMethod.Cash -> "Deposit", "Cash"
-    //         | DepositMethod.Check -> "Deposit", "Check"
-    //         | DepositMethod.ACH -> "Deposit", "ACH"
-    //     | Withdrawal w -> 
-    //         match w with
-    //         | WithdrawalMethod.Cash -> "Withdrawal", "Cash"
-    //         | WithdrawalMethod.ATM -> "Withdrawal", "ATM"
-    //     | Transfer t -> 
-    //         match t with
-    //         | TransferMethod.ACH -> "Transfer", "ACH"
-    //         | TransferMethod.Wire -> "Transfer", "Wire"
-    //         | TransferMethod.Internal -> "Transfer", "Internal"
-    //     | Payment p -> 
-    //         match p with
-    //         | PaymentMethod.Check -> "Payment", "Check"
-    //         | PaymentMethod.Card -> "Payment", "Card"
-    //         | PaymentMethod.ACH -> "Payment", "ACH"    
-
+        
     let action transactionType =
         match transactionType with
         | Deposit _ -> TransactionAction.Deposit
