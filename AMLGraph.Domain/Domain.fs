@@ -71,6 +71,24 @@ type Account =
 
 // ACH is Automated Clearing House, U.S. electronic payment network banks use to move money between accounts.
 // Includes Direct Deposit, Automatic bill payment, Bank-to-Bank electronic transfers, Electronic payments to businesses or people, etc.
+
+type TransactionAction =
+    | Deposit
+    | Withdrawal
+    | Transfer
+    | Payment
+
+type TransactionMethod =
+    | Cash
+    | Check
+    | ACH
+    | ATM
+    | Wire
+    | Internal
+    | Card
+
+// Action-specific method types constrain the valid transaction combinations.
+// For example, a Deposit cannot be constructed with a Card method.
 type DepositMethod =
     | Cash
     | Check
@@ -100,7 +118,7 @@ type Transaction =
     {
         TransactionId : TransactionId
         InstitutionId : InstitutionId
-        TransactionType : TransactionType
+        TransactionType : TransactionType // Action/Method combination gatekeeper
         Amount : decimal
         Timestamp : DateTime
     }
@@ -207,25 +225,53 @@ module TransactionType =
             |> Payment
         | value -> failwith $"Unknown transaction type '{value}'"
     
-    let value (transactionType: TransactionType) = 
+    // let value (transactionType: TransactionType) = 
+    //     match transactionType with
+    //     | Deposit d ->
+    //         match d with
+    //         | DepositMethod.Cash -> "Deposit", "Cash"
+    //         | DepositMethod.Check -> "Deposit", "Check"
+    //         | DepositMethod.ACH -> "Deposit", "ACH"
+    //     | Withdrawal w -> 
+    //         match w with
+    //         | WithdrawalMethod.Cash -> "Withdrawal", "Cash"
+    //         | WithdrawalMethod.ATM -> "Withdrawal", "ATM"
+    //     | Transfer t -> 
+    //         match t with
+    //         | TransferMethod.ACH -> "Transfer", "ACH"
+    //         | TransferMethod.Wire -> "Transfer", "Wire"
+    //         | TransferMethod.Internal -> "Transfer", "Internal"
+    //     | Payment p -> 
+    //         match p with
+    //         | PaymentMethod.Check -> "Payment", "Check"
+    //         | PaymentMethod.Card -> "Payment", "Card"
+    //         | PaymentMethod.ACH -> "Payment", "ACH"    
+
+    let action transactionType =
         match transactionType with
-        | Deposit d ->
-            match d with
-            | DepositMethod.Cash -> "Deposit/Cash"
-            | DepositMethod.Check -> "Deposit/Check"
-            | DepositMethod.ACH -> "Deposit/ACH"
-        | Withdrawal w -> 
-            match w with
-            | WithdrawalMethod.Cash -> "Withdrawal/Cash"
-            | WithdrawalMethod.ATM -> "Withdrawal/ATM"
-        | Transfer t -> 
-            match t with
-            | TransferMethod.ACH -> "Transfer/ACH"
-            | TransferMethod.Wire -> "Transfer/Wire"
-            | TransferMethod.Internal -> "Transfer/Internal"
-        | Payment p -> 
-            match p with
-            | PaymentMethod.Check -> "Payment/Check"
-            | PaymentMethod.Card -> "Payment/Card"
-            | PaymentMethod.ACH -> "Payment/ACH"    
-                
+        | Deposit _ -> TransactionAction.Deposit
+        | Withdrawal _ -> TransactionAction.Withdrawal
+        | Transfer _ -> TransactionAction.Transfer
+        | Payment _ -> TransactionAction.Payment
+
+    let method transactionType =
+        match transactionType with
+        | Deposit DepositMethod.Cash -> TransactionMethod.Cash
+        | Deposit DepositMethod.Check -> TransactionMethod.Check
+        | Deposit DepositMethod.ACH -> TransactionMethod.ACH
+
+        | Withdrawal WithdrawalMethod.Cash -> TransactionMethod.Cash
+        | Withdrawal WithdrawalMethod.ATM -> TransactionMethod.ATM
+
+        | Transfer TransferMethod.ACH -> TransactionMethod.ACH
+        | Transfer TransferMethod.Wire -> TransactionMethod.Wire
+        | Transfer TransferMethod.Internal -> TransactionMethod.Internal
+
+        | Payment PaymentMethod.Check -> TransactionMethod.Check
+        | Payment PaymentMethod.Card -> TransactionMethod.Card
+        | Payment PaymentMethod.ACH -> TransactionMethod.ACH
+
+    let value transactionType =
+        string (action transactionType),
+        string (method transactionType)
+                    

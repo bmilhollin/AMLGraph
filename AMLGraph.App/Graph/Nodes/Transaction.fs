@@ -5,22 +5,27 @@ open AMLGraph.Infrastructure
 
 module Transaction =
 
-    let private toParameters (transaction:Transaction) =
+    let private toParameters (transaction: Transaction) =
+
+        let action, method =
+            TransactionType.value transaction.TransactionType
+
         dict [
             "transactionId", box (EntityIds.transactionIdValue transaction.TransactionId)
             "institutionId", box (EntityIds.institutionIdValue transaction.InstitutionId)
-            "transactionType", box (TransactionType.value transaction.TransactionType)
+            "action", box action
+            "method", box method
             "amount", box transaction.Amount
             "timestamp", box transaction.Timestamp
         ]
-
     let create (transactions:Transaction list) =
 
         let cypher =
             """
             MERGE (t:Transaction {transactionId:$transactionId, institutionId:$institutionId})
             SET
-                t.transactionType = $transactionType,
+                t.action = $action,
+                t.method = $method,
                 t.amount = $amount,
                 t.timestamp = $timestamp
             """
