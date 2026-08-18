@@ -7,11 +7,11 @@ module Ownership =
 
     let private toParameters (ownership:Ownership) =
 
-        let customerKey, institutionId = EntityIds.uniqueCustomerIdValues ownership.CustomerKey
+        let customerKey, institutionId = EntityIds.uniqueCustomerIdValue ownership.CustomerKey
         let customerId = EntityIds.customerIdValue customerKey
         let customerInstitutionId = EntityIds.institutionIdValue institutionId
 
-        let accountKey, institutionId = EntityIds.uniqueAccountIdValues ownership.AccountKey
+        let accountKey, institutionId = EntityIds.uniqueAccountIdValue ownership.AccountKey
         let accountId = EntityIds.accountIdValue accountKey
         let institutionId = EntityIds.institutionIdValue institutionId
 

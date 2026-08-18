@@ -31,7 +31,9 @@ module Transaction =
     /// If a transactionId/institutionId pair has multiple rows and any of the other fields are different, 
     /// that transactionId/institutionId pair is considered a uniqueTransactionId with conflicting attributes,
     /// and the uniqueTransactionId will not be used in the graph. Conflicted uniqueTransactionId are captured for review.
-    let validate (validInstitutions: Set<InstitutionId>) (transactions: Transaction list) : Validated<Transaction list> =
+    let validate 
+        (validInstitutions: Set<InstitutionId>) 
+        (transactions: Transaction list) : Validated<Transaction list> =
 
         let validTransactions = ResizeArray<Transaction>()
         let errors = ResizeArray<ValidationError>()
@@ -44,7 +46,7 @@ module Transaction =
 
         let groups =
             transactions
-            |> List.groupBy (fun t -> t.Key)
+            |> List.groupBy (fun x -> x.Key)
 
         let singletonGroups, duplicateGroups =
             groups

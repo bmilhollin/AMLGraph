@@ -24,11 +24,12 @@ module Institution =
     /// If a institution has multiple rows and any of the other fields besides institutionId are different, 
     /// that institutionId is considered a institution with conflicting attributes,
     /// and the institution will not be used in the graph. Conflicted institutions are captured for review.
-    let validate (institutions: Institution list) : Validated<Institution list> =
+    let validate 
+        (institutions: Institution list) : Validated<Institution list> =
 
         let groups =
             institutions
-            |> List.groupBy (fun a -> a.InstitutionId)
+            |> List.groupBy (fun x -> x.InstitutionId)
 
         let singletonGroups, duplicateGroups =
             groups

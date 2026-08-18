@@ -9,7 +9,7 @@ module Has_Customer_Record =
 
         let personId = EntityIds.personIdValue has_customer_record.PersonId
 
-        let customerKey, institutionId = EntityIds.uniqueCustomerIdValues has_customer_record.CustomerKey
+        let customerKey, institutionId = EntityIds.uniqueCustomerIdValue has_customer_record.CustomerKey
         let customerId = EntityIds.customerIdValue customerKey
         let institutionId = EntityIds.institutionIdValue institutionId
 

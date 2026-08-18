@@ -38,7 +38,9 @@ module Account =
     /// Invalid accounts are captured for review.
     /// It is important NOT to perform a similar check on personId, we do not want to lose an account bc we cannot find a personId in the Persons.tsv file.
     /// The personId may be fraudulent in a money laundering context, but we still want to capture the account and its ownership for review.
-    let validate (validInstitutions: Set<InstitutionId>) (accounts: Account list) : Validated<Account list> =
+    let validate 
+        (validInstitutions: Set<InstitutionId>) 
+        (accounts: Account list) : Validated<Account list> =
 
         let validAccounts = ResizeArray<Account>()
         let errors = ResizeArray<ValidationError>()
@@ -51,7 +53,7 @@ module Account =
 
         let groups =
             accounts
-            |> List.groupBy (fun a -> a.Key)
+            |> List.groupBy (fun x -> x.Key)
 
         let singletonGroups, duplicateGroups =
             groups

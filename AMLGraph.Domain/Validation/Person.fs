@@ -27,11 +27,12 @@ module Person =
     /// and the person will not be used in the graph. Conflicted persons are captured for review.
     /// Later, we may build out the capability to capture aliases and other conflicting data
     /// that can be used of entity resolution
-    let validate (persons: Person list) : Validated<Person list> =
+    let validate 
+        (persons: Person list) : Validated<Person list> =
 
         let groups =
             persons
-            |> List.groupBy (fun a -> a.PersonId)
+            |> List.groupBy (fun x -> x.PersonId)
 
         let singletonGroups, duplicateGroups =
             groups

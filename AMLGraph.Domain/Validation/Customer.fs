@@ -30,7 +30,9 @@ module Customer =
     /// If a customerId/institutionId pair has multiple rows and any of the other fields are different, 
     /// that customerId/institutionId pair is considered a uniqueCustomerId with conflicting attributes,
     /// and the uniqueCustomerId will not be used in the graph. Conflicted uniqueCustomerId are captured for review.
-    let validate (validInstitutions: Set<InstitutionId>) (customers: Customer list) : Validated<Customer list> =
+    let validate 
+        (validInstitutions: Set<InstitutionId>) 
+        (customers: Customer list) : Validated<Customer list> =
 
         let validCustomers = ResizeArray<Customer>()
         let errors = ResizeArray<ValidationError>()
@@ -43,7 +45,7 @@ module Customer =
 
         let groups =
             customers
-            |> List.groupBy (fun c -> c.Key)
+            |> List.groupBy (fun x -> x.Key)
 
         let singletonGroups, duplicateGroups =
             groups
