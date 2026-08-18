@@ -4,26 +4,32 @@ open AMLGraph.Domain
 
 module Ownership =
 
-    let private missingCustomer uniqueCustomerId =
+    // Customer and Account institutions have been validated
+    // in Customer and Account validations
+
+    let private missingCustomer ownershipKey =
         {
-            Entity = CustomerKey uniqueCustomerId
+            Entity = OwnershipKey ownershipKey
             Issue = MissingCustomer
         }
 
-    let private missingAccount uniqueAccountId =
+    let private missingAccount ownershipKey =
         {
-            Entity = AccountKey uniqueAccountId
+            Entity =  OwnershipKey ownershipKey
             Issue = MissingAccount
         }
 
-    let private mismatchedInstitutions ownership=
+    let private mismatchedInstitutions ownershipKey=
         
         {
-            Entity = (ownership.CustomerKey, ownership.AccountKey) |> OwnershipId |> OwnershipKey
+            Entity = OwnershipKey ownershipKey
             Issue = MismatchedInstitutions
         }
 
-    let private validateOwnership validCustomerKeys validAccountKeys ownership =
+    let private validateOwnership 
+        validCustomerKeys 
+        validAccountKeys 
+        ownership =
 
         let customerExists =
             Set.contains ownership.CustomerKey validCustomerKeys
@@ -32,21 +38,21 @@ module Ownership =
             Set.contains ownership.AccountKey validAccountKeys
 
         let customerInstitutionId =
-            snd (EntityIds.uniqueCustomerIdValues ownership.CustomerKey)
+            snd (EntityIds.uniqueCustomerIdValue ownership.CustomerKey)
 
         let accountInstitutionId =
-            snd (EntityIds.uniqueAccountIdValues ownership.AccountKey)
+            snd (EntityIds.uniqueAccountIdValue ownership.AccountKey)
 
         let errors =
             [
                 if not customerExists then
-                    missingCustomer ownership.CustomerKey
+                    missingCustomer ownership.Key
 
                 if not accountExists then
-                    missingAccount ownership.AccountKey
+                    missingAccount ownership.Key
 
                 if customerInstitutionId <> accountInstitutionId then
-                    mismatchedInstitutions ownership
+                    mismatchedInstitutions ownership.Key
             ]
 
         if List.isEmpty errors then
@@ -63,14 +69,14 @@ module Ownership =
             ownerships
             |> List.distinct
         
-        let validCustomerIds =
+        let validCustomerKeys =
             customers
-            |> List.map (fun c -> c.Key)
+            |> List.map (fun x -> x.Key)
             |> Set.ofList
 
         let validAccountKeys =
             accounts
-            |> List.map (fun a -> a.Key)
+            |> List.map (fun x -> x.Key)
             |> Set.ofList
 
         let validOwnerships = ResizeArray<Ownership>()
@@ -79,7 +85,7 @@ module Ownership =
         for ownership in normalizedOwnerships do
 
             let validOwnership, validationErrors =
-                validateOwnership validCustomerIds validAccountKeys ownership
+                validateOwnership validCustomerKeys validAccountKeys ownership
 
             match validOwnership with
             | Some ownership ->
