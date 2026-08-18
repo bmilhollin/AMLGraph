@@ -114,7 +114,7 @@ module Ownership =
                         (
                             result.Valid 
                             |> List.map (fun o -> o.AccountKey)
-                            |> List.map EntityIds.uniqueAccountIdValues
+                            |> List.map EntityIds.uniqueAccountIdValue
                             |> set
                         )
                         (   
