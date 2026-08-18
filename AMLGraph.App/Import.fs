@@ -18,6 +18,7 @@ module Import =
             Accounts : ImportResult<Account>
             Ownerships : ImportResult<Ownership>
             Transactions : ImportResult<Transaction>
+            Transacts : ImportResult<Transacts>
         }
         member this.Errors =
             [
@@ -27,6 +28,7 @@ module Import =
                 yield! this.Accounts.Validation.Errors
                 yield! this.Ownerships.Validation.Errors
                 yield! this.Transactions.Validation.Errors
+                yield! this.Transacts.Validation.Errors
             ]
 
     let loadAndValidate () =
@@ -70,13 +72,19 @@ module Import =
                 validatedAccounts.Valid
                 ownerships
         
-        let transactions =
-            Reader.Transaction.read "Data/Transactions.tsv"
+        let transactions,transacts =
+            Reader.Transaction.read "Data/Transactions.tsv"            
 
         let validatedTransactions =
             Validation.Transaction.validate
                 validInstitutionIds
                 transactions
+
+        let validatedTransacts =
+            Validation.Transacts.validate
+                validatedAccounts.Valid
+                validatedTransactions.Valid
+                transacts
         
         {
             Persons =
@@ -114,6 +122,12 @@ module Import =
                     Read = transactions.Length
                     Validation = validatedTransactions
                 }
+
+            Transacts =
+                {
+                    Read = transacts.Length
+                    Validation = validatedTransacts
+                }
         }
 
     let summarize (results: ImportResults) =
@@ -124,7 +138,8 @@ module Import =
             Customers Read: %d, Valid: %d, Errors: %d\n\
             Accounts Read: %d, Valid: %d, Errors: %d\n\
             Ownerships Read: %d, Valid: %d, Errors: %d\n\
-            Transactions Read: %d, Valid: %d, Errors: %d"
+            Transactions Read: %d, Valid: %d, Errors: %d\n\
+            Transacts Read: %d, Valid: %d, Errors: %d"
             results.Persons.Read
             results.Persons.Validation.Valid.Length
             results.Persons.Validation.Errors.Length
@@ -143,3 +158,6 @@ module Import =
             results.Transactions.Read
             results.Transactions.Validation.Valid.Length
             results.Transactions.Validation.Errors.Length
+            results.Transacts.Read
+            results.Transacts.Validation.Valid.Length
+            results.Transacts.Validation.Errors.Length

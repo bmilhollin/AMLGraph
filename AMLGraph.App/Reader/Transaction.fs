@@ -19,7 +19,7 @@ module Transaction =
 
                 let fields = line.Split('\t')
 
-                if fields.Length <> 6 then
+                if fields.Length <> 7 then
                     failwith $"Unexpected transaction record: {line}"
 
                 let transactionId =
@@ -29,18 +29,23 @@ module Transaction =
                 let institutionId =
                     fields[1].Trim()
                     |> InstitutionId
+                
+                let accountId =
+                    fields[2].Trim()
+                    |> AccountId
 
                 let transactionType =
+                    // only specified combinations of actions and methods are allowed
                     TransactionType.ofString 
-                        (fields[2].Trim())
-                        (fields[3].Trim())
+                        (fields[3].Trim())  // action
+                        (fields[4].Trim()) // method
 
                 let amount =
-                    fields[4].Trim()
+                    fields[5].Trim()
                     |> decimal
 
                 let timestamp =
-                    fields[5].Trim()
+                    fields[6].Trim()
                     |> DateTime.Parse
                     
                 yield
@@ -50,6 +55,11 @@ module Transaction =
                         TransactionType = transactionType
                         Amount = amount
                         Timestamp = timestamp
+                    },
+                    {
+                        AccountId = UniqueAccountId (accountId, institutionId)
+                        TransactionId = UniqueTransactionId (transactionId, institutionId)
                     }
         }
         |> Seq.toList
+        |> List.unzip

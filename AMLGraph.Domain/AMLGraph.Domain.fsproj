@@ -13,6 +13,7 @@
     <Compile Include="Validation\Customer.fs" />
     <Compile Include="Validation\Ownership.fs" />
     <Compile Include="Validation\Transaction.fs" />
+    <Compile Include="Validation\Transacts.fs" />
   </ItemGroup>
 
 </Project>

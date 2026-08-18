@@ -9,8 +9,9 @@ type AccountId = AccountId of string
 type TransactionId = TransactionId of string
 type UniqueCustomerId = UniqueCustomerId of (CustomerId * InstitutionId)
 type UniqueAccountId = UniqueAccountId of (AccountId * InstitutionId)
-type OwnershipId = OwnershipId of (UniqueCustomerId * UniqueAccountId)
+type UniqueOwnershipId = UniqueOwnershipId of (UniqueCustomerId * UniqueAccountId)
 type UniqueTransactionId = UniqueTransactionId of (TransactionId * InstitutionId)
+type UniqueTransactsId = UniqueTransactsId of (UniqueAccountId * UniqueTransactionId)
 
 module EntityIds =    
     let personIdValue (PersonId id) = id
@@ -18,10 +19,11 @@ module EntityIds =
     let accountIdValue (AccountId id) = id
     let institutionIdValue (InstitutionId id) = id
     let transactionIdValue (TransactionId id) = id
-    let uniqueCustomerIdValues (UniqueCustomerId (customerId, institutionId)) = (customerId, institutionId)
-    let uniqueAccountIdValues (UniqueAccountId (accountId, institutionId)) = (accountId, institutionId)
-    let uniqueOwnershipIdValues (OwnershipId (customerId, accountId)) = (customerId, accountId)
-    let uniqueTransactionIdValues (UniqueTransactionId (transactionId, institutionId)) = (transactionId, institutionId)
+    let uniqueCustomerIdValue (UniqueCustomerId (customerId, institutionId)) = (customerId, institutionId)
+    let uniqueAccountIdValue (UniqueAccountId (accountId, institutionId)) = (accountId, institutionId)
+    let uniqueOwnershipIdValue (UniqueOwnershipId (customerId, accountId)) = (customerId, accountId)
+    let uniqueTransactionIdValue (UniqueTransactionId (transactionId, institutionId)) = (transactionId, institutionId)
+    let uniqueTransactsIdValue (UniqueTransactsId (accountId, institutionId)) = (accountId, institutionId)
 
 type AccountType =
     | Checking
@@ -141,14 +143,25 @@ type Ownership =
         CustomerKey: UniqueCustomerId
         AccountKey: UniqueAccountId
     }
+    member this.Key : UniqueOwnershipId =
+        UniqueOwnershipId (this.CustomerKey, this.AccountKey)
+
+type Transacts =
+    {
+        AccountId : UniqueAccountId
+        TransactionId : UniqueTransactionId
+    }
+    member this.Key : UniqueTransactsId =
+        UniqueTransactsId (this.AccountId, this.TransactionId)
 
 type EntityKey =
     | PersonKey of PersonId
     | CustomerKey of UniqueCustomerId
     | AccountKey of UniqueAccountId
     | InstitutionKey of InstitutionId
-    | OwnershipKey of OwnershipId
+    | OwnershipKey of UniqueOwnershipId
     | TransactionKey of UniqueTransactionId
+    | TransactsKey of UniqueTransactsId
 
 type ValidationIssue =
     | ConflictingPersonAttributes
@@ -159,6 +172,7 @@ type ValidationIssue =
     | MissingCustomer
     | MissingInstitution
     | MissingAccount
+    | MissingTransaction
     | MismatchedInstitutions
     
 type ValidationError =
@@ -224,7 +238,7 @@ module TransactionType =
             | value -> failwith $"Unknown payment method {value}"
             |> Payment
         | value -> failwith $"Unknown transaction type '{value}'"
-        
+
     let action transactionType =
         match transactionType with
         | Deposit _ -> TransactionAction.Deposit

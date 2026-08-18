@@ -4,44 +4,76 @@ open AMLGraph.Domain
 
 module ValidationReport =
 
+    let private formatPersonId personId =
+        sprintf
+            "Invalid Person - %s"
+            (EntityIds.personIdValue personId)
+
+    let private formatInstitutionId institutionId =
+        sprintf
+            "Invalid Institution - %s"
+            (EntityIds.institutionIdValue institutionId)
+
     let private formatUniqueCustomerId uniqueCustomerId =
         let customerId, institutionId =
-            EntityIds.uniqueCustomerIdValues uniqueCustomerId
+            EntityIds.uniqueCustomerIdValue uniqueCustomerId
 
         sprintf
-            "Customer %s / Institution %s"
+            "Invalid CustomerKey - Customer %s / Institution %s"
             (EntityIds.customerIdValue customerId)
             (EntityIds.institutionIdValue institutionId)
 
     let private formatUniqueAccountId uniqueAccountId =
         let accountId, institutionId =
-            EntityIds.uniqueAccountIdValues uniqueAccountId
+            EntityIds.uniqueAccountIdValue uniqueAccountId
 
         sprintf
-            "Account %s / Institution %s"
+            "Invalid AccountKey - Account %s / Institution %s"
             (EntityIds.accountIdValue accountId)
             (EntityIds.institutionIdValue institutionId)
 
-    let private formatUniqueTransactionId uniqueTransactionId =
-        let transactionId, institutionId =
-            EntityIds.uniqueTransactionIdValues uniqueTransactionId
+    let private formatUniqueOwnershipId uniqueOwnershipId =
+        let customerKey, accountKey =
+            EntityIds.uniqueOwnershipIdValue uniqueOwnershipId
 
         sprintf
-            "Transaction %s / Institution %s"
+            "Invalid OwnershipKey -\nCustomerKey %s\nAccountKey %s"
+            (formatUniqueCustomerId customerKey)
+            (formatUniqueAccountId accountKey)
+
+    let private formatUniqueTransactionId uniqueTransactionId =
+        let transactionId, institutionId =
+            EntityIds.uniqueTransactionIdValue uniqueTransactionId
+
+        sprintf
+            "Invalid TranactionKey - Transaction %s / Institution %s"
             (EntityIds.transactionIdValue transactionId)
             (EntityIds.institutionIdValue institutionId)
+
+    let private formatUniqueTransactsId uniqueTransactsId =
+        let uniqueAccountId, uniqueTransactionId =
+            EntityIds.uniqueTransactsIdValue uniqueTransactsId
+
+        let accountId, accountInstitutionId =
+            EntityIds.uniqueAccountIdValue uniqueAccountId
+
+        let transactionId, transactionInstitutionId =
+            EntityIds.uniqueTransactionIdValue uniqueTransactionId
+
+        sprintf
+            "Invalid TransactsKey -\nAccountKey - Account %s / Institution %s\nTransactionKey - Transaction %s / Institution %s"
+            (EntityIds.accountIdValue accountId)
+            (EntityIds.institutionIdValue accountInstitutionId)
+            (EntityIds.transactionIdValue transactionId)
+            (EntityIds.institutionIdValue transactionInstitutionId)
 
     let private formatEntity entity =
         match entity with
         | PersonKey personId ->
-            sprintf
-                "Person %s"
-                (EntityIds.personIdValue personId)
-
+            formatPersonId personId
+            
         | InstitutionKey institutionId ->
-            sprintf
-                "Institution %s"
-                (EntityIds.institutionIdValue institutionId)
+            formatInstitutionId institutionId
 
         | CustomerKey customerKey ->
             formatUniqueCustomerId customerKey
@@ -49,17 +81,14 @@ module ValidationReport =
         | AccountKey accountKey ->
             formatUniqueAccountId accountKey
 
-        | OwnershipKey ownershipId ->
-            let customerKey, accountKey =
-                EntityIds.uniqueOwnershipIdValues ownershipId
-
-            sprintf
-                "Ownership\n  %s\n  %s"
-                (formatUniqueCustomerId customerKey)
-                (formatUniqueAccountId accountKey)
+        | OwnershipKey ownershipKey ->
+            formatUniqueOwnershipId ownershipKey
 
         | TransactionKey transactionId ->
             formatUniqueTransactionId transactionId
+
+        | TransactsKey transactsId ->
+            formatUniqueTransactsId transactsId
 
     let private formatIssue issue =
         match issue with
@@ -89,6 +118,9 @@ module ValidationReport =
 
         | MismatchedInstitutions ->
             "Customer and account belong to different institutions."
+
+        | MissingTransaction ->
+            "Referenced transaction does not exist or failed validation"
 
     let formatError (error: ValidationError) =
         sprintf
