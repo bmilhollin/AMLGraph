@@ -5,13 +5,13 @@ open AMLGraph.Infrastructure
 
 module Has_Transaction =
 
-    let private toParameters (posts: Has_Transaction) =
+    let private toParameters (has_Transaction: Has_Transaction) =
 
         let accountId, institutionId =
-            EntityIds.uniqueAccountIdValue posts.AccountId
+            EntityIds.uniqueAccountIdValue has_Transaction.AccountId
 
         let transactionId, _ =
-            EntityIds.uniqueTransactionIdValue posts.TransactionId
+            EntityIds.uniqueTransactionIdValue has_Transaction.TransactionId
 
         dict [
             "accountId", box (EntityIds.accountIdValue accountId)
@@ -19,7 +19,7 @@ module Has_Transaction =
             "transactionId", box (EntityIds.transactionIdValue transactionId)
         ]
 
-    let create (posts: Has_Transaction list) =
+    let create (has_Transactions: Has_Transaction list) =
 
         let cypher =
             """
@@ -35,12 +35,12 @@ module Has_Transaction =
             """
 
         async {
-            for post in posts do
+            for has_Transaction in has_Transactions do
 
                 do!
                     Neo4j.executeWriteAsync
                         cypher
-                        (toParameters post)
+                        (toParameters has_Transaction)
 
             printfn "HAS_TRANSACTION relationships created"
         }

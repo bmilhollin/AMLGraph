@@ -139,7 +139,7 @@ module Import =
             Accounts Read: %d, Valid: %d, Errors: %d\n\
             Ownerships Read: %d, Valid: %d, Errors: %d\n\
             Transactions Read: %d, Valid: %d, Errors: %d\n\
-            Transacts Read: %d, Valid: %d, Errors: %d"
+            Has_Transactions Read: %d, Valid: %d, Errors: %d"
             results.Persons.Read
             results.Persons.Validation.Valid.Length
             results.Persons.Validation.Errors.Length

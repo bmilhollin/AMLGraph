@@ -50,9 +50,9 @@ module ValidationReport =
             (EntityIds.transactionIdValue transactionId)
             (EntityIds.institutionIdValue institutionId)
 
-    let private formatUniqueTransactsId uniqueHasTransactionId =
+    let private formatUniqueHas_TransactionId uniqueHas_TransactionId =
         let uniqueAccountId, uniqueTransactionId =
-            EntityIds.UniqueHas_TransactionIdValue uniqueHasTransactionId
+            EntityIds.UniqueHas_TransactionIdValue uniqueHas_TransactionId
 
         let accountId, accountInstitutionId =
             EntityIds.uniqueAccountIdValue uniqueAccountId
@@ -61,7 +61,7 @@ module ValidationReport =
             EntityIds.uniqueTransactionIdValue uniqueTransactionId
 
         sprintf
-            "Invalid TransactsKey -\nAccountKey - Account %s / Institution %s\nTransactionKey - Transaction %s / Institution %s"
+            "Invalid Has_TransactionKey -\nAccountKey - Account %s / Institution %s\nTransactionKey - Transaction %s / Institution %s"
             (EntityIds.accountIdValue accountId)
             (EntityIds.institutionIdValue accountInstitutionId)
             (EntityIds.transactionIdValue transactionId)
@@ -87,8 +87,8 @@ module ValidationReport =
         | TransactionKey transactionId ->
             formatUniqueTransactionId transactionId
 
-        | Has_TransactionKey postedToKey ->
-            formatUniqueTransactsId postedToKey
+        | Has_TransactionKey has_TransactionKey ->
+            formatUniqueHas_TransactionId has_TransactionKey
 
     let private formatIssue issue =
         match issue with
