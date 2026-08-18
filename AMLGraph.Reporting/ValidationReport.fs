@@ -50,9 +50,9 @@ module ValidationReport =
             (EntityIds.transactionIdValue transactionId)
             (EntityIds.institutionIdValue institutionId)
 
-    let private formatUniqueTransactsId uniqueTransactsId =
+    let private formatUniqueTransactsId uniqueHasTransactionId =
         let uniqueAccountId, uniqueTransactionId =
-            EntityIds.uniqueTransactsIdValue uniqueTransactsId
+            EntityIds.UniqueHas_TransactionIdValue uniqueHasTransactionId
 
         let accountId, accountInstitutionId =
             EntityIds.uniqueAccountIdValue uniqueAccountId
@@ -87,8 +87,8 @@ module ValidationReport =
         | TransactionKey transactionId ->
             formatUniqueTransactionId transactionId
 
-        | TransactsKey transactsId ->
-            formatUniqueTransactsId transactsId
+        | Has_TransactionKey postedToKey ->
+            formatUniqueTransactsId postedToKey
 
     let private formatIssue issue =
         match issue with

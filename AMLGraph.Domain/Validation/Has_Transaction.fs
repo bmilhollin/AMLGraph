@@ -2,71 +2,71 @@ namespace AMLGraph.Validation
 
 open AMLGraph.Domain
 
-module Transacts =
+module Has_Transaction =
 
     // Account and Transaction Institutions have been validated
     // in Account and Transaction validatons
 
-    let private missingAccount transactsKey =
+    let private missingAccount has_TransactionKey =
         {
-            Entity = TransactsKey transactsKey
+            Entity = Has_TransactionKey has_TransactionKey
             Issue = MissingAccount
         }
 
-    let private missingTransaction transactsKey =
+    let private missingTransaction has_TransactionKey =
         {
-            Entity = TransactsKey transactsKey
+            Entity = Has_TransactionKey has_TransactionKey
             Issue = MissingTransaction
         }
 
-    let private mismatchedInstitutions transactsKey=
+    let private mismatchedInstitutions has_TransactionKey=
         
         {
-            Entity = TransactsKey transactsKey
+            Entity = Has_TransactionKey has_TransactionKey
             Issue = MismatchedInstitutions
         }
 
-    let private validateTransacts 
+    let private validateHas_Transaction
         validAccountKeys 
         validTransactionKeys 
-        transacts =
+        has_Transaction =
 
         let accountExists =
-            Set.contains transacts.AccountId validAccountKeys
+            Set.contains has_Transaction.AccountId validAccountKeys
 
         let transactionExists =
-            Set.contains transacts.TransactionId validTransactionKeys
+            Set.contains has_Transaction.TransactionId validTransactionKeys
 
         let accountInstitutionId =
-                snd (EntityIds.uniqueAccountIdValue transacts.AccountId)
+                snd (EntityIds.uniqueAccountIdValue has_Transaction.AccountId)
 
         let transactionInstitutionId =
-                snd (EntityIds.uniqueTransactionIdValue transacts.TransactionId)
+                snd (EntityIds.uniqueTransactionIdValue has_Transaction.TransactionId)
 
         let errors =
             [
                 if not accountExists then
-                    missingAccount transacts.Key
+                    missingAccount has_Transaction.Key
 
                 if not transactionExists then
-                    missingTransaction transacts.Key
+                    missingTransaction has_Transaction.Key
 
                 if accountInstitutionId <> transactionInstitutionId then
-                    mismatchedInstitutions transacts.Key
+                    mismatchedInstitutions has_Transaction.Key
             ]
 
         if List.isEmpty errors then
-            Some transacts, []
+            Some has_Transaction, []
         else
             None, errors
 
     let validate 
         (accounts: Account list) 
         (transactions: Transaction list)
-        (transacts: Transacts list) : Validated<Transacts list> =
+        (has_Transaction: Has_Transaction list) : Validated<Has_Transaction list> =
 
-        let normalizedTransacts =
-            transacts
+        let normalizedHas_Transactions =
+            has_Transaction
             |> List.distinct
         
         let validAccountKeys =
@@ -79,23 +79,23 @@ module Transacts =
             |> List.map (fun x -> x.Key)
             |> Set.ofList
 
-        let validTransacts = ResizeArray<Transacts>()
+        let validHas_Transactions = ResizeArray<Has_Transaction>()
         let errors = ResizeArray<ValidationError>()
 
-        for transacts in normalizedTransacts do
+        for has_Transaction in normalizedHas_Transactions do
 
             let validTransact, validationErrors =
-                validateTransacts validAccountKeys validTransactionKeys transacts
+                validateHas_Transaction validAccountKeys validTransactionKeys has_Transaction
 
             match validTransact with
-            | Some transacts ->
-                validTransacts.Add transacts
+            | Some has_Transaction ->
+                validHas_Transactions.Add has_Transaction
             | None ->
                 ()
 
             errors.AddRange validationErrors
 
         {
-            Valid = List.ofSeq validTransacts
+            Valid = List.ofSeq validHas_Transactions
             Errors = List.ofSeq errors
         }

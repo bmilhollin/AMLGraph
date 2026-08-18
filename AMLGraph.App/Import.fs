@@ -18,7 +18,7 @@ module Import =
             Accounts : ImportResult<Account>
             Ownerships : ImportResult<Ownership>
             Transactions : ImportResult<Transaction>
-            Transacts : ImportResult<Transacts>
+            Has_Transactions : ImportResult<Has_Transaction>
         }
         member this.Errors =
             [
@@ -28,7 +28,7 @@ module Import =
                 yield! this.Accounts.Validation.Errors
                 yield! this.Ownerships.Validation.Errors
                 yield! this.Transactions.Validation.Errors
-                yield! this.Transacts.Validation.Errors
+                yield! this.Has_Transactions.Validation.Errors
             ]
 
     let loadAndValidate () =
@@ -72,7 +72,7 @@ module Import =
                 validatedAccounts.Valid
                 ownerships
         
-        let transactions,transacts =
+        let transactions, has_Transactions =
             Reader.Transaction.read "Data/Transactions.tsv"            
 
         let validatedTransactions =
@@ -80,11 +80,11 @@ module Import =
                 validInstitutionIds
                 transactions
 
-        let validatedTransacts =
-            Validation.Transacts.validate
+        let validatedHas_Transactions =
+            Validation.Has_Transaction.validate
                 validatedAccounts.Valid
                 validatedTransactions.Valid
-                transacts
+                has_Transactions
         
         {
             Persons =
@@ -123,10 +123,10 @@ module Import =
                     Validation = validatedTransactions
                 }
 
-            Transacts =
+            Has_Transactions =
                 {
-                    Read = transacts.Length
-                    Validation = validatedTransacts
+                    Read = has_Transactions.Length
+                    Validation = validatedHas_Transactions
                 }
         }
 
@@ -158,6 +158,6 @@ module Import =
             results.Transactions.Read
             results.Transactions.Validation.Valid.Length
             results.Transactions.Validation.Errors.Length
-            results.Transacts.Read
-            results.Transacts.Validation.Valid.Length
-            results.Transacts.Validation.Errors.Length
+            results.Has_Transactions.Read
+            results.Has_Transactions.Validation.Valid.Length
+            results.Has_Transactions.Validation.Errors.Length

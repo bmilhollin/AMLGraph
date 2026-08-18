@@ -33,6 +33,7 @@ async {
     do! Graph.Relationships.Has_Customer_Record.create hasCustomerRecords
     do! Graph.Relationships.Ownership.create importResult.Ownerships.Validation.Valid
     do! Graph.Relationships.Held_At.create heldAts
+    do! Graph.Relationships.Has_Transaction.create importResult.Has_Transactions.Validation.Valid
 
     Neo4j.dispose ()
         

@@ -11,7 +11,7 @@ type UniqueCustomerId = UniqueCustomerId of (CustomerId * InstitutionId)
 type UniqueAccountId = UniqueAccountId of (AccountId * InstitutionId)
 type UniqueOwnershipId = UniqueOwnershipId of (UniqueCustomerId * UniqueAccountId)
 type UniqueTransactionId = UniqueTransactionId of (TransactionId * InstitutionId)
-type UniqueTransactsId = UniqueTransactsId of (UniqueAccountId * UniqueTransactionId)
+type UniqueHas_TransactionId = UniqueHas_TransactionId of (UniqueAccountId * UniqueTransactionId)
 
 module EntityIds =    
     let personIdValue (PersonId id) = id
@@ -23,7 +23,7 @@ module EntityIds =
     let uniqueAccountIdValue (UniqueAccountId (accountId, institutionId)) = (accountId, institutionId)
     let uniqueOwnershipIdValue (UniqueOwnershipId (customerId, accountId)) = (customerId, accountId)
     let uniqueTransactionIdValue (UniqueTransactionId (transactionId, institutionId)) = (transactionId, institutionId)
-    let uniqueTransactsIdValue (UniqueTransactsId (accountId, institutionId)) = (accountId, institutionId)
+    let UniqueHas_TransactionIdValue (UniqueHas_TransactionId (accountId, institutionId)) = (accountId, institutionId)
 
 type AccountType =
     | Checking
@@ -146,13 +146,13 @@ type Ownership =
     member this.Key : UniqueOwnershipId =
         UniqueOwnershipId (this.CustomerKey, this.AccountKey)
 
-type Transacts =
+type Has_Transaction =
     {
         AccountId : UniqueAccountId
         TransactionId : UniqueTransactionId
     }
-    member this.Key : UniqueTransactsId =
-        UniqueTransactsId (this.AccountId, this.TransactionId)
+    member this.Key : UniqueHas_TransactionId =
+        UniqueHas_TransactionId (this.AccountId, this.TransactionId)
 
 type EntityKey =
     | PersonKey of PersonId
@@ -161,7 +161,7 @@ type EntityKey =
     | InstitutionKey of InstitutionId
     | OwnershipKey of UniqueOwnershipId
     | TransactionKey of UniqueTransactionId
-    | TransactsKey of UniqueTransactsId
+    | Has_TransactionKey of UniqueHas_TransactionId
 
 type ValidationIssue =
     | ConflictingPersonAttributes

@@ -1,2 +1,2 @@
 TransactionId	InstitutionId	AccountId	TransactionType	TransactionMethod	Amount	Timestamp
-T001	FI001	A001	Deposit	Cash	500.00	2026-08-16T10:00:00
+T001	FI001	A1001	Deposit	Cash	500.00	2026-08-16T10:00:00
