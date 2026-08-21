@@ -41,7 +41,7 @@ module SyntheticAccount =
         {
             AccountId = AccountId "SYN-A003"
             InstitutionId = InstitutionId "SYN-FI001"
-            AccountType = CreditCard
+            AccountType = AccountType.CreditCard
             OpenDate = "2020-01-01"
             Balance = 500.00m
         }
@@ -50,7 +50,7 @@ module SyntheticAccount =
         {
             AccountId = AccountId "SYN-A004"
             InstitutionId = InstitutionId "SYN-FI004"
-            AccountType = CreditCard
+            AccountType = AccountType.CreditCard
             OpenDate = "2022-01-01"
             Balance = 5000.00m
         }

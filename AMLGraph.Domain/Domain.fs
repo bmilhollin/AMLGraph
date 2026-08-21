@@ -6,24 +6,24 @@ type PersonId = PersonId of string
 type InstitutionId = InstitutionId of string
 type CustomerId = CustomerId of string
 type AccountId = AccountId of string
-type TransactionId = TransactionId of string
+type TransactionId = TransactionId of string // TODO REMOVE
 type UniqueCustomerId = UniqueCustomerId of (CustomerId * InstitutionId)
 type UniqueAccountId = UniqueAccountId of (AccountId * InstitutionId)
 type UniqueOwnershipId = UniqueOwnershipId of (UniqueCustomerId * UniqueAccountId)
-type UniqueTransactionId = UniqueTransactionId of (TransactionId * InstitutionId)
-type UniqueHas_TransactionId = UniqueHas_TransactionId of (UniqueAccountId * UniqueTransactionId)
+type UniqueTransactionId = UniqueTransactionId of (TransactionId * InstitutionId) // TODO REMOVE
+type UniqueHas_TransactionId = UniqueHas_TransactionId of (UniqueAccountId * UniqueTransactionId) // TODO REMOVE
 
 module EntityIds =    
     let personIdValue (PersonId id) = id
     let customerIdValue (CustomerId id) = id
     let accountIdValue (AccountId id) = id
     let institutionIdValue (InstitutionId id) = id
-    let transactionIdValue (TransactionId id) = id
+    let transactionIdValue (TransactionId id) = id // TODO REMOVE
     let uniqueCustomerIdValue (UniqueCustomerId (customerId, institutionId)) = (customerId, institutionId)
     let uniqueAccountIdValue (UniqueAccountId (accountId, institutionId)) = (accountId, institutionId)
     let uniqueOwnershipIdValue (UniqueOwnershipId (customerId, accountId)) = (customerId, accountId)
-    let uniqueTransactionIdValue (UniqueTransactionId (transactionId, institutionId)) = (transactionId, institutionId)
-    let UniqueHas_TransactionIdValue (UniqueHas_TransactionId (accountId, institutionId)) = (accountId, institutionId)
+    let uniqueTransactionIdValue (UniqueTransactionId (transactionId, institutionId)) = (transactionId, institutionId)  // TODO REMOVE
+    let UniqueHas_TransactionIdValue (UniqueHas_TransactionId (accountId, institutionId)) = (accountId, institutionId) // TODO REMOVE
 
 type AccountType =
     | Checking
@@ -71,9 +71,9 @@ type Account =
     member this.Key =
         UniqueAccountId (this.AccountId, this.InstitutionId)
 
+// TODO REMOVE THIS SECTION - BEGIN
 // ACH is Automated Clearing House, U.S. electronic payment network banks use to move money between accounts.
 // Includes Direct Deposit, Automatic bill payment, Bank-to-Bank electronic transfers, Electronic payments to businesses or people, etc.
-
 type TransactionAction =
     | Deposit
     | Withdrawal
@@ -126,6 +126,46 @@ type Transaction =
     }
     member this.Key : UniqueTransactionId =
         UniqueTransactionId (this.TransactionId, this.InstitutionId)
+// TODO REMOVE THIS SECTION - END
+type Currency =
+    | AUD
+    | BRL
+    | CAD
+    | CHF
+    | CNY
+    | EUR
+    | GBP
+    | INR
+    | JPY
+    | MXN
+    | RUB
+    | SGD
+    | TRY
+    | USD
+    | Bitcoin
+
+type PaymentFormat =
+    | ACH
+    | Cash
+    | Cheque
+    | CreditCard
+    | Reinvestment
+    | Wire
+
+type Funds = 
+    {
+        Amount: decimal
+        Currency: Currency
+    }
+type FundsTransaction =
+    {
+        Timestamp : DateTime
+        FromAccount: UniqueAccountId
+        ToAccount: UniqueAccountId
+        Paid: Funds
+        Received: Funds
+        Format: PaymentFormat
+    }
 
 type Has_Customer_Record =
     {
@@ -146,6 +186,7 @@ type Ownership =
     member this.Key : UniqueOwnershipId =
         UniqueOwnershipId (this.CustomerKey, this.AccountKey)
 
+// TODO REMOVE
 type Has_Transaction =
     {
         AccountId : UniqueAccountId
@@ -160,8 +201,8 @@ type EntityKey =
     | AccountKey of UniqueAccountId
     | InstitutionKey of InstitutionId
     | OwnershipKey of UniqueOwnershipId
-    | TransactionKey of UniqueTransactionId
-    | Has_TransactionKey of UniqueHas_TransactionId
+    | TransactionKey of UniqueTransactionId // TODO REMOVE
+    | Has_TransactionKey of UniqueHas_TransactionId // TODO REMOVE
 
 type ValidationIssue =
     | ConflictingPersonAttributes
@@ -172,7 +213,7 @@ type ValidationIssue =
     | MissingCustomer
     | MissingInstitution
     | MissingAccount
-    | MissingTransaction
+    | MissingTransaction  // TODO REMOVE??
     | MismatchedInstitutions
     
 type ValidationError =
@@ -188,24 +229,24 @@ type Validated<'T> =
     }
 
 module AccountType =
-
     let ofString = function
-        | "Checking" -> Checking
-        | "Savings" -> Savings
-        | "Business" -> Business
-        | "Credit Card" -> CreditCard
-        | "Loan" -> Loan
-        | "Brokerage" -> Brokerage
+        | "Checking" -> AccountType.Checking
+        | "Savings" -> AccountType.Savings
+        | "Business" -> AccountType.Business
+        | "Credit Card" -> AccountType.CreditCard
+        | "Loan" -> AccountType.Loan
+        | "Brokerage" -> AccountType.Brokerage
         | value -> failwith $"Unknown account type '{value}'."
 
     let value = function
-        | Checking -> "Checking"
-        | Savings -> "Savings"
-        | Business -> "Business"
-        | CreditCard -> "Credit Card"
-        | Loan -> "Loan"
-        | Brokerage -> "Brokerage"
+        | AccountType.Checking -> "Checking"
+        | AccountType.Savings -> "Savings"
+        | AccountType.Business -> "Business"
+        | AccountType.CreditCard -> "Credit Card"
+        | AccountType.Loan -> "Loan"
+        | AccountType.Brokerage -> "Brokerage"
 
+// TODO REMOVE MODULE
 module TransactionType =
 
     let ofString transactionType transactionMethod =
@@ -267,3 +308,33 @@ module TransactionType =
         string (action transactionType),
         string (method transactionType)
                     
+module Parse =
+
+    let currency value =
+        match value with
+        | "AUD" | "Australian Dollar" -> AUD
+        | "BRL" | "Brazil Real" -> BRL
+        | "CAD" | "Canadian Dollar" -> CAD
+        | "CHF" | "Swiss Franc" -> CHF
+        | "CNY" | "Yuan" -> CNY
+        | "EUR" | "Euro" -> EUR
+        | "GBP" | "UK Pound" -> GBP
+        | "INR" | "Rupee" -> INR
+        | "JPY" | "Yen" -> JPY
+        | "MXN" | "Mexican Peso" -> MXN
+        | "RUB" | "Ruble" -> RUB
+        | "SGD" | "Singapore Dollar" -> SGD
+        | "TRY" | "Turkish Lira" -> TRY
+        | "USD" | "US Dollar" -> USD
+        | "BTC" | "Bitcoin" -> Bitcoin
+        | _ -> failwith $"Unknown currency: {value}"
+
+    let paymentFormat value =
+        match value with
+        | "ACH" -> PaymentFormat.ACH
+        | "Cash" -> PaymentFormat.Cash
+        | "Cheque" -> PaymentFormat.Cheque
+        | "Credit Card" -> PaymentFormat.CreditCard
+        | "Reinvestment" -> PaymentFormat.Reinvestment
+        | "Wire" -> PaymentFormat.Wire
+        | value -> failwith $"Unknown payment format: {value}"

@@ -12,6 +12,7 @@
     <Compile Include="Reader\Customer.fs" />
     <Compile Include="Reader\Account.fs" />
     <Compile Include="Reader\Transaction.fs" />
+    <Compile Include="Reader\FundsTransaction.fs" />
     <Compile Include="Reader\Institution.fs" />
     <Compile Include="Graph\Nodes\Person.fs" />
     <Compile Include="Graph\Nodes\Account.fs" />

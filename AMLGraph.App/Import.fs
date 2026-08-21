@@ -19,6 +19,7 @@ module Import =
             Ownerships : ImportResult<Ownership>
             Transactions : ImportResult<Transaction>
             Has_Transactions : ImportResult<Has_Transaction>
+            FundsTransactions: ImportResult<FundsTransaction>
         }
         member this.Errors =
             [
@@ -29,6 +30,7 @@ module Import =
                 yield! this.Ownerships.Validation.Errors
                 yield! this.Transactions.Validation.Errors
                 yield! this.Has_Transactions.Validation.Errors
+                yield! this.FundsTransactions.Validation.Errors
             ]
 
     let loadAndValidate () =
@@ -85,6 +87,9 @@ module Import =
                 validatedAccounts.Valid
                 validatedTransactions.Valid
                 has_Transactions
+
+        let fundsTransactions =
+            Reader.FundsTransaction.read "Data/FundsTransactions.tsv"
         
         {
             Persons =
@@ -116,17 +121,27 @@ module Import =
                     Read = ownerships.Length
                     Validation = validatedOwnerships
                 }
-
+            // TODO REMOVE
             Transactions =
                 {
                     Read = transactions.Length
                     Validation = validatedTransactions
                 }
-
+            // TODO REMOVE
             Has_Transactions =
                 {
                     Read = has_Transactions.Length
                     Validation = validatedHas_Transactions
+                }
+
+            FundsTransactions =
+                {
+                    Read = fundsTransactions.Length
+                    Validation = 
+                        {
+                            Valid = []
+                            Errors = []
+                        }
                 }
         }
 
@@ -139,7 +154,8 @@ module Import =
             Accounts Read: %d, Valid: %d, Errors: %d\n\
             Ownerships Read: %d, Valid: %d, Errors: %d\n\
             Transactions Read: %d, Valid: %d, Errors: %d\n\
-            Has_Transactions Read: %d, Valid: %d, Errors: %d"
+            Has_Transactions Read: %d, Valid: %d, Errors: %d\n\
+            FundsTransactions Read: %d, Valid: %d, Errors: %d"
             results.Persons.Read
             results.Persons.Validation.Valid.Length
             results.Persons.Validation.Errors.Length
@@ -155,9 +171,14 @@ module Import =
             results.Ownerships.Read
             results.Ownerships.Validation.Valid.Length
             results.Ownerships.Validation.Errors.Length
-            results.Transactions.Read
+            // TODO REMOVE SECTION - BEGIN
+            results.Transactions.Read                                
             results.Transactions.Validation.Valid.Length
             results.Transactions.Validation.Errors.Length
             results.Has_Transactions.Read
             results.Has_Transactions.Validation.Valid.Length
             results.Has_Transactions.Validation.Errors.Length
+            // TODO REMOVE SECTION - END
+            results.FundsTransactions.Read                                
+            results.FundsTransactions.Validation.Valid.Length
+            results.FundsTransactions.Validation.Errors.Length
