@@ -68,6 +68,11 @@ module Import =
                 validInstitutionIds
                 accounts
 
+        let validatedUniqueAccountIds =
+            validatedAccounts.Valid
+            |> List.map _.Key
+            |> Set
+
         let validatedOwnerships =
             Validation.Ownership.validate
                 validatedCustomers.Valid
@@ -90,6 +95,12 @@ module Import =
 
         let fundsTransactions =
             Reader.FundsTransaction.read "Data/FundsTransactions.tsv"
+
+        let validatedFundsTransactions =
+            Validation.FundsTransaction.validate
+                validInstitutionIds
+                validatedUniqueAccountIds
+                fundsTransactions
         
         {
             Persons =
@@ -137,11 +148,7 @@ module Import =
             FundsTransactions =
                 {
                     Read = fundsTransactions.Length
-                    Validation = 
-                        {
-                            Valid = []
-                            Errors = []
-                        }
+                    Validation = validatedFundsTransactions
                 }
         }
 

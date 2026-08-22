@@ -116,6 +116,18 @@ module ValidationReport =
         | MissingAccount ->
             "Referenced account does not exist or failed validation."
 
+        | MissingFromAccount ->
+            "Referenced FROM account does not exist or failed validation."
+
+        | MissingToAccount ->
+            "Referenced TO account does not exist or failed validation."
+
+        | MissingFromInstitution ->
+            "Referenced FROM institution does not exist or failed validation."
+
+        | MissingToInstitution ->
+            "Referenced TO institution does not exist or failed validation."
+
         | MismatchedInstitutions ->
             "Customer and account belong to different institutions."
 

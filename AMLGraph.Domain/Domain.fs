@@ -6,11 +6,11 @@ type PersonId = PersonId of string
 type InstitutionId = InstitutionId of string
 type CustomerId = CustomerId of string
 type AccountId = AccountId of string
-type TransactionId = TransactionId of string // TODO REMOVE
+type TransactionId = TransactionId of string 
 type UniqueCustomerId = UniqueCustomerId of (CustomerId * InstitutionId)
 type UniqueAccountId = UniqueAccountId of (AccountId * InstitutionId)
 type UniqueOwnershipId = UniqueOwnershipId of (UniqueCustomerId * UniqueAccountId)
-type UniqueTransactionId = UniqueTransactionId of (TransactionId * InstitutionId) // TODO REMOVE
+type UniqueTransactionId = UniqueTransactionId of (TransactionId * InstitutionId) 
 type UniqueHas_TransactionId = UniqueHas_TransactionId of (UniqueAccountId * UniqueTransactionId) // TODO REMOVE
 
 module EntityIds =    
@@ -18,11 +18,11 @@ module EntityIds =
     let customerIdValue (CustomerId id) = id
     let accountIdValue (AccountId id) = id
     let institutionIdValue (InstitutionId id) = id
-    let transactionIdValue (TransactionId id) = id // TODO REMOVE
+    let transactionIdValue (TransactionId id) = id 
     let uniqueCustomerIdValue (UniqueCustomerId (customerId, institutionId)) = (customerId, institutionId)
     let uniqueAccountIdValue (UniqueAccountId (accountId, institutionId)) = (accountId, institutionId)
     let uniqueOwnershipIdValue (UniqueOwnershipId (customerId, accountId)) = (customerId, accountId)
-    let uniqueTransactionIdValue (UniqueTransactionId (transactionId, institutionId)) = (transactionId, institutionId)  // TODO REMOVE
+    let uniqueTransactionIdValue (UniqueTransactionId (transactionId, institutionId)) = (transactionId, institutionId)
     let UniqueHas_TransactionIdValue (UniqueHas_TransactionId (accountId, institutionId)) = (accountId, institutionId) // TODO REMOVE
 
 type AccountType =
@@ -159,6 +159,7 @@ type Funds =
     }
 type FundsTransaction =
     {
+        TransactionId : TransactionId
         Timestamp : DateTime
         FromAccount: UniqueAccountId
         ToAccount: UniqueAccountId
@@ -166,6 +167,10 @@ type FundsTransaction =
         Received: Funds
         Format: PaymentFormat
     }
+    member this.Key : UniqueTransactionId =
+        let _, institutionId = 
+            EntityIds.uniqueAccountIdValue this.FromAccount
+        UniqueTransactionId (this.TransactionId, institutionId)
 
 type Has_Customer_Record =
     {
@@ -201,7 +206,7 @@ type EntityKey =
     | AccountKey of UniqueAccountId
     | InstitutionKey of InstitutionId
     | OwnershipKey of UniqueOwnershipId
-    | TransactionKey of UniqueTransactionId // TODO REMOVE
+    | TransactionKey of UniqueTransactionId
     | Has_TransactionKey of UniqueHas_TransactionId // TODO REMOVE
 
 type ValidationIssue =
@@ -213,6 +218,10 @@ type ValidationIssue =
     | MissingCustomer
     | MissingInstitution
     | MissingAccount
+    | MissingFromInstitution
+    | MissingToInstitution
+    | MissingFromAccount
+    | MissingToAccount
     | MissingTransaction  // TODO REMOVE??
     | MismatchedInstitutions
     
