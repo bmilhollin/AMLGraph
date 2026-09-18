@@ -128,7 +128,16 @@ AMLGraph
 │   ├── Reader
 │   ├── Graph
 │   │   ├── Nodes
+│   │   │   ├── Person.fs
+│   │   │   ├── Customer.fs
+│   │   │   ├── Institution.fs
+│   │   │   ├── Account.fs
+│   │   │   └── Transaction.fs
 │   │   └── Relationships
+│   │   │   ├── Has_Customer_Record.fs
+│   │   │   ├── Held_At.fs
+│   │   │   ├── Ownership.fs
+│   │   │   └── Has_Transaction.fs
 │   └── Infrastructure
 │       ├── Neo4j.fs
 │       └── Schema.fs
