@@ -72,7 +72,7 @@ module FundsTransaction =
                         Timestamp = timestamp
                         FromAccount = UniqueAccountId (fromAccountId, fromInstitutionId)
                         ToAccount = UniqueAccountId (toAccountId, toInstitutionId)
-                        Paid = {Amount = fromAmount; Currency = fromCurrency}
+                        Sent = {Amount = fromAmount; Currency = fromCurrency}
                         Received = {Amount = toAmount; Currency = toCurrency}
                         Format = format
                     }

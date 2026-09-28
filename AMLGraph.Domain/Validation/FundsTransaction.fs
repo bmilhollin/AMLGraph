@@ -9,7 +9,7 @@ module FundsTransaction =
         left.Timestamp = right.Timestamp &&
         left.FromAccount = right.FromAccount &&
         left.ToAccount = right.ToAccount &&
-        left.Paid = right.Paid &&
+        left.Sent = right.Sent &&
         left.Received = right.Received &&
         left.Format = right.Format
 

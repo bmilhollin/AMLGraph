@@ -1,11 +1,12 @@
 namespace AMLGraph.Infrastructure
 
 open System
+open System.Collections.Generic
 open Neo4j.Driver
-// open System.Threading.Tasks
 module Neo4j =
 
     // intital, throwaway Neo4j dev database
+    let databaseName = "AMLGraph"
     let uri = "bolt://localhost:7687"
     let username = "neo4j"
     let password = Environment.GetEnvironmentVariable("NEO4J_PASSWORD")
@@ -30,7 +31,10 @@ module Neo4j =
     let executeWriteAsync cypher parameters =
         async {
 
-            use session = driver.AsyncSession()
+            use session = 
+                driver.AsyncSession(
+                    SessionConfigBuilder.ForDatabase(databaseName)
+                )
 
             do!
                 session.ExecuteWriteAsync(
@@ -49,3 +53,25 @@ module Neo4j =
                         })
                 |> Async.AwaitTask
         }
+
+
+module Clear =
+
+    let emptyParameters: IDictionary<string, obj> = dict []
+
+    let graph () =
+            // Implementation for clearing the graph
+            let cypher =
+                """
+                MATCH (n) DETACH DELETE n
+                """
+
+            async {
+                
+                do! 
+                    Neo4j.executeWriteAsync
+                        cypher
+                        emptyParameters
+
+                printfn "Graph cleared"
+            }

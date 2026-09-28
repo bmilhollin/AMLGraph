@@ -163,11 +163,12 @@ type FundsTransaction =
         Timestamp : DateTime
         FromAccount: UniqueAccountId
         ToAccount: UniqueAccountId
-        Paid: Funds
+        Sent: Funds
         Received: Funds
         Format: PaymentFormat
     }
     member this.Key : UniqueTransactionId =
+        // instituitionId is associated with the FromAccount
         let _, institutionId = 
             EntityIds.uniqueAccountIdValue this.FromAccount
         UniqueTransactionId (this.TransactionId, institutionId)
@@ -199,6 +200,28 @@ type Has_Transaction =
     }
     member this.Key : UniqueHas_TransactionId =
         UniqueHas_TransactionId (this.AccountId, this.TransactionId)
+
+/// TransactionKey's InstitutionId is associated with the FromAccount
+type Sent_Transaction =
+    {
+        FromAccountKey : UniqueAccountId
+        TransactionKey : UniqueTransactionId
+    }
+
+/// TransactionKey's InstitutionId is associated with the FromAccount
+type Received_By =
+    {
+        TransactionKey : UniqueTransactionId
+        ToAccountKey : UniqueAccountId
+    }
+
+// type Flow =
+//     {
+//         AccountId : UniqueAccountId
+//         TransactionId : UniqueTransactionId
+//     }
+//     member this.Key : UniqueHas_TransactionId =
+//         UniqueHas_TransactionId (this.AccountId, this.TransactionId)
 
 type EntityKey =
     | PersonKey of PersonId
@@ -338,6 +361,24 @@ module Parse =
         | "BTC" | "Bitcoin" -> Bitcoin
         | _ -> failwith $"Unknown currency: {value}"
 
+    let currencyString (currency: Currency) =
+        match currency with
+        | AUD -> "AUD"
+        | BRL -> "BRL"
+        | CAD -> "CAD"
+        | CHF -> "CHF"
+        | CNY -> "CNY"
+        | EUR -> "EUR"
+        | GBP -> "GBP"
+        | INR -> "INR"
+        | JPY -> "JPY"
+        | MXN -> "MXN"
+        | RUB -> "RUB"
+        | SGD -> "SGD"
+        | TRY -> "TRY"
+        | USD -> "USD"
+        | Bitcoin -> "BTC"
+
     let paymentFormat value =
         match value with
         | "ACH" -> PaymentFormat.ACH
@@ -347,3 +388,12 @@ module Parse =
         | "Reinvestment" -> PaymentFormat.Reinvestment
         | "Wire" -> PaymentFormat.Wire
         | value -> failwith $"Unknown payment format: {value}"
+
+    let paymentFormatString (format: PaymentFormat) =
+        match format with
+        | PaymentFormat.ACH -> "ACH"
+        | PaymentFormat.Cash -> "Cash"
+        | PaymentFormat.Cheque -> "Cheque"
+        | PaymentFormat.CreditCard -> "Credit Card"
+        | PaymentFormat.Reinvestment -> "Reinvestment"
+        | PaymentFormat.Wire -> "Wire"

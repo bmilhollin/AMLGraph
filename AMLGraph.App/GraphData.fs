@@ -4,7 +4,7 @@ open AMLGraph.Domain
 
 module GraphData =
 
-
+    
     // A validated customer may reference a Person that does not exist.
     // In AMLGraph this is intentional because unresolved identity can itself
     // represent meaningful AML information.
@@ -23,3 +23,18 @@ module GraphData =
             {
                 AccountKey = a.Key
             })
+
+    // Derive both relationships from validated transactions;
+    // their account endpoints were checked during transaction validation.
+    let sentAndReceivedBy (fundsTransactions: FundsTransaction list) =
+        fundsTransactions
+        |> List.map (fun t -> 
+            { 
+                FromAccountKey = t.FromAccount
+                TransactionKey = t.Key
+            },
+            {
+                TransactionKey = t.Key
+                ToAccountKey = t.ToAccount
+            })
+        |> List.unzip

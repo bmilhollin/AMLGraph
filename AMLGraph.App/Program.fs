@@ -25,15 +25,21 @@ async {
     let heldAts =
         GraphData.heldAts importResult.Accounts.Validation.Valid
 
+    let sentTransactions, receivedTransactions =
+        GraphData.sentAndReceivedBy importResult.FundsTransactions.Validation.Valid
+
+    do! Clear.graph ()
+
     do! Graph.Nodes.Person.create importResult.Persons.Validation.Valid
     do! Graph.Nodes.Customer.create importResult.Customers.Validation.Valid
     do! Graph.Nodes.Institution.create importResult.Institutions.Validation.Valid
     do! Graph.Nodes.Account.create importResult.Accounts.Validation.Valid
     do! Graph.Nodes.Transaction.create importResult.Transactions.Validation.Valid
+    do! Graph.Nodes.FundsTransaction.create importResult.FundsTransactions.Validation.Valid
     do! Graph.Relationships.Has_Customer_Record.create hasCustomerRecords
     do! Graph.Relationships.Ownership.create importResult.Ownerships.Validation.Valid
     do! Graph.Relationships.Held_At.create heldAts
-    do! Graph.Relationships.Has_Transaction.create importResult.Has_Transactions.Validation.Valid
+    // do! Graph.Relationships.Has_Transaction.create importResult.Has_Transactions.Validation.Valid
 
     Neo4j.dispose ()
         
