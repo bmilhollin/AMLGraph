@@ -73,5 +73,5 @@ module Clear =
                         cypher
                         emptyParameters
 
-                printfn "Graph cleared"
+                printfn "Graph Nodes and Relationships cleared (not constraints)"
             }
