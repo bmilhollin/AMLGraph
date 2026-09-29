@@ -209,19 +209,11 @@ type Sent =
     }
 
 /// TransactionKey's InstitutionId is associated with the FromAccount
-type Received_By =
+type ReceivedBy =
     {
         TransactionKey : UniqueTransactionId
         ToAccountKey : UniqueAccountId
     }
-
-// type Flow =
-//     {
-//         AccountId : UniqueAccountId
-//         TransactionId : UniqueTransactionId
-//     }
-//     member this.Key : UniqueHas_TransactionId =
-//         UniqueHas_TransactionId (this.AccountId, this.TransactionId)
 
 type EntityKey =
     | PersonKey of PersonId

@@ -7,15 +7,15 @@ module Sent =
 
     let private toParameters (sent: Sent) =
 
-        let accountId, institutionId =
+        let fromAccountId, fromInstitutionId =
             EntityIds.uniqueAccountIdValue sent.FromAccountKey
 
         let transactionId, _ =
             EntityIds.uniqueTransactionIdValue sent.TransactionKey
 
         dict [
-            "accountId", box (EntityIds.accountIdValue accountId)
-            "accountInstitutionId", box (EntityIds.institutionIdValue institutionId)
+            "fromAccountId", box (EntityIds.accountIdValue fromAccountId)
+            "fromInstitutionId", box (EntityIds.institutionIdValue fromInstitutionId)
             "transactionId", box (EntityIds.transactionIdValue transactionId)
         ]
     let create (sents: Sent list) =
@@ -23,12 +23,12 @@ module Sent =
         let cypher =
             """
            MATCH (a:Account {
-                accountId: $accountId,
-                institutionId: $institutionId
+                accountId: $fromAccountId,
+                institutionId: $fromInstitutionId
             })
             MATCH (t:FundsTransaction {
                 transactionId: $transactionId,
-                fromInstitutionId: $institutionId
+                fromInstitutionId: $fromInstitutionId
             })
             MERGE (a)-[:SENT]->(t)
             """
