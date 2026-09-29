@@ -6,7 +6,7 @@ open Neo4j.Driver
 module Neo4j =
 
     // intital, throwaway Neo4j dev database
-    let databaseName = "AMLGraph"
+    let databaseName = "neo4j"
     let uri = "bolt://localhost:7687"
     let username = "neo4j"
     let password = Environment.GetEnvironmentVariable("NEO4J_PASSWORD")
