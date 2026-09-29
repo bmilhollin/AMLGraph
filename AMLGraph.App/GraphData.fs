@@ -26,8 +26,8 @@ module GraphData =
 
     // Derive both relationships from validated transactions;
     // their account endpoints were checked during transaction validation.
-    let sentAndReceivedBy (fundsTransactions: FundsTransaction list) =
-        fundsTransactions
+    let sentAndReceivedBy (transactions: Transaction list) =
+        transactions
         |> List.map (fun t -> 
             { 
                 FromAccountKey = t.FromAccount

@@ -26,7 +26,7 @@ module Sent =
                 accountId: $fromAccountId,
                 institutionId: $fromInstitutionId
             })
-            MATCH (t:FundsTransaction {
+            MATCH (t:Transaction {
                 transactionId: $transactionId,
                 fromInstitutionId: $fromInstitutionId
             })

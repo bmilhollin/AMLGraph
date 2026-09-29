@@ -23,7 +23,7 @@ module ReceivedBy =
 
         let cypher =
             """
-            MATCH (t:FundsTransaction {
+            MATCH (t:Transaction {
                 transactionId: $transactionId,
                 fromInstitutionId: $fromInstitutionId
             })

@@ -26,15 +26,15 @@ async {
         GraphData.heldAts importResult.Accounts.Validation.Valid
 
     let sentTransactions, receivedTransactions =
-        GraphData.sentAndReceivedBy importResult.FundsTransactions.Validation.Valid
+        GraphData.sentAndReceivedBy importResult.Transactions.Validation.Valid
 
-    do! Clear.graph ()
+    do! Clear.graph () // not clearing constraints here
 
     do! Graph.Nodes.Person.create importResult.Persons.Validation.Valid
     do! Graph.Nodes.Customer.create importResult.Customers.Validation.Valid
     do! Graph.Nodes.Institution.create importResult.Institutions.Validation.Valid
     do! Graph.Nodes.Account.create importResult.Accounts.Validation.Valid
-    do! Graph.Nodes.FundsTransaction.create importResult.FundsTransactions.Validation.Valid
+    do! Graph.Nodes.Transaction.create importResult.Transactions.Validation.Valid
     do! Graph.Relationships.HasCustomerRecord.create hasCustomerRecords
     do! Graph.Relationships.Ownership.create importResult.Ownerships.Validation.Valid
     do! Graph.Relationships.HeldAt.create heldAts

@@ -2,9 +2,9 @@ namespace AMLGraph.Validation
 
 open AMLGraph.Domain
 
-module FundsTransaction =
+module Transaction =
 
-    let private transactionAttributesMatch (left: FundsTransaction) (right: FundsTransaction) =
+    let private transactionAttributesMatch (left: Transaction) (right: Transaction) =
 
         left.Timestamp = right.Timestamp &&
         left.FromAccount = right.FromAccount &&
@@ -33,7 +33,7 @@ module FundsTransaction =
     let private validateInstitutions 
         (validInstitutions: Set<InstitutionId>)
         (errors: ResizeArray<ValidationError>)
-        (transaction: FundsTransaction) =
+        (transaction: Transaction) =
         let getInstitutionId (uniqueAccountId: UniqueAccountId) =
             uniqueAccountId
             |> EntityIds.uniqueAccountIdValue
@@ -56,7 +56,7 @@ module FundsTransaction =
     let private validateUniqueAccountIds 
         (validUniqueAccountIds: Set<UniqueAccountId>)
         (errors: ResizeArray<ValidationError>)
-        (transaction: FundsTransaction) =
+        (transaction: Transaction) =
         
         let fromIsValid = validUniqueAccountIds.Contains transaction.FromAccount
         let toIsValid = validUniqueAccountIds.Contains transaction.ToAccount
@@ -73,7 +73,7 @@ module FundsTransaction =
         (validInstitutions: Set<InstitutionId>)
         (validUniqueAccountIds: Set<UniqueAccountId>)
         (errors: ResizeArray<ValidationError>)
-        (transaction: FundsTransaction) =
+        (transaction: Transaction) =
 
         let institutionsValid =
             validateInstitutions validInstitutions errors transaction
@@ -90,9 +90,9 @@ module FundsTransaction =
     let validate
         (validInstitutions: Set<InstitutionId>)
         (validUniqueAccountIds: Set<UniqueAccountId>)
-        (transactions: FundsTransaction list) : Validated<FundsTransaction list> =
+        (transactions: Transaction list) : Validated<Transaction list> =
 
-        let validTransactions = ResizeArray<FundsTransaction>()
+        let validTransactions = ResizeArray<Transaction>()
         let errors = ResizeArray<ValidationError>()
 
         let addIfValidInstitutionsAndUniqueAccountIds transaction =

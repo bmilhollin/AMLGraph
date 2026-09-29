@@ -99,7 +99,7 @@ type Funds =
         Amount: decimal
         Currency: Currency
     }
-type FundsTransaction =
+type Transaction =
     {
         TransactionId : TransactionId
         Timestamp : DateTime

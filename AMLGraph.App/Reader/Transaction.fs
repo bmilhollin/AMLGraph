@@ -4,7 +4,7 @@ open System
 open System.IO
 open AMLGraph.Domain
 
-module FundsTransaction =
+module Transaction =
 
     let read (filePath:string) =
 
@@ -79,4 +79,3 @@ module FundsTransaction =
                    
         }
         |> Seq.toList
-        // |> List.unzip
