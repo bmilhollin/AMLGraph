@@ -17,8 +17,6 @@ module Import =
             Customers : ImportResult<Customer>
             Accounts : ImportResult<Account>
             Ownerships : ImportResult<Ownership>
-            // Transactions : ImportResult<Transaction>
-            // Has_Transactions : ImportResult<Has_Transaction>
             FundsTransactions: ImportResult<FundsTransaction>
         }
         member this.Errors =
@@ -28,8 +26,6 @@ module Import =
                 yield! this.Customers.Validation.Errors
                 yield! this.Accounts.Validation.Errors
                 yield! this.Ownerships.Validation.Errors
-                // yield! this.Transactions.Validation.Errors
-                // yield! this.Has_Transactions.Validation.Errors
                 yield! this.FundsTransactions.Validation.Errors
             ]
 
@@ -79,20 +75,6 @@ module Import =
                 validatedAccounts.Valid
                 ownerships
         
-        // let transactions, has_Transactions =
-        //     Reader.Transaction.read "Data/Transactions.tsv"            
-
-        // let validatedTransactions =
-        //     Validation.Transaction.validate
-        //         validInstitutionIds
-        //         transactions
-
-        // let validatedHas_Transactions =
-        //     Validation.Has_Transaction.validate
-        //         validatedAccounts.Valid
-        //         validatedTransactions.Valid
-        //         has_Transactions
-
         let fundsTransactions =
             Reader.FundsTransaction.read "Data/FundsTransactions.tsv"
 
@@ -132,18 +114,6 @@ module Import =
                     Read = ownerships.Length
                     Validation = validatedOwnerships
                 }
-            // // TODO REMOVE
-            // Transactions =
-            //     {
-            //         Read = transactions.Length
-            //         Validation = validatedTransactions
-            //     }
-            // // TODO REMOVE
-            // Has_Transactions =
-            //     {
-            //         Read = has_Transactions.Length
-            //         Validation = validatedHas_Transactions
-            //     }
 
             FundsTransactions =
                 {
