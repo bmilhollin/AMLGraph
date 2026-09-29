@@ -202,7 +202,7 @@ type Has_Transaction =
         UniqueHas_TransactionId (this.AccountId, this.TransactionId)
 
 /// TransactionKey's InstitutionId is associated with the FromAccount
-type Sent_Transaction =
+type Sent =
     {
         FromAccountKey : UniqueAccountId
         TransactionKey : UniqueTransactionId
