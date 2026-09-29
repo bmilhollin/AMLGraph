@@ -11,7 +11,6 @@ type UniqueCustomerId = UniqueCustomerId of (CustomerId * InstitutionId)
 type UniqueAccountId = UniqueAccountId of (AccountId * InstitutionId)
 type UniqueOwnershipId = UniqueOwnershipId of (UniqueCustomerId * UniqueAccountId)
 type UniqueTransactionId = UniqueTransactionId of (TransactionId * InstitutionId) 
-type UniqueHas_TransactionId = UniqueHas_TransactionId of (UniqueAccountId * UniqueTransactionId) // TODO REMOVE
 
 module EntityIds =    
     let personIdValue (PersonId id) = id
@@ -21,9 +20,8 @@ module EntityIds =
     let transactionIdValue (TransactionId id) = id 
     let uniqueCustomerIdValue (UniqueCustomerId (customerId, institutionId)) = (customerId, institutionId)
     let uniqueAccountIdValue (UniqueAccountId (accountId, institutionId)) = (accountId, institutionId)
-    let uniqueOwnershipIdValue (UniqueOwnershipId (customerId, accountId)) = (customerId, accountId)
+    let uniqueOwnershipIdValue (UniqueOwnershipId (uniqueCustomerId, uniqueAccountId)) = (uniqueCustomerId, uniqueAccountId)
     let uniqueTransactionIdValue (UniqueTransactionId (transactionId, institutionId)) = (transactionId, institutionId)
-    let UniqueHas_TransactionIdValue (UniqueHas_TransactionId (accountId, institutionId)) = (accountId, institutionId) // TODO REMOVE
 
 type AccountType =
     | Checking
@@ -71,62 +69,6 @@ type Account =
     member this.Key =
         UniqueAccountId (this.AccountId, this.InstitutionId)
 
-// TODO REMOVE THIS SECTION - BEGIN
-// ACH is Automated Clearing House, U.S. electronic payment network banks use to move money between accounts.
-// Includes Direct Deposit, Automatic bill payment, Bank-to-Bank electronic transfers, Electronic payments to businesses or people, etc.
-type TransactionAction =
-    | Deposit
-    | Withdrawal
-    | Transfer
-    | Payment
-
-type TransactionMethod =
-    | Cash
-    | Check
-    | ACH
-    | ATM
-    | Wire
-    | Internal
-    | Card
-
-// Action-specific method types constrain the valid transaction combinations.
-// For example, a Deposit cannot be constructed with a Card method.
-type DepositMethod =
-    | Cash
-    | Check
-    | ACH
-
-type WithdrawalMethod =
-    | Cash
-    | ATM
-
-type TransferMethod =
-    | ACH
-    | Wire
-    | Internal
-
-type PaymentMethod =
-    | Check
-    | Card
-    | ACH
-
-type TransactionType =
-    | Deposit of DepositMethod
-    | Withdrawal of WithdrawalMethod
-    | Transfer of TransferMethod
-    | Payment of PaymentMethod
-
-type Transaction =
-    {
-        TransactionId : TransactionId
-        InstitutionId : InstitutionId
-        TransactionType : TransactionType // Action/Method combination gatekeeper
-        Amount : decimal
-        Timestamp : DateTime
-    }
-    member this.Key : UniqueTransactionId =
-        UniqueTransactionId (this.TransactionId, this.InstitutionId)
-// TODO REMOVE THIS SECTION - END
 type Currency =
     | AUD
     | BRL
@@ -192,15 +134,6 @@ type Ownership =
     member this.Key : UniqueOwnershipId =
         UniqueOwnershipId (this.CustomerKey, this.AccountKey)
 
-// TODO REMOVE
-type Has_Transaction =
-    {
-        AccountId : UniqueAccountId
-        TransactionId : UniqueTransactionId
-    }
-    member this.Key : UniqueHas_TransactionId =
-        UniqueHas_TransactionId (this.AccountId, this.TransactionId)
-
 /// TransactionKey's InstitutionId is associated with the FromAccount
 type Sent =
     {
@@ -222,7 +155,6 @@ type EntityKey =
     | InstitutionKey of InstitutionId
     | OwnershipKey of UniqueOwnershipId
     | TransactionKey of UniqueTransactionId
-    | Has_TransactionKey of UniqueHas_TransactionId // TODO REMOVE
 
 type ValidationIssue =
     | ConflictingPersonAttributes
@@ -237,7 +169,6 @@ type ValidationIssue =
     | MissingToInstitution
     | MissingFromAccount
     | MissingToAccount
-    | MissingTransaction  // TODO REMOVE??
     | MismatchedInstitutions
     
 type ValidationError =
@@ -271,66 +202,66 @@ module AccountType =
         | AccountType.Brokerage -> "Brokerage"
 
 // TODO REMOVE MODULE
-module TransactionType =
+// module TransactionType =
 
-    let ofString transactionType transactionMethod =
-        match transactionType with
-        | "Deposit" ->
-            match transactionMethod with
-            | "Cash" -> DepositMethod.Cash
-            | "Check" -> DepositMethod.Check
-            | "ACH" -> DepositMethod.ACH
-            | value -> failwith $"Unknown deposit method {value}"
-            |> Deposit
-        | "Withdrawal" ->
-            match transactionMethod with
-            | "Cash" -> WithdrawalMethod.Cash
-            | "ATM" -> WithdrawalMethod.ATM
-            | value -> failwith $"Unknown withdrawal method {value}"
-            |> Withdrawal
-        | "Transfer" ->
-            match transactionMethod with
-            | "ACH" -> TransferMethod.ACH
-            | "Wire" -> TransferMethod.Wire
-            | "Internal" -> TransferMethod.Internal
-            | value -> failwith $"Unknown transfer method {value}"
-            |> Transfer
-        | "Payment" -> 
-            match transactionMethod with
-            | "Check" -> PaymentMethod.Check
-            | "Card" -> PaymentMethod.Card
-            | "ACH" -> PaymentMethod.ACH
-            | value -> failwith $"Unknown payment method {value}"
-            |> Payment
-        | value -> failwith $"Unknown transaction type '{value}'"
+//     let ofString transactionType transactionMethod =
+//         match transactionType with
+//         | "Deposit" ->
+//             match transactionMethod with
+//             | "Cash" -> DepositMethod.Cash
+//             | "Check" -> DepositMethod.Check
+//             | "ACH" -> DepositMethod.ACH
+//             | value -> failwith $"Unknown deposit method {value}"
+//             |> Deposit
+//         | "Withdrawal" ->
+//             match transactionMethod with
+//             | "Cash" -> WithdrawalMethod.Cash
+//             | "ATM" -> WithdrawalMethod.ATM
+//             | value -> failwith $"Unknown withdrawal method {value}"
+//             |> Withdrawal
+//         | "Transfer" ->
+//             match transactionMethod with
+//             | "ACH" -> TransferMethod.ACH
+//             | "Wire" -> TransferMethod.Wire
+//             | "Internal" -> TransferMethod.Internal
+//             | value -> failwith $"Unknown transfer method {value}"
+//             |> Transfer
+//         | "Payment" -> 
+//             match transactionMethod with
+//             | "Check" -> PaymentMethod.Check
+//             | "Card" -> PaymentMethod.Card
+//             | "ACH" -> PaymentMethod.ACH
+//             | value -> failwith $"Unknown payment method {value}"
+//             |> Payment
+//         | value -> failwith $"Unknown transaction type '{value}'"
 
-    let action transactionType =
-        match transactionType with
-        | Deposit _ -> TransactionAction.Deposit
-        | Withdrawal _ -> TransactionAction.Withdrawal
-        | Transfer _ -> TransactionAction.Transfer
-        | Payment _ -> TransactionAction.Payment
+//     let action transactionType =
+//         match transactionType with
+//         | Deposit _ -> TransactionAction.Deposit
+//         | Withdrawal _ -> TransactionAction.Withdrawal
+//         | Transfer _ -> TransactionAction.Transfer
+//         | Payment _ -> TransactionAction.Payment
 
-    let method transactionType =
-        match transactionType with
-        | Deposit DepositMethod.Cash -> TransactionMethod.Cash
-        | Deposit DepositMethod.Check -> TransactionMethod.Check
-        | Deposit DepositMethod.ACH -> TransactionMethod.ACH
+//     let method transactionType =
+//         match transactionType with
+//         | Deposit DepositMethod.Cash -> TransactionMethod.Cash
+//         | Deposit DepositMethod.Check -> TransactionMethod.Check
+//         | Deposit DepositMethod.ACH -> TransactionMethod.ACH
 
-        | Withdrawal WithdrawalMethod.Cash -> TransactionMethod.Cash
-        | Withdrawal WithdrawalMethod.ATM -> TransactionMethod.ATM
+//         | Withdrawal WithdrawalMethod.Cash -> TransactionMethod.Cash
+//         | Withdrawal WithdrawalMethod.ATM -> TransactionMethod.ATM
 
-        | Transfer TransferMethod.ACH -> TransactionMethod.ACH
-        | Transfer TransferMethod.Wire -> TransactionMethod.Wire
-        | Transfer TransferMethod.Internal -> TransactionMethod.Internal
+//         | Transfer TransferMethod.ACH -> TransactionMethod.ACH
+//         | Transfer TransferMethod.Wire -> TransactionMethod.Wire
+//         | Transfer TransferMethod.Internal -> TransactionMethod.Internal
 
-        | Payment PaymentMethod.Check -> TransactionMethod.Check
-        | Payment PaymentMethod.Card -> TransactionMethod.Card
-        | Payment PaymentMethod.ACH -> TransactionMethod.ACH
+//         | Payment PaymentMethod.Check -> TransactionMethod.Check
+//         | Payment PaymentMethod.Card -> TransactionMethod.Card
+//         | Payment PaymentMethod.ACH -> TransactionMethod.ACH
 
-    let value transactionType =
-        string (action transactionType),
-        string (method transactionType)
+//     let value transactionType =
+//         string (action transactionType),
+//         string (method transactionType)
                     
 module Parse =
 
