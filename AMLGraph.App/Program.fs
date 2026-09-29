@@ -40,6 +40,8 @@ async {
     do! Graph.Relationships.Ownership.create importResult.Ownerships.Validation.Valid
     do! Graph.Relationships.Held_At.create heldAts
     do! Graph.Relationships.Sent.create sentTransactions
+    do! Graph.Relationships.ReceivedBy.create receivedTransactions
+    
 
     Neo4j.dispose ()
         

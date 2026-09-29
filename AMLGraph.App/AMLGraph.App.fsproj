@@ -25,6 +25,7 @@
     <Compile Include="Graph\Relationships\Ownership.fs" />
     <Compile Include="Graph\Relationships\Has_Transaction.fs" />
     <Compile Include="Graph\Relationships\Sent.fs" />
+    <Compile Include="Graph\Relationships\ReceivedBy.fs" />
     <Compile Include="GraphData.fs" />
     <Compile Include="Import.fs" />
     <Compile Include="Program.fs" />
