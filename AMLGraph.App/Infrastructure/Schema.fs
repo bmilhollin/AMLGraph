@@ -50,14 +50,14 @@ module Schema =
             """
 
             """
-            DROP CONSTRAINT transaction_id_key IF EXISTS
+            DROP CONSTRAINT funds_transaction_id_key IF EXISTS
             """
             
             """
-            CREATE CONSTRAINT transaction_id_key
+            CREATE CONSTRAINT funds_transaction_id_key
             IF NOT EXISTS
-            FOR (t:Transaction)
-            REQUIRE (t.transactionId, t.institutionId) IS NODE KEY
+            FOR (t:FundsTransaction)
+            REQUIRE (t.transactionId, t.fromInstitutionId) IS NODE KEY
             """
         ]
 
