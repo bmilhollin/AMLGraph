@@ -3,11 +3,11 @@ namespace AMLGraph.Graph.Relationships
 open AMLGraph.Domain
 open AMLGraph.Infrastructure
 
-module Held_At =
+module HeldAt =
 
-    let private toParameters (held_at:Held_At) =
+    let private toParameters (heldAt:HeldAt) =
 
-        let accountKey= EntityIds.uniqueAccountIdValue held_at.AccountKey
+        let accountKey= EntityIds.uniqueAccountIdValue heldAt.AccountKey
         let accountId = EntityIds.accountIdValue (fst accountKey)
         let institutionId = EntityIds.institutionIdValue (snd accountKey)
 
@@ -16,7 +16,7 @@ module Held_At =
             "institutionId", box institutionId
         ]
 
-    let create (held_ats: Held_At list) =
+    let create (heldAts: HeldAt list) =
 
         let cypher =
             """
@@ -32,12 +32,12 @@ module Held_At =
 
         async {
 
-            for held_at in held_ats do
+            for heldAt in heldAts do
 
                 do!
                     Neo4j.executeWriteAsync
                         cypher
-                        (toParameters held_at)
+                        (toParameters heldAt)
 
-            printfn "Held_At relationships created"
+            printfn "HELD_AT relationships created"
         }

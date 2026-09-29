@@ -173,13 +173,13 @@ type FundsTransaction =
             EntityIds.uniqueAccountIdValue this.FromAccount
         UniqueTransactionId (this.TransactionId, institutionId)
 
-type Has_Customer_Record =
+type HasCustomerRecord =
     {
         PersonId: PersonId
         CustomerKey: UniqueCustomerId
     }
     
-type Held_At =
+type HeldAt =
     {
         AccountKey: UniqueAccountId
     }

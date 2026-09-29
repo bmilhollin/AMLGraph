@@ -3,13 +3,13 @@ namespace AMLGraph.Graph.Relationships
 open AMLGraph.Domain
 open AMLGraph.Infrastructure
 
-module Has_Customer_Record =
+module HasCustomerRecord =
 
-    let private toParameters (has_customer_record:Has_Customer_Record) =
+    let private toParameters (hasCustomerRecord:HasCustomerRecord) =
 
-        let personId = EntityIds.personIdValue has_customer_record.PersonId
+        let personId = EntityIds.personIdValue hasCustomerRecord.PersonId
 
-        let customerKey, institutionId = EntityIds.uniqueCustomerIdValue has_customer_record.CustomerKey
+        let customerKey, institutionId = EntityIds.uniqueCustomerIdValue hasCustomerRecord.CustomerKey
         let customerId = EntityIds.customerIdValue customerKey
         let institutionId = EntityIds.institutionIdValue institutionId
 
@@ -19,7 +19,7 @@ module Has_Customer_Record =
             "institutionId", box institutionId
         ]
 
-    let create (has_customer_records:Has_Customer_Record list) =
+    let create (hasCustomerRecords:HasCustomerRecord list) =
 
         let cypher =
             """
@@ -30,12 +30,12 @@ module Has_Customer_Record =
 
         async {
 
-            for has_customer_record in has_customer_records do
+            for hasCustomerRecord in hasCustomerRecords do
 
                 do!
                     Neo4j.executeWriteAsync
                         cypher
-                        (toParameters has_customer_record)
+                        (toParameters hasCustomerRecord)
 
-            printfn "Has_Customer_Record relationships created"
+            printfn "HAS_CUSTOMER_RECORD relationships created"
         }
