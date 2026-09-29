@@ -15,7 +15,7 @@ module Sent =
 
         dict [
             "accountId", box (EntityIds.accountIdValue accountId)
-            "accountInstitutionId", box (EntityIds.institutionIdValue institutionId)
+            "institutionId", box (EntityIds.institutionIdValue institutionId)
             "transactionId", box (EntityIds.transactionIdValue transactionId)
         ]
     let create (sents: Sent list) =
