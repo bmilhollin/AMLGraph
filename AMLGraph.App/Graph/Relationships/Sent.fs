@@ -10,12 +10,12 @@ module Sent =
         let accountId, institutionId =
             EntityIds.uniqueAccountIdValue sent.FromAccountKey
 
-        let transactionId, transactionInstitutionId =
+        let transactionId, _ =
             EntityIds.uniqueTransactionIdValue sent.TransactionKey
 
         dict [
             "accountId", box (EntityIds.accountIdValue accountId)
-            "institutionId", box (EntityIds.institutionIdValue institutionId)
+            "accountInstitutionId", box (EntityIds.institutionIdValue institutionId)
             "transactionId", box (EntityIds.transactionIdValue transactionId)
         ]
     let create (sents: Sent list) =
@@ -42,5 +42,5 @@ module Sent =
                         cypher
                         (toParameters sent)
 
-            printfn "Sent relationships created"
+            printfn "SENT relationships created"
         }
