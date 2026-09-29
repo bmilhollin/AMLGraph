@@ -201,68 +201,6 @@ module AccountType =
         | AccountType.Loan -> "Loan"
         | AccountType.Brokerage -> "Brokerage"
 
-// TODO REMOVE MODULE
-// module TransactionType =
-
-//     let ofString transactionType transactionMethod =
-//         match transactionType with
-//         | "Deposit" ->
-//             match transactionMethod with
-//             | "Cash" -> DepositMethod.Cash
-//             | "Check" -> DepositMethod.Check
-//             | "ACH" -> DepositMethod.ACH
-//             | value -> failwith $"Unknown deposit method {value}"
-//             |> Deposit
-//         | "Withdrawal" ->
-//             match transactionMethod with
-//             | "Cash" -> WithdrawalMethod.Cash
-//             | "ATM" -> WithdrawalMethod.ATM
-//             | value -> failwith $"Unknown withdrawal method {value}"
-//             |> Withdrawal
-//         | "Transfer" ->
-//             match transactionMethod with
-//             | "ACH" -> TransferMethod.ACH
-//             | "Wire" -> TransferMethod.Wire
-//             | "Internal" -> TransferMethod.Internal
-//             | value -> failwith $"Unknown transfer method {value}"
-//             |> Transfer
-//         | "Payment" -> 
-//             match transactionMethod with
-//             | "Check" -> PaymentMethod.Check
-//             | "Card" -> PaymentMethod.Card
-//             | "ACH" -> PaymentMethod.ACH
-//             | value -> failwith $"Unknown payment method {value}"
-//             |> Payment
-//         | value -> failwith $"Unknown transaction type '{value}'"
-
-//     let action transactionType =
-//         match transactionType with
-//         | Deposit _ -> TransactionAction.Deposit
-//         | Withdrawal _ -> TransactionAction.Withdrawal
-//         | Transfer _ -> TransactionAction.Transfer
-//         | Payment _ -> TransactionAction.Payment
-
-//     let method transactionType =
-//         match transactionType with
-//         | Deposit DepositMethod.Cash -> TransactionMethod.Cash
-//         | Deposit DepositMethod.Check -> TransactionMethod.Check
-//         | Deposit DepositMethod.ACH -> TransactionMethod.ACH
-
-//         | Withdrawal WithdrawalMethod.Cash -> TransactionMethod.Cash
-//         | Withdrawal WithdrawalMethod.ATM -> TransactionMethod.ATM
-
-//         | Transfer TransferMethod.ACH -> TransactionMethod.ACH
-//         | Transfer TransferMethod.Wire -> TransactionMethod.Wire
-//         | Transfer TransferMethod.Internal -> TransactionMethod.Internal
-
-//         | Payment PaymentMethod.Check -> TransactionMethod.Check
-//         | Payment PaymentMethod.Card -> TransactionMethod.Card
-//         | Payment PaymentMethod.ACH -> TransactionMethod.ACH
-
-//     let value transactionType =
-//         string (action transactionType),
-//         string (method transactionType)
-                    
 module Parse =
 
     let currency value =
