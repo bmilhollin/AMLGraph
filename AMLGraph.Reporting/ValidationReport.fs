@@ -50,23 +50,6 @@ module ValidationReport =
             (EntityIds.transactionIdValue transactionId)
             (EntityIds.institutionIdValue institutionId)
 
-    let private formatUniqueHas_TransactionId uniqueHas_TransactionId =
-        let uniqueAccountId, uniqueTransactionId =
-            EntityIds.UniqueHas_TransactionIdValue uniqueHas_TransactionId
-
-        let accountId, accountInstitutionId =
-            EntityIds.uniqueAccountIdValue uniqueAccountId
-
-        let transactionId, transactionInstitutionId =
-            EntityIds.uniqueTransactionIdValue uniqueTransactionId
-
-        sprintf
-            "Invalid Has_TransactionKey -\nAccountKey - Account %s / Institution %s\nTransactionKey - Transaction %s / Institution %s"
-            (EntityIds.accountIdValue accountId)
-            (EntityIds.institutionIdValue accountInstitutionId)
-            (EntityIds.transactionIdValue transactionId)
-            (EntityIds.institutionIdValue transactionInstitutionId)
-
     let private formatEntity entity =
         match entity with
         | PersonKey personId ->
@@ -86,9 +69,6 @@ module ValidationReport =
 
         | TransactionKey transactionId ->
             formatUniqueTransactionId transactionId
-
-        | Has_TransactionKey has_TransactionKey ->
-            formatUniqueHas_TransactionId has_TransactionKey
 
     let private formatIssue issue =
         match issue with
@@ -130,9 +110,6 @@ module ValidationReport =
 
         | MismatchedInstitutions ->
             "Customer and account belong to different institutions."
-
-        | MissingTransaction ->
-            "Referenced transaction does not exist or failed validation"
 
     let formatError (error: ValidationError) =
         sprintf
