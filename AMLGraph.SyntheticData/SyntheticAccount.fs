@@ -54,3 +54,22 @@ module SyntheticAccount =
             OpenDate = "2022-01-01"
             Balance = 5000.00m
         }
+
+    let a500 =
+        {
+            AccountId = AccountId "SYN-A001"
+            InstitutionId = InstitutionId "SYN-FI003"
+            AccountType = Checking
+            OpenDate = "2020-01-01"
+            Balance = 1000.00m
+        }
+
+    let a600WithInvalidInstitution =
+        {
+            AccountId = AccountId "SYN-A001"
+            InstitutionId = InstitutionId "SYN-FI005"
+            AccountType = Checking
+            OpenDate = "2020-01-01"
+            Balance = 1000.00m  // m converts to decimal, money
+        }
+
