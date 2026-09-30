@@ -18,6 +18,20 @@ Many Neo4j examples focus primarily on Cypher queries or graph algorithms.  AMLG
 
 The project intentionally favors readability, explicit behavior, and maintainability over framework magic.
 
+## Data Source
+
+When searching for a reasonable dataset to use for this project, I came across the paper [*Realistic Synthetic Financial Transactions for Anti-Money Laundering Models*](https://arxiv.org/pdf/2306.16424). The paper describes both the challenges financial institutions face when developing and evaluating anti-money-laundering models and the difficulty of obtaining realistic financial transaction data with known money-laundering activity.
+
+The researchers developed **AMLworld**, an agent-based simulator that creates a synthetic multi-bank financial system. Rather than generating isolated suspicious transactions, AMLworld simulates a broader economy containing banks, accounts, individuals and companies conducting ordinary financial activity. Known money-laundering patterns are then introduced into this simulated economy. Because the data is synthetic, the researchers know which transactions are associated with laundering, providing ground truth that is generally unavailable in real financial data. The AMLworld data and supporting information are available through the [IBM AML-Data repository](https://github.com/IBM/AML-Data).
+
+The complete simulation is much larger and more detailed than AMLGraph requires. AMLGraph focuses primarily on people, the accounts they own at financial institutions, the movement of funds between those accounts, and the graph structures that may indicate money laundering.
+
+IBM therefore provides several generated datasets of different sizes and laundering prevalence through the [IBM Transactions for Anti-Money Laundering (AML) dataset on Kaggle](https://www.kaggle.com/datasets/ealtman2019/ibm-transactions-for-anti-money-laundering-aml). The datasets are divided into **HI** (higher illicit) and **LI** (lower illicit) groups, with small, medium, and large versions of each.
+
+AMLGraph uses **`LI-Small_Trans.csv`**, the small, lower-illicit transaction dataset, as its initial external dataset. Despite being the smallest LI dataset, it contains millions of synthetic transactions spanning multiple financial institutions. Each transaction identifies the sending and receiving banks and accounts, amounts and currencies paid and received, payment format, timestamp, and whether the transaction is known to be associated with money laundering. Companion data identifies accounts and known laundering patterns, making it possible to examine both individual transactions and the larger graph structures formed as funds move among accounts and institutions.
+
+This combination—the research describing how and why the data was generated, the synthetic multi-bank transaction network, and known laundering patterns—makes the dataset particularly useful for AMLGraph. It provides a realistic setting for exploring how graph-based representations can expose relationships and transaction patterns that may not be apparent when transactions are considered individually.
+
 ## Goals
 
 * Learn Neo4j and Cypher through a realistic AML domain
@@ -42,7 +56,7 @@ The project intentionally favors readability, explicit behavior, and maintainabi
 ✔ Domain validation
 ✔ Synthetic data library
 ✔ Expecto validation test suite
-◻ Transactions
+◻ IBM Transactions for AML
 ◻ Contact and identity relationships
 ◻ Entity resolution
 ◻ Graph analytics
