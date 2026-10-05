@@ -16,5 +16,6 @@ let main argv =
                     Validation.Customer.tests
                     Validation.Account.tests
                     Validation.Ownership.tests
+                    Validation.Transaction.tests
                 ]
         )
