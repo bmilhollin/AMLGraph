@@ -96,10 +96,10 @@ module ValidationReport =
         | MissingAccount ->
             "Referenced account does not exist or failed validation."
 
-        | MissingFromAccount ->
+        | MissingFromAccountId ->
             "Referenced FROM account does not exist or failed validation."
 
-        | MissingToAccount ->
+        | MissingToAccountId ->
             "Referenced TO account does not exist or failed validation."
 
         | MissingFromInstitution ->

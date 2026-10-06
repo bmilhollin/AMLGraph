@@ -167,8 +167,8 @@ type ValidationIssue =
     | MissingAccount
     | MissingFromInstitution
     | MissingToInstitution
-    | MissingFromAccount
-    | MissingToAccount
+    | MissingFromAccountId
+    | MissingToAccountId
     | MismatchedInstitutions
     
 type ValidationError =

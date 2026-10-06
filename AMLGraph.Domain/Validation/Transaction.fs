@@ -62,10 +62,10 @@ module Transaction =
         let toIsValid = validUniqueAccountIds.Contains transaction.ToAccount
 
         if not fromIsValid then
-            errors.Add(transactionError transaction.Key MissingFromAccount)
+            errors.Add(transactionError transaction.Key MissingFromAccountId)
 
         if not toIsValid then
-            errors.Add(transactionError transaction.Key MissingToAccount)
+            errors.Add(transactionError transaction.Key MissingToAccountId)
 
         fromIsValid && toIsValid
 
