@@ -209,9 +209,9 @@ module AccountType =
         | AccountType.Loan -> "Loan"
         | AccountType.Brokerage -> "Brokerage"
 
-module TryParse =
+module Parse =
 
-    let currency value =
+    let tryParseCurrency value =
         match value with
         | "AUD" | "Australian Dollar" -> Some AUD
         | "BRL" | "Brazil Real" -> Some BRL
@@ -248,7 +248,7 @@ module TryParse =
         | USD -> "USD"
         | Bitcoin -> "BTC"
 
-    let paymentFormat value =
+    let tryParsePaymentFormat value =
         match value with
         | "ACH" -> Some PaymentFormat.ACH
         | "Cash" -> Some PaymentFormat.Cash
@@ -267,7 +267,7 @@ module TryParse =
         | PaymentFormat.Reinvestment -> "Reinvestment"
         | PaymentFormat.Wire -> "Wire"
 
-    let countryCode (value: string) =
+    let tryParseCountryCode (value: string) =
         if isNull value then
             None
         else

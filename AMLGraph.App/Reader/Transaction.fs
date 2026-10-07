@@ -51,7 +51,7 @@ module Transaction =
                     |> decimal
 
                 let fromCurrency =
-                    match TryParse.currency(fields[7].Trim()) with
+                    match Parse.tryParseCurrency(fields[7].Trim()) with
                     | Some currency ->
                         currency
                     | None ->
@@ -63,7 +63,7 @@ module Transaction =
                     |> decimal
 
                 let toCurrency =
-                    match TryParse.currency(fields[9].Trim()) with
+                    match Parse.tryParseCurrency(fields[9].Trim()) with
                     | Some currency ->
                         currency
                     | None ->
@@ -71,7 +71,7 @@ module Transaction =
                             $"Invalid to currency code '{fields[9]}'. Expected a valid currency code."
 
                 let format =
-                    match TryParse.paymentFormat(fields[10].Trim()) with
+                    match Parse.tryParsePaymentFormat(fields[10].Trim()) with
                     | Some format ->
                         format
                     | None ->

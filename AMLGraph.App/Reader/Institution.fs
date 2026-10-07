@@ -31,7 +31,7 @@ module Institution =
                 let institutionType = fields[2].Trim()
 
                 let countryCode = 
-                    match TryParse.countryCode(fields[3].Trim()) with
+                    match Parse.tryParseCountryCode(fields[3].Trim()) with
                     | Some countryCode ->
                         countryCode
                     | None ->

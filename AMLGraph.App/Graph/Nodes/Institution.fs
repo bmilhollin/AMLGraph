@@ -10,7 +10,7 @@ module Institution =
             "institutionId", box (EntityIds.institutionIdValue institution.InstitutionId)
             "name", box institution.Name
             "institutionType", box institution.InstitutionType
-            "countryCode", box (TryParse.countryCodeString institution.CountryCode)
+            "countryCode", box (Parse.countryCodeString institution.CountryCode)
         ]
 
     let create (institutions:Institution list) =
