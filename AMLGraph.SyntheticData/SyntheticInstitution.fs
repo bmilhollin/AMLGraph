@@ -12,13 +12,13 @@ module SyntheticInstitution =
             InstitutionId = InstitutionId "SYN-FI001"
             Name = "First National Bank"
             InstitutionType = "Bank"
-            CountryCode = "US"
+            CountryCode = US
         }
 
     let bank01DifferentCountryCode =
         {
             bank01 with
-                CountryCode = "GB"
+                CountryCode = GB
         }
 
     let bank02 =
@@ -26,7 +26,7 @@ module SyntheticInstitution =
             InstitutionId = InstitutionId "SYN-FI002"
             Name = "Community Bank"
             InstitutionType = "Bank"
-            CountryCode = "US"
+            CountryCode = US
         }
 
     let bank03 =
@@ -34,6 +34,6 @@ module SyntheticInstitution =
             InstitutionId = InstitutionId "SYN-FI003"
             Name = "Acme Bank"
             InstitutionType = "Bank"
-            CountryCode = "DE"
+            CountryCode = DE
         }
 

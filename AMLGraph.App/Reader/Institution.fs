@@ -31,9 +31,12 @@ module Institution =
                 let institutionType = fields[2].Trim()
 
                 let countryCode = 
-                    match fields[3].Trim().Length with
-                    | 2 -> fields[3].Trim()
-                    | _ -> failwith $"Invalid country code: {fields[3].Trim()}"
+                    match TryParse.countryCode(fields[3].Trim()) with
+                    | Some countryCode ->
+                        countryCode
+                    | None ->
+                        failwith
+                            $"Invalid country code '{fields[3]}'. Expected an ISO alpha-2 country code."
 
                 yield
                     {

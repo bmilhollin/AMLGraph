@@ -18,10 +18,10 @@ module Transaction =
             "toAccountId", box (EntityIds.accountIdValue toAccountId)
             "toInstitutionId", box (EntityIds.institutionIdValue toInstitutionId)
             "sentAmount", box transaction.Sent.Amount
-            "sentCurrency", box (Parse.currencyString transaction.Sent.Currency)
+            "sentCurrency", box (TryParse.currencyString transaction.Sent.Currency)
             "receivedAmount", box transaction.Received.Amount
-            "receivedCurrency", box (Parse.currencyString transaction.Received.Currency)
-            "format", box (Parse.paymentFormatString transaction.Format)
+            "receivedCurrency", box (TryParse.currencyString transaction.Received.Currency)
+            "format", box (TryParse.paymentFormatString transaction.Format)
         ]
     let create (transactions: Transaction list) =
 

@@ -51,20 +51,32 @@ module Transaction =
                     |> decimal
 
                 let fromCurrency =
-                    fields[7].Trim()
-                    |> Parse.currency
+                    match TryParse.currency(fields[7].Trim()) with
+                    | Some currency ->
+                        currency
+                    | None ->
+                        failwith
+                            $"Invalid from currency code '{fields[7]}'. Expected a valid currency code."
 
                 let toAmount =
                     fields[8].Trim()
                     |> decimal
 
                 let toCurrency =
-                    fields[9].Trim()
-                    |> Parse.currency
+                    match TryParse.currency(fields[9].Trim()) with
+                    | Some currency ->
+                        currency
+                    | None ->
+                        failwith
+                            $"Invalid to currency code '{fields[9]}'. Expected a valid currency code."
 
                 let format =
-                    fields[10].Trim()
-                    |> Parse.paymentFormat
+                    match TryParse.paymentFormat(fields[10].Trim()) with
+                    | Some format ->
+                        format
+                    | None ->
+                        failwith
+                            $"Invalid payment format '{fields[10]}'. Expected a valid payment format."
                     
                 yield
                     {
@@ -75,7 +87,6 @@ module Transaction =
                         Sent = {Amount = fromAmount; Currency = fromCurrency}
                         Received = {Amount = toAmount; Currency = toCurrency}
                         Format = format
-                    }
-                   
+                    }                   
         }
         |> Seq.toList
