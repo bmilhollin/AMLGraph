@@ -56,22 +56,41 @@ module SyntheticTransaction =
                 ToAccount = SyntheticAccount.a500.Key
         }
 
-    let t200InvalidFromAccount = // invalid
+    let t200InvalidFromAccountInstId = // invalid institution ID
         {
             t200 with
-                FromAccount = SyntheticAccount.a600WithInvalidInstitution.Key
+                FromAccount = SyntheticAccount.a600WithInvalidInstitutionId.Key
         }
 
-    let t200InvalidToAccount = // invalid
+    let t200InvalidToAccountInstId = // invalid institution ID
         {
             t200 with
-                ToAccount = SyntheticAccount.a600WithInvalidInstitution.Key
+                ToAccount = SyntheticAccount.a600WithInvalidInstitutionId.Key
         }
     
-    let t200InvalidToAndFromAccount = // invalid
+    let t200InvalidToAndFromAccountInstId = // invalid institution ID
         {
             t200 with
-                FromAccount = SyntheticAccount.a600WithInvalidInstitution.Key
-                ToAccount = SyntheticAccount.a600WithInvalidInstitution.Key
+                FromAccount = SyntheticAccount.a600WithInvalidInstitutionId.Key
+                ToAccount = SyntheticAccount.a600WithInvalidInstitutionId.Key
+        }
+
+    let t300InvalidFromAccountAcctId = // invalid account ID
+        {
+            t200 with
+                FromAccount = SyntheticAccount.a600WithInvalidAccountId.Key
+        }
+
+    let t300InvalidToAccountAcctId = // invalid account ID
+        {
+            t200 with
+                ToAccount = SyntheticAccount.a600WithInvalidAccountId.Key
+        }
+
+    let t300InvalidToAndFromAccountAcctId = // invalid account IDs
+        {
+            t200 with
+                FromAccount = SyntheticAccount.a600WithInvalidAccountId.Key
+                ToAccount = SyntheticAccount.a600WithInvalidAccountId.Key
         }
     

@@ -64,10 +64,19 @@ module SyntheticAccount =
             Balance = 1000.00m
         }
 
-    let a600WithInvalidInstitution =
+    let a600WithInvalidInstitutionId =
         {
             AccountId = AccountId "SYN-A001"
             InstitutionId = InstitutionId "SYN-FI005"
+            AccountType = Checking
+            OpenDate = "2020-01-01"
+            Balance = 1000.00m  // m converts to decimal, money
+        }
+    
+    let a600WithInvalidAccountId =
+        {
+            AccountId = AccountId "SYN-A999"
+            InstitutionId = InstitutionId "SYN-FI001"
             AccountType = Checking
             OpenDate = "2020-01-01"
             Balance = 1000.00m  // m converts to decimal, money

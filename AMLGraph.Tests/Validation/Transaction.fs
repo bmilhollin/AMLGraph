@@ -72,15 +72,12 @@ module Transaction =
                                 }
                             ]
                             "Expected one conflict error for the transaction key"
-                    ))
-        
-
+                    ))       
 
         testList "Transaction Validation" 
             (List.append
                 mismatchTests
                 [
-                
                     testCase 
                         "With unique TransactionKeys, Valid FromAccountKey and Valid ToAccountKey produce valid transactions"
                         
@@ -172,6 +169,33 @@ module Transaction =
                             )
 
                     testCase 
+                        "Empty transaction list results in no valid transactions and no errors"
+
+                        (fun () ->
+
+                            // Arrange
+                            let transactions =
+                                [
+                                ]
+                            
+                            // Act
+                            let result =
+                                Transaction.validate 
+                                    validatedInstitutions
+                                    validatedAccountKeys
+                                    transactions
+
+                            // Assert
+                            Expect.isEmpty
+                                result.Valid
+                                "Expected 0 valid transactions"
+
+                            Expect.isEmpty
+                                result.Errors
+                                "Expected 0 errors"
+                            )
+
+                    testCase 
                         "Transaction with invalid FromAccount InstitutionId is rejected"
 
                         (fun () ->
@@ -179,7 +203,7 @@ module Transaction =
                             // Arrange
                             let transactions =
                                 [
-                                    SyntheticTransaction.t200InvalidFromAccount
+                                    SyntheticTransaction.t200InvalidFromAccountInstId
                                 ]
                             
                             // Act
@@ -218,7 +242,7 @@ module Transaction =
                                 (result.Errors
                                 |> List.map (fun e -> e.Entity)
                                 |> List.distinct)
-                                [TransactionKey SyntheticTransaction.t200InvalidFromAccount.Key]
+                                [TransactionKey SyntheticTransaction.t200InvalidFromAccountInstId.Key]
                                 "Expected error to reference the invalid UniqueTransactionId"
                             )
 
@@ -230,7 +254,7 @@ module Transaction =
                             // Arrange
                             let transactions =
                                 [
-                                    SyntheticTransaction.t200InvalidToAccount
+                                    SyntheticTransaction.t200InvalidToAccountInstId
                                 ]
                             
                             // Act
@@ -269,7 +293,7 @@ module Transaction =
                                 (result.Errors
                                 |> List.map (fun e -> e.Entity)
                                 |> List.distinct)
-                                [TransactionKey SyntheticTransaction.t200InvalidToAccount.Key]
+                                [TransactionKey SyntheticTransaction.t200InvalidToAccountInstId.Key]
                                 "Expected error to reference the invalid UniqueTransactionId"
                             )
 
@@ -281,7 +305,7 @@ module Transaction =
                             // Arrange
                             let transactions =
                                 [
-                                    SyntheticTransaction.t200InvalidToAndFromAccount
+                                    SyntheticTransaction.t200InvalidToAndFromAccountInstId
                                 ]
                             
                             // Act
@@ -320,17 +344,173 @@ module Transaction =
 
                             Expect.equal
                                 result.Errors.Head.Entity
-                                (TransactionKey SyntheticTransaction.t200InvalidToAndFromAccount.Key)
+                                (TransactionKey SyntheticTransaction.t200InvalidToAndFromAccountInstId.Key)
                                 "Expected error to reference the invalid UniqueTransactionId"
 
                             Expect.equal
                                 (result.Errors
                                 |> List.map (fun e -> e.Entity)
                                 |> List.distinct)
-                                [TransactionKey SyntheticTransaction.t200InvalidToAndFromAccount.Key]
+                                [TransactionKey SyntheticTransaction.t200InvalidToAndFromAccountInstId.Key]
+                                "Expected error to reference the invalid UniqueTransactionId"
+                            )
+
+                    testCase 
+                        "Transaction with invalid FromAccount AccountId is rejected"
+
+                        (fun () ->
+
+                            // Arrange
+                            let transactions =
+                                [
+                                    SyntheticTransaction.t300InvalidFromAccountAcctId
+                                ]
+                            
+                            // Act
+                            let result =
+                                Transaction.validate 
+                                    validatedInstitutions
+                                    validatedAccountKeys
+                                    transactions
+
+                            // Assert
+                            Expect.isEmpty
+                                result.Valid
+                                "Expected 0 valid transactions"
+
+                            Expect.hasLength
+                                result.Errors
+                                1
+                                (ValidationReport.formatErrors result.Errors)
+
+                            Expect.equal
+                                (
+                                    result.Errors
+                                    |> List.map (fun e -> e.Issue) 
+                                    |> Set.ofList
+                                )
+                                (
+                                set 
+                                    [
+                                        MissingFromAccountId
+                                    ]
+                                )
+                                "Expected missing from account IDs"
+
+                            Expect.equal
+                                (result.Errors
+                                |> List.map (fun e -> e.Entity)
+                                |> List.distinct)
+                                [TransactionKey SyntheticTransaction.t300InvalidFromAccountAcctId.Key]
                                 "Expected error to reference the invalid UniqueTransactionId"
                             )
                     
+                    testCase 
+                        "Transaction with invalid ToAccount AccountId is rejected"
+
+                        (fun () ->
+
+                            // Arrange
+                            let transactions =
+                                [
+                                    SyntheticTransaction.t300InvalidToAccountAcctId
+                                ]
+                            
+                            // Act
+                            let result =
+                                Transaction.validate 
+                                    validatedInstitutions
+                                    validatedAccountKeys
+                                    transactions
+
+                            // Assert
+                            Expect.isEmpty
+                                result.Valid
+                                "Expected 0 valid transactions"
+
+                            Expect.hasLength
+                                result.Errors
+                                1
+                                (ValidationReport.formatErrors result.Errors)
+
+                            Expect.equal
+                                (
+                                    result.Errors
+                                    |> List.map (fun e -> e.Issue) 
+                                    |> Set.ofList
+                                )
+                                (
+                                set 
+                                    [
+                                        MissingToAccountId
+                                    ]
+                                )
+                                "Expected missing to account IDs"
+
+                            Expect.equal
+                                (result.Errors
+                                |> List.map (fun e -> e.Entity)
+                                |> List.distinct)
+                                [TransactionKey SyntheticTransaction.t300InvalidToAccountAcctId.Key]
+                                "Expected error to reference the invalid UniqueTransactionId"
+                            )
+
+                    testCase 
+                        "Transaction with invalid FromAccount & ToAccount AccountId is rejected"
+
+                        (fun () ->
+
+                            // Arrange
+                            let transactions =
+                                [
+                                    SyntheticTransaction.t300InvalidToAndFromAccountAcctId
+                                ]
+                            
+                            // Act
+                            let result =
+                                Transaction.validate 
+                                    validatedInstitutions
+                                    validatedAccountKeys
+                                    transactions
+
+                            // Assert
+                            Expect.isEmpty
+                                result.Valid
+                                "Expected 0 valid transactions"
+
+                            Expect.hasLength
+                                result.Errors
+                                2
+                                (ValidationReport.formatErrors result.Errors)
+
+                            Expect.equal
+                                (
+                                    result.Errors
+                                    |> List.map (fun e -> e.Issue) 
+                                    |> Set.ofList
+                                )
+                                (
+                                set 
+                                    [
+                                        MissingFromAccountId
+                                        MissingToAccountId
+                                    ]
+                                )
+                                "Expected missing to&from account IDs"
+
+                            Expect.equal
+                                result.Errors.Head.Entity
+                                (TransactionKey SyntheticTransaction.t300InvalidToAndFromAccountAcctId.Key)
+                                "Expected error to reference the invalid UniqueTransactionId"
+
+                            Expect.equal
+                                (result.Errors
+                                |> List.map (fun e -> e.Entity)
+                                |> List.distinct)
+                                [TransactionKey SyntheticTransaction.t300InvalidToAndFromAccountAcctId.Key]
+                                "Expected error to reference the invalid UniqueTransactionId"
+                            )
+
                     testCase 
                         "Validation failure does not prevent valid transactions from being retained"
                         (fun () ->
@@ -338,7 +518,7 @@ module Transaction =
                             // Arrange
                             let transactions =
                                 [
-                                    SyntheticTransaction.t200InvalidToAccount
+                                    SyntheticTransaction.t200InvalidToAccountInstId
                                     SyntheticTransaction.t100
                                 ]
                             
@@ -356,6 +536,42 @@ module Transaction =
                                 "Expected only t100 to be retained"
 
                             // errors/length for t200InvalidToAccount are documented above
+                        )
+
+                    testCase 
+                        "Rejecting a valid group does not affect other valid transactions"
+                        (fun () ->
+
+                            // Arrange
+                            let transactions =
+                                [
+                                    SyntheticTransaction.t100
+                                    SyntheticTransaction.t100WithDifferentFormat
+                                    SyntheticTransaction.t200
+                                ]
+                            
+                            // Act
+                            let result =
+                                Transaction.validate 
+                                    validatedInstitutions
+                                    validatedAccountKeys
+                                    transactions
+
+                            // Assert
+                            Expect.equal
+                                result.Valid
+                                [SyntheticTransaction.t200]
+                                "Expected only t200 to be retained"
+
+                            Expect.equal
+                                result.Errors
+                                [
+                                    {
+                                        Entity = TransactionKey original.Key
+                                        Issue = ConflictingTransactionAttributes
+                                    }
+                                ]
+                                "Expected one conflict error for the transaction key"
                         )
                 ]
             )
