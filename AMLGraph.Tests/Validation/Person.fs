@@ -66,6 +66,27 @@ module Person =
                 )
 
             testCase
+                "An empty person list produces no valid persons and no errors"
+                (fun () ->
+
+                    // Arrange
+                    let persons = []
+
+                    // Act
+                    let result =
+                        Person.validate persons
+
+                    // Assert
+                    Expect.isEmpty
+                        result.Valid
+                        "Expected 0 valid persons"
+
+                    Expect.isEmpty
+                        result.Errors
+                        (ValidationReport.formatErrors result.Errors)
+                )
+
+            testCase
                 "Duplicate PersonIds with conflicting attributes are rejected"
                 (fun () ->
                     // Arrange
@@ -84,26 +105,19 @@ module Person =
                         result.Valid
                         "Expected 0 valid persons"
 
-                    Expect.hasLength
+                    Expect.equal
                         result.Errors
-                        1
-                        (ValidationReport.formatErrors result.Errors)
-
-                    let error = result.Errors.Head
-
-                    Expect.equal
-                        error.Issue
-                        ConflictingPersonAttributes
-                        "Expected conflicting person attributes error"
-
-                    Expect.equal
-                        error.Entity
-                        (PersonKey SyntheticPerson.john.PersonId)
-                        "Expected error to reference the conflicting person"
+                        [
+                            {
+                                Issue = ConflictingPersonAttributes
+                                Entity = PersonKey SyntheticPerson.john.PersonId
+                            }
+                        ]
+                        "Expected one conflicting person attributes error for John"
                     )
 
             testCase
-                "Conflicting PersonIds groups do not prevent valid person groups from being imported"
+                "A conflicting person group does not prevent unrelated valid person groups from being validated"
                 (fun () ->
                     // Arrange
                     let persons =
