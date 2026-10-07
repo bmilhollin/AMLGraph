@@ -49,7 +49,7 @@ module Account =
                 )
 
             testCase 
-                "Duplicate accountIds/institutionIds with identical attributes produce one valid unique account" 
+                "Duplicate AccountKeys with identical attributes produce one valid account"
                 (fun () ->
 
                     // Arrange
@@ -76,7 +76,7 @@ module Account =
                 )
 
             testCase
-                "Duplicate accountIds/institutionIds with conflicting attributes are rejected"
+                "Duplicate AccountKeys with conflicting attributes are rejected"
                 (fun () ->
                     // Arrange
                     let accounts =
@@ -94,26 +94,40 @@ module Account =
                         result.Valid
                         "Expected 0 valid accounts"
 
-                    Expect.hasLength
+                    Expect.equal
                         result.Errors
-                        1
+                        [
+                            {
+                                Entity = AccountKey SyntheticAccount.a100.Key
+                                Issue = ConflictingAccountAttributes
+                            }
+                        ]
                         (ValidationReport.formatErrors result.Errors)
-
-                    let error = result.Errors.Head
-
-                    Expect.equal
-                        error.Issue
-                        ConflictingAccountAttributes
-                        "Expected conflicting account attributes error"
-
-                    Expect.equal
-                        error.Entity
-                        (AccountKey SyntheticAccount.a100.Key)
-                        "Expected error to reference the conflicting account"
-                                    )
+                )
 
             testCase
-                "Conflicting accountIds/institutionIds groups do not prevent valid groups from being imported"
+                "Empty accounts result in no valid accounts"
+                (fun () ->
+                    // Arrange
+                    let accounts = []
+
+                    // Act
+                    let result =
+                        Account.validate validatedInstitutionIds accounts
+                        
+                    // Assert
+                    Expect.isEmpty
+                        result.Valid
+                        "Expected 0 valid accounts"
+
+                    Expect.isEmpty
+                        result.Errors
+                        "Expected 0 errors"                    
+                )
+    
+
+            testCase
+                "A conflicting account group does not prevent unrelated valid account groups from being validated"
                 (fun () ->
                     // Arrange
                     let accounts =
@@ -135,22 +149,15 @@ module Account =
                         2
                         "Expected 2 valid accounts"
 
-                    Expect.hasLength
+                    Expect.equal
                         result.Errors
-                        1
+                        [
+                            {
+                                Entity = AccountKey SyntheticAccount.a100.Key
+                                Issue = ConflictingAccountAttributes
+                            }
+                        ]
                         (ValidationReport.formatErrors result.Errors)
-
-                    let error = result.Errors.Head
-
-                    Expect.equal
-                        error.Issue
-                        ConflictingAccountAttributes
-                        "Expected conflicting account attributes error"
-
-                    Expect.equal
-                        error.Entity
-                        (AccountKey SyntheticAccount.a100.Key)
-                        "Expected error to reference the conflicting account"
 
                     let validIds =
                         result.Valid
@@ -186,17 +193,15 @@ module Account =
                         result.Valid
                         "Expected 0 valid accounts"
 
-                    Expect.hasLength
-                        result.Errors
-                        1
-                        (ValidationReport.formatErrors result.Errors)
-
-                    let error = result.Errors.Head
-
                     Expect.equal
-                        error.Issue
-                        MissingInstitution
-                        "Expected missing institution error"
+                        result.Errors
+                        [
+                            {
+                                Entity = AccountKey SyntheticAccount.a100.Key
+                                Issue = MissingInstitution
+                            }
+                        ]
+                        (ValidationReport.formatErrors result.Errors)
                 )
 
             testCase 
@@ -214,32 +219,20 @@ module Account =
                         Account.validate validatedInstitutionIds accounts
 
                     // Assert
-                    Expect.hasLength
-                        result.Valid
-                        1
-                        "Expected 1 valid account"
+                    Expect.equal
+                        (result.Valid |> List.map (fun a -> a.Key))
+                        [ SyntheticAccount.a100.Key ]
+                        "Expected a100 to be the only valid account"
 
-                    Expect.hasLength
+                    Expect.equal
                         result.Errors
-                        1
-                        (ValidationReport.formatErrors result.Errors)
-
-                    let error = result.Errors.Head
-
-                    Expect.equal
-                        error.Issue
-                        MissingInstitution
-                        "Expected missing institution error"
-
-                    Expect.equal
-                        result.Valid.Head.AccountId
-                        SyntheticAccount.a100.AccountId
-                        "Expected valid account to be a100"
-
-                    Expect.equal
-                        result.Errors.Head.Entity
-                        (AccountKey SyntheticAccount.a400.Key)
-                        "Expected invalid account to be a400"
+                        [
+                            {
+                                Entity = AccountKey SyntheticAccount.a400.Key
+                                Issue = MissingInstitution
+                            }
+                        ]
+                        (ValidationReport.formatErrors result.Errors)                   
                 )
 
             testCase 
@@ -262,19 +255,22 @@ module Account =
                         2
                         "Expected 2 valid accounts"
 
-                    Expect.isEmpty
-                        result.Errors
-                        (ValidationReport.formatErrors result.Errors)
-
-                    let institutions = 
+                    let accountKeys =
                         result.Valid
-                        |> List.map (fun c -> c.InstitutionId)
+                        |> List.map (fun a -> a.Key)
                         |> Set.ofList
 
                     Expect.equal
-                        institutions
-                        ([ InstitutionId "SYN-FI001"; InstitutionId "SYN-FI002" ] |> Set.ofList)
-                        "Expected SYN-FI001 and SYN-FI002 institutions"
+                        accountKeys
+                        (set [
+                            SyntheticAccount.a100.Key
+                            SyntheticAccount.a100DifferentInstitution.Key
+                        ])
+                        "Expected both institution-scoped account keys"
+
+                    Expect.isEmpty
+                        result.Errors
+                        (ValidationReport.formatErrors result.Errors)
                 )
         ]
 

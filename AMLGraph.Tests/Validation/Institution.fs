@@ -85,26 +85,40 @@ module Institution =
                         result.Valid
                         "Expected 0 valid institutions"
 
-                    Expect.hasLength
+                    Expect.equal
                         result.Errors
-                        1
+                        [
+                            {
+                                Entity = InstitutionKey SyntheticInstitution.bank01.InstitutionId
+                                Issue = ConflictingInstitutionAttributes
+                            }
+                        ]
                         (ValidationReport.formatErrors result.Errors)
-
-                    let error = result.Errors.Head
-
-                    Expect.equal
-                        error.Issue
-                        ConflictingInstitutionAttributes
-                        "Expected conflicting institution attributes error"
-
-                    Expect.equal
-                        error.Entity
-                        (InstitutionKey SyntheticInstitution.bank01.InstitutionId)
-                        "Expected error to reference the conflicting institution"
                 )
 
             testCase
-                "Conflicting InstitutionId groups do not prevent valid institution groups from being imported"
+                "An empty institution list produces no valid institutions and no errors"
+                (fun () ->
+
+                    // Arrange
+                    let institutions = []
+
+                    // Act
+                    let result =
+                        Institution.validate institutions
+
+                    // Assert
+                    Expect.isEmpty
+                        result.Valid
+                        "Expected 0 valid institutions"
+
+                    Expect.isEmpty
+                        result.Errors
+                        "Expected 0 errors"
+                )    
+
+            testCase
+                "A conflicting institution group does not prevent unrelated valid institution groups from being validated"
                 (fun () ->
                     // Arrange
                     let institutions =
@@ -125,22 +139,15 @@ module Institution =
                         2
                         "Expected 2 valid institutions"
 
-                    Expect.hasLength
+                    Expect.equal
                         result.Errors
-                        1
+                        [
+                            {
+                                Entity = InstitutionKey SyntheticInstitution.bank01.InstitutionId
+                                Issue = ConflictingInstitutionAttributes
+                            }
+                        ]
                         (ValidationReport.formatErrors result.Errors)
-
-                    let error = result.Errors.Head
-
-                    Expect.equal
-                        error.Issue
-                        ConflictingInstitutionAttributes
-                        "Expected conflicting institution attributes error"
-
-                    Expect.equal
-                        error.Entity
-                        (InstitutionKey SyntheticInstitution.bank01.InstitutionId)
-                        "Expected error to reference the conflicting institution"
 
                     let validIds =
                         result.Valid

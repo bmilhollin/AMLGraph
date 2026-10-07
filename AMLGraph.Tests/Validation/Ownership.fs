@@ -76,6 +76,30 @@ module Ownership =
                         (ValidationReport.formatErrors result.Errors)
                 )
 
+            testCase
+                "An empty ownership list produces no valid ownerships and no errors"
+                (fun () ->
+
+                    // Arrange
+                    let ownerships = []
+
+                    // Act
+                    let result =
+                        Ownership.validate
+                            validatedCustomers
+                            validatedAccounts
+                            ownerships
+
+                    // Assert
+                    Expect.isEmpty
+                        result.Valid
+                        "Expected 0 valid ownerships"
+
+                    Expect.isEmpty
+                        result.Errors
+                        "Expected 0 errors"
+                )
+
             testCase 
                 "Multiple customers may own the same account"
                 
@@ -97,32 +121,13 @@ module Ownership =
 
                     // Assert
                     Expect.equal
-                        result.Valid.Length
-                        2
-                        "Expected 2 valid ownerships"
+                        (result.Valid |> Set.ofList)
+                        (set ownerships)
+                        "Expected both ownership relationships"                    
 
                     Expect.isEmpty
                         result.Errors
                         (ValidationReport.formatErrors result.Errors)
-
-                    Expect.equal
-                        (result.Valid |> Set.ofList)
-                        (set ownerships)
-                        "Expected both ownership relationships"
-
-                    Expect.equal
-                        (
-                            result.Valid 
-                            |> List.map (fun o -> o.AccountKey)
-                            |> List.map EntityIds.uniqueAccountIdValue
-                            |> set
-                        )
-                        (   
-                            set [
-                                    AccountId "SYN-A001", InstitutionId "SYN-FI001"
-                                ]
-                        )
-                        "Expected single SYN-A001/SYN-FI001 unique account ID"
                 )
 
             testCase 
@@ -155,18 +160,9 @@ module Ownership =
                         (ValidationReport.formatErrors result.Errors)
 
                     Expect.equal
-                        (
-                            result.Valid 
-                            |> List.map (fun o -> o.CustomerKey) 
-                            |> set
-                        )
-                        (   
-                            set [
-                                    SyntheticOwnership.johnOwnsA100.CustomerKey
-                                    SyntheticOwnership.johnOwnsA200.CustomerKey
-                                ]
-                        )
-                        "Expected single SYN-C001/SYN-FI001 customer key"
+                        (result.Valid |> Set.ofList)
+                        (set ownerships)
+                        "Expected both ownership relationships"
                 )
 
             testCase 
@@ -193,23 +189,19 @@ module Ownership =
                         "Expected 0 valid ownerships"
 
                     Expect.equal
-                        result.Errors.Length
-                        2
+                        (result.Errors |> Set.ofList)
+                        (set [
+                                {
+                                    Entity = OwnershipKey SyntheticOwnership.jamesOwnsUnknownAccount.Key
+                                    Issue = MissingAccount
+                                }
+                                {
+                                    Entity = OwnershipKey SyntheticOwnership.jamesOwnsUnknownAccount.Key
+                                    Issue = MismatchedInstitutions
+                                }
+                            ]
+                        )
                         (ValidationReport.formatErrors result.Errors)
-
-                    Expect.equal
-                        (
-                            result.Errors
-                            |> List.map (fun o -> o.Issue) 
-                            |> set
-                        )
-                        (   
-                            set [
-                                    ValidationIssue.MissingAccount
-                                    ValidationIssue.MismatchedInstitutions
-                                ]
-                        )
-                        "Expected MissingAccount and MismatchedInstitutions issues"
                 )
 
             testCase 
@@ -236,22 +228,14 @@ module Ownership =
                         "Expected 0 valid ownerships"
 
                     Expect.equal
-                        result.Errors.Length
-                        1
+                        result.Errors
+                        [
+                            {
+                                Entity = OwnershipKey SyntheticOwnership.unknownCustomerOwnsA200.Key
+                                Issue = MissingCustomer
+                            }
+                        ]
                         (ValidationReport.formatErrors result.Errors)
-
-                    Expect.equal
-                        (
-                            result.Errors
-                            |> List.map (fun o -> o.Issue) 
-                            |> set
-                        )
-                        (   
-                            set [
-                                    ValidationIssue.MissingCustomer
-                                ]
-                        )
-                        "Expected MissingCustomer issues"
                 )
 
             testCase 
@@ -278,28 +262,26 @@ module Ownership =
                         "Expected 0 valid ownerships"
 
                     Expect.equal
-                        result.Errors.Length
-                        3
+                        (result.Errors |> Set.ofList)
+                        (set [
+                            {
+                                Entity = OwnershipKey SyntheticOwnership.unknownCustomerOwnsUnknownAccount.Key
+                                Issue = MissingCustomer
+                            }
+                            {
+                                Entity = OwnershipKey SyntheticOwnership.unknownCustomerOwnsUnknownAccount.Key
+                                Issue = MissingAccount
+                            }
+                            {
+                                Entity = OwnershipKey SyntheticOwnership.unknownCustomerOwnsUnknownAccount.Key
+                                Issue = MismatchedInstitutions
+                            }
+                        ])
                         (ValidationReport.formatErrors result.Errors)
-
-                    Expect.equal
-                        (
-                            result.Errors
-                            |> List.map (fun o -> o.Issue) 
-                            |> set
-                        )
-                        (   
-                            set [
-                                    ValidationIssue.MissingCustomer
-                                    ValidationIssue.MissingAccount
-                                    ValidationIssue.MismatchedInstitutions
-                                ]
-                        )
-                        "Expected MissingCustomer, MissingAccount, and MismatchedInstitutions issues"
                 )
 
             testCase 
-                "Invalid ownerships do not prevent valid ownerships from being imported"
+                "An invalid ownership does not prevent unrelated valid ownerships from being validated"
                 
                 (fun () ->
 
@@ -323,25 +305,6 @@ module Ownership =
                         1
                         "Expected 1 valid ownership"
 
-                    Expect.hasLength
-                        result.Errors
-                        2
-                        (ValidationReport.formatErrors result.Errors)
-
-                    Expect.equal
-                        (
-                            result.Errors 
-                            |> List.map (fun o -> o.Issue)
-                            |> Set.ofList
-                        )
-                        (   
-                            set [
-                                    ValidationIssue.MissingAccount
-                                    ValidationIssue.MismatchedInstitutions
-                                ]
-                        )
-                        "Expected MissingAccount and MismatchedInstitutions issues"
-
                     Expect.equal
                         (result.Valid |> Set.ofList)
                         (
@@ -351,6 +314,20 @@ module Ownership =
                             |> Set.ofList
                         )
                         "Expected valid ownership relationship"
+
+                    Expect.equal
+                        (result.Errors |> Set.ofList)
+                        (set [
+                            {
+                                Entity = OwnershipKey SyntheticOwnership.jamesOwnsUnknownAccount.Key
+                                Issue = MissingAccount
+                            }
+                            {
+                                Entity = OwnershipKey SyntheticOwnership.jamesOwnsUnknownAccount.Key
+                                Issue = MismatchedInstitutions
+                            }
+                        ])
+                        (ValidationReport.formatErrors result.Errors)
                 )
 
             testCase 
@@ -374,15 +351,6 @@ module Ownership =
 
                     // Assert
                     Expect.equal
-                        result.Valid.Length
-                        2
-                        "Expected 2 valid ownerships"
-
-                    Expect.isEmpty
-                        result.Errors
-                        (ValidationReport.formatErrors result.Errors)
-
-                    Expect.equal
                         (result.Valid |> Set.ofList)
                         (
                             [
@@ -392,6 +360,10 @@ module Ownership =
                             |> Set.ofList
                         )
                         "Expected both ownership relationships"
+
+                    Expect.isEmpty
+                        result.Errors
+                        (ValidationReport.formatErrors result.Errors)
                 )
 
             testCase 
@@ -418,18 +390,13 @@ module Ownership =
                         "Expected 0 valid ownerships"
 
                     Expect.equal
-                        result.Errors.Length
-                        1
+                        result.Errors
+                        [
+                            {
+                                Entity = OwnershipKey SyntheticOwnership.mismatchedInstitutionsOwnership.Key
+                                Issue = MismatchedInstitutions
+                            }
+                        ]
                         (ValidationReport.formatErrors result.Errors)
-
-                    Expect.equal
-                        (result.Errors |> List.map (fun e -> e.Issue) |> Set.ofList)
-                        (
-                            [
-                                ValidationIssue.MismatchedInstitutions
-                            ] 
-                            |> Set.ofList
-                        )
-                        "Expected single MismatchedInstitutions issue"
                 )
         ]

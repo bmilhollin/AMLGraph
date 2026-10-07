@@ -49,7 +49,7 @@ module Customer =
                 )
 
             testCase 
-                "Duplicate customerIds/institutionIds with identical attributes produce one valid customer" 
+                "Duplicate CustomerKeys with identical attributes produce one valid customer"
                 (fun () ->
 
                     // Arrange
@@ -76,7 +76,7 @@ module Customer =
                 )
 
             testCase
-                "Duplicate customerIds/institutionIds with conflicting attributes are rejected"
+                "Duplicate CustomerKeys with conflicting attributes are rejected"
                 (fun () ->
                     // Arrange
                     let customers =
@@ -94,26 +94,40 @@ module Customer =
                         result.Valid
                         "Expected 0 valid customers"
 
-                    Expect.hasLength
+                    Expect.equal
                         result.Errors
-                        1
+                        [
+                            {
+                                Issue = ConflictingCustomerAttributes
+                                Entity = CustomerKey SyntheticCustomer.john.Key
+                            }
+                        ]
                         (ValidationReport.formatErrors result.Errors)
-
-                    let error = result.Errors.Head
-
-                    Expect.equal
-                        error.Issue
-                        ConflictingCustomerAttributes
-                        "Expected conflicting customer attributes error"
-
-                    Expect.equal
-                        error.Entity
-                        (CustomerKey SyntheticCustomer.john.Key)
-                        "Expected error to reference the conflicting customer"
                 )
 
             testCase
-                "Conflicting customerIds/institutionIds do not prevent valid customer groups from being imported"
+                "Empty customer list produces no valid customers and no errors"
+                (fun () ->
+                    // Arrange
+                    let customers = []
+
+                    // Act
+                    let result =
+                        Customer.validate validatedInstitutionIds customers
+                        
+                    // Assert
+                    Expect.isEmpty
+                        result.Valid
+                        "Expected 0 valid customers"
+
+                    Expect.isEmpty
+                        result.Errors
+                        "Expected 0 errors"
+                )
+
+
+            testCase
+                "A conflicting customer group does not prevent unrelated valid customer groups from being validated"
                 (fun () ->
                     // Arrange
                     let customers =
@@ -135,22 +149,15 @@ module Customer =
                         2
                         "Expected 2 valid customers"
 
-                    Expect.hasLength
+                    Expect.equal
                         result.Errors
-                        1
+                        [
+                            {
+                                Issue = ConflictingCustomerAttributes
+                                Entity = CustomerKey SyntheticCustomer.john.Key
+                            }
+                        ]
                         (ValidationReport.formatErrors result.Errors)
-
-                    let error = result.Errors.Head
-
-                    Expect.equal
-                        error.Issue
-                        ConflictingCustomerAttributes
-                        "Expected conflicting customer attributes error"
-
-                    Expect.equal
-                        error.Entity
-                        (CustomerKey SyntheticCustomer.john.Key)
-                        "Expected error to reference the conflicting customer"
 
                     let validKeys =
                         result.Valid
@@ -186,17 +193,15 @@ module Customer =
                         result.Valid
                         "Expected 0 valid customers"
 
-                    Expect.hasLength
-                        result.Errors
-                        1
-                        (ValidationReport.formatErrors result.Errors)
-
-                    let error = result.Errors.Head
-
                     Expect.equal
-                        error.Issue
-                        MissingInstitution
-                        "Expected missing institution error"
+                        result.Errors
+                        [
+                            {
+                                Issue = MissingInstitution
+                                Entity = CustomerKey SyntheticCustomer.john.Key
+                            }
+                        ]
+                        (ValidationReport.formatErrors result.Errors)
                 )
 
             testCase 
@@ -214,32 +219,20 @@ module Customer =
                         Customer.validate validatedInstitutionIds customers
 
                     // Assert
-                    Expect.hasLength
-                        result.Valid
-                        1
-                        "Expected 1 valid customer"
+                    Expect.equal
+                        (result.Valid |> List.map (fun c -> c.Key))
+                        [ SyntheticCustomer.john.Key ]
+                        "Expected John to be the only valid customer"
 
-                    Expect.hasLength
+                    Expect.equal
                         result.Errors
-                        1
-                        (ValidationReport.formatErrors result.Errors)
-
-                    let error = result.Errors.Head
-
-                    Expect.equal
-                        error.Issue
-                        MissingInstitution
-                        "Expected missing institution error"
-
-                    Expect.equal
-                        result.Valid.Head.CustomerId
-                        SyntheticCustomer.john.CustomerId
-                        "Expected valid customer to be john"
-
-                    Expect.equal
-                        result.Errors.Head.Entity
-                        (CustomerKey SyntheticCustomer.jamesWithInvalidInstitutionId.Key)
-                        "Expected invalid customer to be jamesWithInvalidInstitutionId"
+                        [
+                            {
+                                Issue = MissingInstitution
+                                Entity = CustomerKey SyntheticCustomer.jamesWithInvalidInstitutionId.Key
+                            }
+                        ]
+                        (ValidationReport.formatErrors result.Errors)                    
                 )
 
             testCase

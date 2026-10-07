@@ -83,7 +83,7 @@ module Person =
 
                     Expect.isEmpty
                         result.Errors
-                        (ValidationReport.formatErrors result.Errors)
+                        "Expected 0 valid persons"
                 )
 
             testCase
