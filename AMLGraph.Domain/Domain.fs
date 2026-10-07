@@ -50,12 +50,20 @@ type Customer =
     member this.Key =
         UniqueCustomerId (this.CustomerId, this.InstitutionId)
 
+type CountryCode =
+    | CA
+    | DE
+    | ET
+    | GB
+    | US
+    | ZW
+
 type Institution =
     {
         InstitutionId: InstitutionId
         Name: string
         InstitutionType: string
-        CountryCode: string  // ISO alpha-2: US, GB, DE, etc.
+        CountryCode: CountryCode  // ISO alpha-2: US, GB, DE, etc.
     }
 
 type Account =
@@ -201,26 +209,26 @@ module AccountType =
         | AccountType.Loan -> "Loan"
         | AccountType.Brokerage -> "Brokerage"
 
-module Parse =
+module TryParse =
 
     let currency value =
         match value with
-        | "AUD" | "Australian Dollar" -> AUD
-        | "BRL" | "Brazil Real" -> BRL
-        | "CAD" | "Canadian Dollar" -> CAD
-        | "CHF" | "Swiss Franc" -> CHF
-        | "CNY" | "Yuan" -> CNY
-        | "EUR" | "Euro" -> EUR
-        | "GBP" | "UK Pound" -> GBP
-        | "INR" | "Rupee" -> INR
-        | "JPY" | "Yen" -> JPY
-        | "MXN" | "Mexican Peso" -> MXN
-        | "RUB" | "Ruble" -> RUB
-        | "SGD" | "Singapore Dollar" -> SGD
-        | "TRY" | "Turkish Lira" -> TRY
-        | "USD" | "US Dollar" -> USD
-        | "BTC" | "Bitcoin" -> Bitcoin
-        | _ -> failwith $"Unknown currency: {value}"
+        | "AUD" | "Australian Dollar" -> Some AUD
+        | "BRL" | "Brazil Real" -> Some BRL
+        | "CAD" | "Canadian Dollar" -> Some CAD
+        | "CHF" | "Swiss Franc" -> Some CHF
+        | "CNY" | "Yuan" -> Some CNY
+        | "EUR" | "Euro" -> Some EUR
+        | "GBP" | "UK Pound" -> Some GBP
+        | "INR" | "Rupee" -> Some INR
+        | "JPY" | "Yen" -> Some JPY
+        | "MXN" | "Mexican Peso" -> Some MXN
+        | "RUB" | "Ruble" -> Some RUB
+        | "SGD" | "Singapore Dollar" -> Some SGD
+        | "TRY" | "Turkish Lira" -> Some TRY
+        | "USD" | "US Dollar" -> Some USD
+        | "BTC" | "Bitcoin" -> Some Bitcoin
+        | _ -> None
 
     let currencyString (currency: Currency) =
         match currency with
@@ -242,13 +250,13 @@ module Parse =
 
     let paymentFormat value =
         match value with
-        | "ACH" -> PaymentFormat.ACH
-        | "Cash" -> PaymentFormat.Cash
-        | "Cheque" -> PaymentFormat.Cheque
-        | "Credit Card" -> PaymentFormat.CreditCard
-        | "Reinvestment" -> PaymentFormat.Reinvestment
-        | "Wire" -> PaymentFormat.Wire
-        | value -> failwith $"Unknown payment format: {value}"
+        | "ACH" -> Some PaymentFormat.ACH
+        | "Cash" -> Some PaymentFormat.Cash
+        | "Cheque" -> Some PaymentFormat.Cheque
+        | "Credit Card" -> Some PaymentFormat.CreditCard
+        | "Reinvestment" -> Some PaymentFormat.Reinvestment
+        | "Wire" -> Some PaymentFormat.Wire
+        | _ -> None
 
     let paymentFormatString (format: PaymentFormat) =
         match format with
@@ -258,3 +266,27 @@ module Parse =
         | PaymentFormat.CreditCard -> "Credit Card"
         | PaymentFormat.Reinvestment -> "Reinvestment"
         | PaymentFormat.Wire -> "Wire"
+
+    let countryCode (value: string) =
+        if isNull value then
+            None
+        else
+            match value.Trim().ToUpperInvariant() with
+            | "CA" -> Some CA
+            | "DE" -> Some DE
+            | "ET" -> Some ET
+            | "GB" -> Some GB
+            | "US" -> Some US
+            | "ZW" -> Some ZW
+            | _ -> None
+
+    let countryCodeString (countryCode: CountryCode) =
+        match countryCode with
+        | CA -> "CA"
+        | DE -> "DE"
+        | ET -> "ET"
+        | GB -> "GB"
+        | US -> "US"
+        | ZW -> "ZW"
+
+
