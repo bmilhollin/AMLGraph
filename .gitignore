@@ -16,3 +16,6 @@ project.lock.json
 *.DotSettings.user
 
 .fake
+
+/Sandbox/
+

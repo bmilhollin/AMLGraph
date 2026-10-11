@@ -20,7 +20,7 @@ The project intentionally favors readability, explicit behavior, and maintainabi
 
 ## Data Source
 
-When searching for a reasonable dataset to use for this project, I came across the paper [*Realistic Synthetic Financial Transactions for Anti-Money Laundering Models*](https://arxiv.org/pdf/2306.16424). The paper describes both the challenges financial institutions face when developing and evaluating anti-money-laundering models and the difficulty of obtaining realistic financial transaction data with known money-laundering activity.
+When searching for a reasonable dataset to use for this project, I came across the paper [Realistic Synthetic Financial Transactions for Anti-Money Laundering Models](https://arxiv.org/pdf/2306.16424). The paper describes both the challenges financial institutions face when developing and evaluating anti-money-laundering models and the difficulty of obtaining realistic financial transaction data with known money-laundering activity.
 
 The researchers developed **AMLworld**, an agent-based simulator that creates a synthetic multi-bank financial system. Rather than generating isolated suspicious transactions, AMLworld simulates a broader economy containing banks, accounts, individuals and companies conducting ordinary financial activity. Known money-laundering patterns are then introduced into this simulated economy. Because the data is synthetic, the researchers know which transactions are associated with laundering, providing ground truth that is generally unavailable in real financial data. The AMLworld data and supporting information are available through the [IBM AML-Data repository](https://github.com/IBM/AML-Data).
 
