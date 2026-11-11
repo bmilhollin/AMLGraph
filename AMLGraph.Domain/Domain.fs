@@ -52,6 +52,18 @@ type Customer =
     member this.Key =
         UniqueCustomerId (this.CustomerId, this.InstitutionId)
 
+type EntityType =
+    | Corporation
+    | SoleProprietorship
+    | Partnership
+    | Individual
+
+type Entity = {
+    EntityId: EntityId
+    EntityType: EntityType
+    Name: string // descriptive, not unique identifier
+    }
+
 type CountryCode =
     | CA
     | DE
