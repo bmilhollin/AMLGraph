@@ -29,7 +29,7 @@ module Ownership =
             """
             MATCH (c:Customer {customerId:$customerId, institutionId:$institutionId})
             MATCH (a:Account {accountId:$accountId, institutionId:$institutionId})
-            MERGE (c)-[:OWNS]->(a)
+            MERGE (c)-[:OWNERSHIP]->(a)
             """
 
         async {
