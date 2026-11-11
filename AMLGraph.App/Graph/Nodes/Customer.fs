@@ -7,9 +7,9 @@ module Customer =
 
     let private toParameters (customer:Customer) =
         dict [
-            "customerId", box (EntityIds.customerIdValue customer.CustomerId)
-            "institutionId", box (EntityIds.institutionIdValue customer.InstitutionId)
-            "personId", box (EntityIds.personIdValue customer.PersonId)
+            "customerId", box (Unwrap.customerId customer.CustomerId)
+            "institutionId", box (Unwrap.institutionId customer.InstitutionId)
+            "personId", box (Unwrap.personId customer.PersonId)
             "riskRating", box customer.RiskRating
         ]
 

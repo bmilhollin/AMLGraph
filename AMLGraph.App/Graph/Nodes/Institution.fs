@@ -7,7 +7,7 @@ module Institution =
 
     let private toParameters (institution:Institution) =
         dict [
-            "institutionId", box (EntityIds.institutionIdValue institution.InstitutionId)
+            "institutionId", box (Unwrap.institutionId institution.InstitutionId)
             "name", box institution.Name
             "institutionType", box institution.InstitutionType
             "countryCode", box (Parse.countryCodeString institution.CountryCode)

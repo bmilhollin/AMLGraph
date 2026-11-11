@@ -38,10 +38,10 @@ module Ownership =
             Set.contains ownership.AccountKey validAccountKeys
 
         let customerInstitutionId =
-            snd (EntityIds.uniqueCustomerIdValue ownership.CustomerKey)
+            snd (Unwrap.uniqueCustomerId ownership.CustomerKey)
 
         let accountInstitutionId =
-            snd (EntityIds.uniqueAccountIdValue ownership.AccountKey)
+            snd (Unwrap.uniqueAccountId ownership.AccountKey)
 
         let errors =
             [

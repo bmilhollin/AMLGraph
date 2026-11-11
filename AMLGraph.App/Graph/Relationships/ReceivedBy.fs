@@ -8,16 +8,16 @@ module ReceivedBy =
     let private toParameters (receivedBy: ReceivedBy) =
 
         let transactionId, fromInstitutionId =
-            EntityIds.uniqueTransactionIdValue receivedBy.TransactionKey
+            Unwrap.uniqueTransactionId receivedBy.TransactionKey
 
         let toAccountId, toInstitutionId =
-            EntityIds.uniqueAccountIdValue receivedBy.ToAccountKey
+            Unwrap.uniqueAccountId receivedBy.ToAccountKey
 
         dict [
-            "toAccountId", box (EntityIds.accountIdValue toAccountId)
-            "toInstitutionId", box (EntityIds.institutionIdValue toInstitutionId)
-            "transactionId", box (EntityIds.transactionIdValue transactionId)
-            "fromInstitutionId", box (EntityIds.institutionIdValue fromInstitutionId)
+            "toAccountId", box (Unwrap.accountId toAccountId)
+            "toInstitutionId", box (Unwrap.institutionId toInstitutionId)
+            "transactionId", box (Unwrap.transactionId transactionId)
+            "fromInstitutionId", box (Unwrap.institutionId fromInstitutionId)
         ]
     let create (receivedBys: ReceivedBy list) =
 

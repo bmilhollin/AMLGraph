@@ -7,34 +7,34 @@ module ValidationReport =
     let private formatPersonId personId =
         sprintf
             "Invalid Person - %s"
-            (EntityIds.personIdValue personId)
+            (Unwrap.personId personId)
 
     let private formatInstitutionId institutionId =
         sprintf
             "Invalid Institution - %s"
-            (EntityIds.institutionIdValue institutionId)
+            (Unwrap.institutionId institutionId)
 
     let private formatUniqueCustomerId uniqueCustomerId =
         let customerId, institutionId =
-            EntityIds.uniqueCustomerIdValue uniqueCustomerId
+            Unwrap.uniqueCustomerId uniqueCustomerId
 
         sprintf
             "Invalid CustomerKey - Customer %s / Institution %s"
-            (EntityIds.customerIdValue customerId)
-            (EntityIds.institutionIdValue institutionId)
+            (Unwrap.customerId customerId)
+            (Unwrap.institutionId institutionId)
 
     let private formatUniqueAccountId uniqueAccountId =
         let accountId, institutionId =
-            EntityIds.uniqueAccountIdValue uniqueAccountId
+            Unwrap.uniqueAccountId uniqueAccountId
 
         sprintf
             "Invalid AccountKey - Account %s / Institution %s"
-            (EntityIds.accountIdValue accountId)
-            (EntityIds.institutionIdValue institutionId)
+            (Unwrap.accountId accountId)
+            (Unwrap.institutionId institutionId)
 
     let private formatUniqueOwnershipId uniqueOwnershipId =
         let customerKey, accountKey =
-            EntityIds.uniqueOwnershipIdValue uniqueOwnershipId
+            Unwrap.uniqueOwnershipId uniqueOwnershipId
 
         sprintf
             "Invalid OwnershipKey -\nCustomerKey %s\nAccountKey %s"
@@ -43,12 +43,12 @@ module ValidationReport =
 
     let private formatUniqueTransactionId uniqueTransactionId =
         let transactionId, institutionId =
-            EntityIds.uniqueTransactionIdValue uniqueTransactionId
+            Unwrap.uniqueTransactionId uniqueTransactionId
 
         sprintf
             "Invalid TranactionKey - Transaction %s / Institution %s"
-            (EntityIds.transactionIdValue transactionId)
-            (EntityIds.institutionIdValue institutionId)
+            (Unwrap.transactionId transactionId)
+            (Unwrap.institutionId institutionId)
 
     let private formatEntity entity =
         match entity with

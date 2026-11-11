@@ -7,16 +7,16 @@ module Transaction =
 
     let private toParameters (transaction: Transaction) =
 
-        let fromAccountId, fromInstitutionId = EntityIds.uniqueAccountIdValue transaction.FromAccount
-        let toAccountId, toInstitutionId = EntityIds.uniqueAccountIdValue transaction.ToAccount
+        let fromAccountId, fromInstitutionId = Unwrap.uniqueAccountId transaction.FromAccount
+        let toAccountId, toInstitutionId = Unwrap.uniqueAccountId transaction.ToAccount
 
         dict [
-            "transactionId", box (EntityIds.transactionIdValue transaction.TransactionId)
+            "transactionId", box (Unwrap.transactionId transaction.TransactionId)
             "timestamp", box transaction.Timestamp
-            "fromAccountId", box (EntityIds.accountIdValue fromAccountId)
-            "fromInstitutionId", box (EntityIds.institutionIdValue fromInstitutionId)
-            "toAccountId", box (EntityIds.accountIdValue toAccountId)
-            "toInstitutionId", box (EntityIds.institutionIdValue toInstitutionId)
+            "fromAccountId", box (Unwrap.accountId fromAccountId)
+            "fromInstitutionId", box (Unwrap.institutionId fromInstitutionId)
+            "toAccountId", box (Unwrap.accountId toAccountId)
+            "toInstitutionId", box (Unwrap.institutionId toInstitutionId)
             "sentAmount", box transaction.Sent.Amount
             "sentCurrency", box (Parse.currencyString transaction.Sent.Currency)
             "receivedAmount", box transaction.Received.Amount

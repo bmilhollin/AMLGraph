@@ -36,7 +36,7 @@ module Transaction =
         (transaction: Transaction) =
         let getInstitutionId (uniqueAccountId: UniqueAccountId) =
             uniqueAccountId
-            |> EntityIds.uniqueAccountIdValue
+            |> Unwrap.uniqueAccountId
             |> snd
 
         let fromInstitutionId = getInstitutionId transaction.FromAccount

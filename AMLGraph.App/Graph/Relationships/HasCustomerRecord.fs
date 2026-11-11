@@ -7,11 +7,11 @@ module HasCustomerRecord =
 
     let private toParameters (hasCustomerRecord:HasCustomerRecord) =
 
-        let personId = EntityIds.personIdValue hasCustomerRecord.PersonId
+        let personId = Unwrap.personId hasCustomerRecord.PersonId
 
-        let customerKey, institutionId = EntityIds.uniqueCustomerIdValue hasCustomerRecord.CustomerKey
-        let customerId = EntityIds.customerIdValue customerKey
-        let institutionId = EntityIds.institutionIdValue institutionId
+        let customerKey, institutionId = Unwrap.uniqueCustomerId hasCustomerRecord.CustomerKey
+        let customerId = Unwrap.customerId customerKey
+        let institutionId = Unwrap.institutionId institutionId
 
         dict [
             "personId", box personId

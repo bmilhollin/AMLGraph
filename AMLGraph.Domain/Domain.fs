@@ -3,25 +3,27 @@ namespace AMLGraph.Domain
 open System
 
 type PersonId = PersonId of string
-type InstitutionId = InstitutionId of string
 type CustomerId = CustomerId of string
+type EntityId = EntityId of string
 type AccountId = AccountId of string
+type InstitutionId = InstitutionId of string
 type TransactionId = TransactionId of string 
 type UniqueCustomerId = UniqueCustomerId of (CustomerId * InstitutionId)
 type UniqueAccountId = UniqueAccountId of (AccountId * InstitutionId)
 type UniqueOwnershipId = UniqueOwnershipId of (UniqueCustomerId * UniqueAccountId)
 type UniqueTransactionId = UniqueTransactionId of (TransactionId * InstitutionId) 
 
-module EntityIds =    
-    let personIdValue (PersonId id) = id
-    let customerIdValue (CustomerId id) = id
-    let accountIdValue (AccountId id) = id
-    let institutionIdValue (InstitutionId id) = id
-    let transactionIdValue (TransactionId id) = id 
-    let uniqueCustomerIdValue (UniqueCustomerId (customerId, institutionId)) = (customerId, institutionId)
-    let uniqueAccountIdValue (UniqueAccountId (accountId, institutionId)) = (accountId, institutionId)
-    let uniqueOwnershipIdValue (UniqueOwnershipId (uniqueCustomerId, uniqueAccountId)) = (uniqueCustomerId, uniqueAccountId)
-    let uniqueTransactionIdValue (UniqueTransactionId (transactionId, institutionId)) = (transactionId, institutionId)
+module Unwrap =    
+    let personId (PersonId id) = id
+    let customerId (CustomerId id) = id
+    let entity (EntityId id) = id
+    let accountId (AccountId id) = id
+    let institutionId (InstitutionId id) = id
+    let transactionId (TransactionId id) = id 
+    let uniqueCustomerId (UniqueCustomerId (customerId, institutionId)) = (customerId, institutionId)
+    let uniqueAccountId (UniqueAccountId (accountId, institutionId)) = (accountId, institutionId)
+    let uniqueOwnershipId (UniqueOwnershipId (uniqueCustomerId, uniqueAccountId)) = (uniqueCustomerId, uniqueAccountId)
+    let uniqueTransactionId (UniqueTransactionId (transactionId, institutionId)) = (transactionId, institutionId)
 
 type AccountType =
     | Checking
@@ -120,7 +122,7 @@ type Transaction =
     member this.Key : UniqueTransactionId =
         // instituitionId is associated with the FromAccount
         let _, institutionId = 
-            EntityIds.uniqueAccountIdValue this.FromAccount
+            Unwrap.uniqueAccountId this.FromAccount
         UniqueTransactionId (this.TransactionId, institutionId)
 
 type HasCustomerRecord =

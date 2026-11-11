@@ -7,13 +7,13 @@ module Ownership =
 
     let private toParameters (ownership:Ownership) =
 
-        let customerKey, institutionId = EntityIds.uniqueCustomerIdValue ownership.CustomerKey
-        let customerId = EntityIds.customerIdValue customerKey
-        let customerInstitutionId = EntityIds.institutionIdValue institutionId
+        let customerKey, institutionId = Unwrap.uniqueCustomerId ownership.CustomerKey
+        let customerId = Unwrap.customerId customerKey
+        let customerInstitutionId = Unwrap.institutionId institutionId
 
-        let accountKey, institutionId = EntityIds.uniqueAccountIdValue ownership.AccountKey
-        let accountId = EntityIds.accountIdValue accountKey
-        let institutionId = EntityIds.institutionIdValue institutionId
+        let accountKey, institutionId = Unwrap.uniqueAccountId ownership.AccountKey
+        let accountId = Unwrap.accountId accountKey
+        let institutionId = Unwrap.institutionId institutionId
 
         // TODO: Check institutionId is the same for both customer and account, and throw if not.
 

@@ -7,7 +7,7 @@ module Person =
 
     let private toParameters (person:Person) =
         dict [
-            "personId", box (EntityIds.personIdValue person.PersonId)
+            "personId", box (Unwrap.personId person.PersonId)
             "firstName", box person.FirstName
             "lastName", box person.LastName
             "dob", box person.Dob

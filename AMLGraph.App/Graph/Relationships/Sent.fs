@@ -8,15 +8,15 @@ module Sent =
     let private toParameters (sent: Sent) =
 
         let fromAccountId, fromInstitutionId =
-            EntityIds.uniqueAccountIdValue sent.FromAccountKey
+            Unwrap.uniqueAccountId sent.FromAccountKey
 
         let transactionId, _ =
-            EntityIds.uniqueTransactionIdValue sent.TransactionKey
+            Unwrap.uniqueTransactionId sent.TransactionKey
 
         dict [
-            "fromAccountId", box (EntityIds.accountIdValue fromAccountId)
-            "fromInstitutionId", box (EntityIds.institutionIdValue fromInstitutionId)
-            "transactionId", box (EntityIds.transactionIdValue transactionId)
+            "fromAccountId", box (Unwrap.accountId fromAccountId)
+            "fromInstitutionId", box (Unwrap.institutionId fromInstitutionId)
+            "transactionId", box (Unwrap.transactionId transactionId)
         ]
     let create (sents: Sent list) =
 
