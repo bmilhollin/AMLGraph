@@ -5,9 +5,9 @@ open AMLGraph.Domain
 module Institution =
 
     let private institutionAttributesMatch left right =
-        left.Name = right.Name &&
-        left.InstitutionType = right.InstitutionType &&
-        left.CountryCode = right.CountryCode 
+        left.Name = right.Name  //&&
+        // left.InstitutionType = right.InstitutionType &&
+        // left.CountryCode = right.CountryCode 
 
     let private isSingleton (_, group) =
         match group with
@@ -20,10 +20,10 @@ module Institution =
             Issue = ConflictingInstitutionAttributes
         }
 
-    /// An institutionId could exist on multiple rows within institutions.tsv.
-    /// If a institution has multiple rows and any of the other fields besides institutionId are different, 
-    /// that institutionId is considered a institution with conflicting attributes,
-    /// and the institution will not be used in the graph. Conflicted institutions are captured for review.
+
+    /// Institutions sharing an InstitutionId must have identical names.
+    /// Identical duplicates are consolidated into one institution.
+    /// Conflicting institutions are excluded and reported for review.
     let validate 
         (institutions: Institution list) : Validated<Institution list> =
 
