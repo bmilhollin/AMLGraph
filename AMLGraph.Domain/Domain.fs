@@ -2,55 +2,58 @@ namespace AMLGraph.Domain
 
 open System
 
-type PersonId = PersonId of string
-type CustomerId = CustomerId of string
+// LEGACY DOMAIN MODEL
+// Retained temporarily as reference implementations.
+// Replaced by the IBM-aligned Entity/Account model.
+// type PersonId = PersonId of string
+// type CustomerId = CustomerId of string
 type EntityId = EntityId of string
 type AccountId = AccountId of string
 type InstitutionId = InstitutionId of string
 type TransactionId = TransactionId of string 
-type UniqueCustomerId = UniqueCustomerId of (CustomerId * InstitutionId)
+// type UniqueCustomerId = UniqueCustomerId of (CustomerId * InstitutionId)
 type UniqueAccountId = UniqueAccountId of (AccountId * InstitutionId)
-type UniqueOwnershipId = UniqueOwnershipId of (UniqueCustomerId * UniqueAccountId)
+// type UniqueOwnershipId = UniqueOwnershipId of (UniqueCustomerId * UniqueAccountId)
 type UniqueTransactionId = UniqueTransactionId of (TransactionId * InstitutionId) 
 
 module Unwrap =    
-    let personId (PersonId id) = id
-    let customerId (CustomerId id) = id
+    // let personId (PersonId id) = id
+    // let customerId (CustomerId id) = id
     let entityId (EntityId id) = id
     let accountId (AccountId id) = id
     let institutionId (InstitutionId id) = id
     let transactionId (TransactionId id) = id 
-    let uniqueCustomerId (UniqueCustomerId (customerId, institutionId)) = (customerId, institutionId)
+    // let uniqueCustomerId (UniqueCustomerId (customerId, institutionId)) = (customerId, institutionId)
     let uniqueAccountId (UniqueAccountId (accountId, institutionId)) = (accountId, institutionId)
-    let uniqueOwnershipId (UniqueOwnershipId (uniqueCustomerId, uniqueAccountId)) = (uniqueCustomerId, uniqueAccountId)
+    // let uniqueOwnershipId (UniqueOwnershipId (uniqueCustomerId, uniqueAccountId)) = (uniqueCustomerId, uniqueAccountId)
     let uniqueTransactionId (UniqueTransactionId (transactionId, institutionId)) = (transactionId, institutionId)
 
-type AccountType =
-    | Checking
-    | Savings
-    | Business
-    | CreditCard
-    | Loan
-    | Brokerage
+// type AccountType =
+//     | Checking
+//     | Savings
+//     | Business
+//     | CreditCard
+//     | Loan
+//     | Brokerage
 
-type Person =
-    {
-        PersonId: PersonId
-        FirstName: string
-        LastName: string
-        Dob: string
-        Occupation: string
-    }
+// type Person =
+//     {
+//         PersonId: PersonId
+//         FirstName: string
+//         LastName: string
+//         Dob: string
+//         Occupation: string
+//     }
 
-type Customer =
-    {
-        CustomerId: CustomerId
-        InstitutionId: InstitutionId
-        PersonId: PersonId
-        RiskRating: int
-    }
-    member this.Key =
-        UniqueCustomerId (this.CustomerId, this.InstitutionId)
+// type Customer =
+//     {
+//         CustomerId: CustomerId
+//         InstitutionId: InstitutionId
+//         PersonId: PersonId
+//         RiskRating: int
+//     }
+//     member this.Key =
+//         UniqueCustomerId (this.CustomerId, this.InstitutionId)
 
 type EntityType =
     | Corporation
@@ -77,17 +80,17 @@ type Institution =
     {
         InstitutionId: InstitutionId
         Name: string
-        InstitutionType: string
-        CountryCode: CountryCode  // ISO alpha-2: US, GB, DE, etc.
+        // InstitutionType: string
+        // CountryCode: CountryCode  // ISO alpha-2: US, GB, DE, etc.
     }
 
 type Account =
     {
         AccountId: AccountId
         InstitutionId: InstitutionId
-        AccountType: AccountType
-        OpenDate: string
-        Balance: decimal
+        // AccountType: AccountType
+        // OpenDate: string
+        // Balance: decimal
     }
     member this.Key =
         UniqueAccountId (this.AccountId, this.InstitutionId)
@@ -138,24 +141,24 @@ type Transaction =
             Unwrap.uniqueAccountId this.FromAccount
         UniqueTransactionId (this.TransactionId, institutionId)
 
-type HasCustomerRecord =
-    {
-        PersonId: PersonId
-        CustomerKey: UniqueCustomerId
-    }
+// type HasCustomerRecord =
+//     {
+//         PersonId: PersonId
+//         CustomerKey: UniqueCustomerId
+//     }
     
 type HeldAt =
     {
         AccountKey: UniqueAccountId
     }
 
-type Ownership =
-    {
-        CustomerKey: UniqueCustomerId
-        AccountKey: UniqueAccountId
-    }
-    member this.Key : UniqueOwnershipId =
-        UniqueOwnershipId (this.CustomerKey, this.AccountKey)
+// type Ownership =
+//     {
+//         CustomerKey: UniqueCustomerId
+//         AccountKey: UniqueAccountId
+//     }
+//     member this.Key : UniqueOwnershipId =
+//         UniqueOwnershipId (this.CustomerKey, this.AccountKey)
 
 /// TransactionKey's InstitutionId is associated with the FromAccount
 type Sent =
@@ -171,21 +174,23 @@ type ReceivedBy =
         ToAccountKey : UniqueAccountId
     }
 
-type EntityKey =
-    | PersonKey of PersonId
-    | CustomerKey of UniqueCustomerId
+type UniqueKey =  // was EntityKey, conflicts with idea of Entity in IBM data set
+    // | PersonKey of PersonId
+    // | CustomerKey of UniqueCustomerId
+    | EntityKey of EntityId
     | AccountKey of UniqueAccountId
     | InstitutionKey of InstitutionId
-    | OwnershipKey of UniqueOwnershipId
+    // | OwnershipKey of UniqueOwnershipId
     | TransactionKey of UniqueTransactionId
 
 type ValidationIssue =
-    | ConflictingPersonAttributes
-    | ConflictingCustomerAttributes
+    // | ConflictingPersonAttributes
+    // | ConflictingCustomerAttributes
+    | ConflictingEntityAttributes
     | ConflictingInstitutionAttributes
     | ConflictingAccountAttributes
     | ConflictingTransactionAttributes
-    | MissingCustomer
+    // | MissingCustomer
     | MissingInstitution
     | MissingAccount
     | MissingFromInstitution
@@ -196,7 +201,7 @@ type ValidationIssue =
     
 type ValidationError =
     {
-        Entity: EntityKey
+        Entity: UniqueKey
         Issue: ValidationIssue
     }
 
@@ -206,23 +211,23 @@ type Validated<'T> =
         Errors: ValidationError list
     }
 
-module AccountType =
-    let ofString = function
-        | "Checking" -> AccountType.Checking
-        | "Savings" -> AccountType.Savings
-        | "Business" -> AccountType.Business
-        | "Credit Card" -> AccountType.CreditCard
-        | "Loan" -> AccountType.Loan
-        | "Brokerage" -> AccountType.Brokerage
-        | value -> failwith $"Unknown account type '{value}'."
+// module AccountType =
+//     let ofString = function
+//         | "Checking" -> AccountType.Checking
+//         | "Savings" -> AccountType.Savings
+//         | "Business" -> AccountType.Business
+//         | "Credit Card" -> AccountType.CreditCard
+//         | "Loan" -> AccountType.Loan
+//         | "Brokerage" -> AccountType.Brokerage
+//         | value -> failwith $"Unknown account type '{value}'."
 
-    let value = function
-        | AccountType.Checking -> "Checking"
-        | AccountType.Savings -> "Savings"
-        | AccountType.Business -> "Business"
-        | AccountType.CreditCard -> "Credit Card"
-        | AccountType.Loan -> "Loan"
-        | AccountType.Brokerage -> "Brokerage"
+//     let value = function
+//         | AccountType.Checking -> "Checking"
+//         | AccountType.Savings -> "Savings"
+//         | AccountType.Business -> "Business"
+//         | AccountType.CreditCard -> "Credit Card"
+//         | AccountType.Loan -> "Loan"
+//         | AccountType.Brokerage -> "Brokerage"
 
 module Parse =
 
