@@ -9,9 +9,6 @@ module Account =
         dict [
             "accountId", box (Unwrap.accountId account.AccountId)
             "institutionId", box (Unwrap.institutionId account.InstitutionId)
-            "accountType", box (AccountType.value account.AccountType)
-            "openDate", box account.OpenDate
-            "balance", box account.Balance
         ]
 
     let create (accounts:Account list) =
@@ -19,10 +16,6 @@ module Account =
         let cypher =
             """
             MERGE (a:Account {accountId:$accountId, institutionId:$institutionId})
-            SET
-                a.accountType = $accountType,
-                a.openDate = $openDate,
-                a.balance = $balance
             """
 
         async {
@@ -33,5 +26,5 @@ module Account =
                         cypher
                         (toParameters account)
 
-            printfn "Accounts nodes created"
+            printfn "Account nodes created"
         }

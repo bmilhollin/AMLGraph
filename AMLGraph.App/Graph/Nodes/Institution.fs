@@ -9,8 +9,6 @@ module Institution =
         dict [
             "institutionId", box (Unwrap.institutionId institution.InstitutionId)
             "name", box institution.Name
-            "institutionType", box institution.InstitutionType
-            "countryCode", box (Parse.countryCodeString institution.CountryCode)
         ]
 
     let create (institutions:Institution list) =
@@ -20,8 +18,6 @@ module Institution =
             MERGE (i:Institution {institutionId:$institutionId})
             SET
                 i.name = $name,
-                i.institutionType = $institutionType,
-                i.countryCode = $countryCode
             """
 
         async {

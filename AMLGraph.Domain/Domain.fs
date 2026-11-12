@@ -152,13 +152,11 @@ type HeldAt =
         AccountKey: UniqueAccountId
     }
 
-// type Ownership =
-//     {
-//         CustomerKey: UniqueCustomerId
-//         AccountKey: UniqueAccountId
-//     }
-//     member this.Key : UniqueOwnershipId =
-//         UniqueOwnershipId (this.CustomerKey, this.AccountKey)
+type Ownership =
+    {
+        EntityKey: EntityId
+        AccountKey: UniqueAccountId
+    }
 
 /// TransactionKey's InstitutionId is associated with the FromAccount
 type Sent =
@@ -188,7 +186,7 @@ type ValidationIssue =
     // | ConflictingCustomerAttributes
     | ConflictingEntityAttributes
     | ConflictingInstitutionAttributes
-    | ConflictingAccountAttributes
+    // | ConflictingAccountAttributes
     | ConflictingTransactionAttributes
     // | MissingCustomer
     | MissingInstitution

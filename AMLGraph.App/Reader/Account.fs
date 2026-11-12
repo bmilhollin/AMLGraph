@@ -3,52 +3,78 @@ namespace AMLGraph.Reader
 open System.IO
 open AMLGraph.Domain
 
-// The Account.tsv file contains account and ownership information.
-// There is no distinct reader for ownership information.
-// Ownership information is read in with account information using the account reader.
+// The LI-Small_Accounts.tsv file contains institution, account,
+// entity, and ownership information.
+// All four collections are constructed in a single pass.
+
+type AccountFileData =
+    {
+        Institutions: Institution list
+        Accounts: AMLGraph.Domain.Account list
+        Entities: Entity list
+        Ownerships: Ownership list
+    }
 
 module Account =
 
-    let read (filePath:string) : Account list * Ownership list =
+    let read (filePath:string) : AccountFileData =
 
         use reader = new StreamReader(filePath)
 
         reader.ReadLine() |> ignore
 
-        seq {
-            while not reader.EndOfStream do
+        let institutions = ResizeArray<Institution>()
+        let accounts = ResizeArray<AMLGraph.Domain.Account>()
+        let entities = ResizeArray<Entity>()
+        let ownerships = ResizeArray<Ownership>()
 
-                let line = reader.ReadLine()
+        while not reader.EndOfStream do
 
-                let fields = line.Split('\t')
+            let line = reader.ReadLine()
+            let fields = line.Split('\t')
 
-                if fields.Length <> 6 then
-                    failwith $"Unexpected account record: {line}"
+            if fields.Length <> 5 then
+                failwith $"Unexpected account record: {line}"
 
-                let accountId =
-                    fields[0].Trim()
-                    |> AccountId
+            let institutionName = fields[0].Trim()
+            let institutionId = fields[1].Trim() |> InstitutionId
+            let accountId = fields[2].Trim() |> AccountId
+            let entityId = fields[3].Trim() |> EntityId
+            let entityName = fields[4].Trim()
 
-                let customerId =
-                    fields[1].Trim()
-                    |> CustomerId
+            let entityType =
+                let typeName = (entityName.Split('#')[0]).Trim()
 
-                let institutionId =
-                    fields[2].Trim()
-                    |> InstitutionId
+                match Parse.tryParseEntityType typeName with
+                | Some entityType ->
+                    entityType
+                | None ->
+                    failwith $"Invalid entity type in '{entityName}'"
 
-                yield
-                    {
-                        AccountId = accountId
-                        InstitutionId = institutionId
-                        AccountType = fields[3].Trim() |> AccountType.ofString
-                        OpenDate = fields[4].Trim()
-                        Balance = decimal fields[5]
-                    },
-                    {
-                        CustomerKey = (customerId, institutionId) |> UniqueCustomerId
-                        AccountKey = (accountId, institutionId) |> UniqueAccountId
-                    }
+            institutions.Add {
+                InstitutionId = institutionId
+                Name = institutionName
+            }
+
+            accounts.Add {
+                AccountId = accountId
+                InstitutionId = institutionId
+            }
+
+            entities.Add {
+                EntityId = entityId
+                EntityType = entityType
+                Name = entityName
+            }
+
+            ownerships.Add {
+                EntityKey = entityId
+                AccountKey = UniqueAccountId (accountId, institutionId)
+            }
+
+        {
+            Institutions = List.ofSeq institutions
+            Accounts = List.ofSeq accounts
+            Entities = List.ofSeq entities
+            Ownerships = List.ofSeq ownerships
         }
-        |> Seq.toList
-        |> List.unzip
