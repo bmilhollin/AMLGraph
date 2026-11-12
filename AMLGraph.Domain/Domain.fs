@@ -58,10 +58,11 @@ type EntityType =
     | Partnership
     | Individual
 
-type Entity = {
-    EntityId: EntityId
-    EntityType: EntityType
-    Name: string // descriptive, not unique identifier
+type Entity = 
+    {
+        EntityId: EntityId
+        EntityType: EntityType
+        Name: string // descriptive, not unique identifier
     }
 
 type CountryCode =
@@ -224,6 +225,19 @@ module AccountType =
         | AccountType.Brokerage -> "Brokerage"
 
 module Parse =
+
+    let tryParseEntityType = function
+        | "Corporation" -> Some Corporation
+        | "Sole Proprietorship" -> Some SoleProprietorship
+        | "Partnership" -> Some Partnership
+        | "Individual" -> Some Individual
+        | _ -> None
+
+    let entityTypeString = function
+        | Corporation -> "Corporation"
+        | SoleProprietorship -> "Sole Proprietorship"
+        | Partnership -> "Partnership"
+        | Individual -> "Individual"
 
     let tryParseCurrency value =
         match value with
